@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0008095468, g: 0.004161891, b: 0.02006406, a: 1}
+  m_IndirectSpecularColor: {r: 0.010486943, g: 0.05298245, b: 0.15319028, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -181,10 +181,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SCORE
+  m_text: "\u30B9\u30B3\u30A2"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 91a9c99e8d9e1b6489e50ea1bb0297a6, type: 2}
-  m_sharedMaterial: {fileID: 3021503706827539129, guid: 91a9c99e8d9e1b6489e50ea1bb0297a6, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: bb28340ea42951e438dd1a3f3be9f2d2, type: 2}
+  m_sharedMaterial: {fileID: 1666672912150196406, guid: bb28340ea42951e438dd1a3f3be9f2d2, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -244,7 +244,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 4.483017, z: 0.085998535, w: 0}
+  m_margin: {x: 12.998787, y: 4.483017, z: 13.08548, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -804,8 +804,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: SPACE START
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 91a9c99e8d9e1b6489e50ea1bb0297a6, type: 2}
-  m_sharedMaterial: {fileID: 3021503706827539129, guid: 91a9c99e8d9e1b6489e50ea1bb0297a6, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: bb28340ea42951e438dd1a3f3be9f2d2, type: 2}
+  m_sharedMaterial: {fileID: 1666672912150196406, guid: bb28340ea42951e438dd1a3f3be9f2d2, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

@@ -12,8 +12,8 @@ public class EnemyDetectorAndShooter : MonoBehaviour
     public Transform launchPoint; // 弾を発射する位置
     public float detectionRadius = 20f; // 検出範囲
     
-
-   public Vector3 detectionSize = new Vector3(20f, 10f, 100f);
+    //範囲設定
+    public Vector3 detectionSize = new Vector3(20f, 15f, 100f);
 
     public LayerMask enemyLayer; // 敵のレイヤーマスク
     public int maxTargets = 5; // 最大検出する敵の数

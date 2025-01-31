@@ -39,15 +39,7 @@ public class EnemySpawnScript : MonoBehaviour
     {
 
 
-      　//敵が出てくる時間
-       
-        //ス本させるOBJを後ろに進める
-       // transform.position += spawnSpeed * transform.forward * Time.deltaTime;
-
-
-
-       // Debug.Log(defeats);
-       
+      
 
         if (enemySpawns > 0 )
         {
@@ -67,12 +59,7 @@ public class EnemySpawnScript : MonoBehaviour
 
         }
         
-        //一定数倒すとリスポーン
-        //if (defeats == 5)
-        //{
-        //    enemySpawns = 10;
-        //    defeats = 0;
-        //}
+      
 
     }
 
