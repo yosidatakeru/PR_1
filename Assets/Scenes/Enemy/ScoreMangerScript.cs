@@ -4,29 +4,31 @@ using UnityEngine;
 
 public class ScoreMangerScript : MonoBehaviour
 {
-    public Transform player;  // 追従するターゲット（プレイヤー）
-    public float radius = 5f; // 軌道半径
-    public float speed = 2f;  // 回転速度
+    private Transform player;  // 追従するターゲット（プレイヤー）
+    private float radius;      // 軌道半径
+    private float speed;       // 回転速度
+    private float angle;       // 現在の角度
 
-    private float angle = 0f; // 現在の角度
-    // Start is called before the first frame update
-    void Start()
+    public void Setup(Transform target, float orbitRadius, float orbitSpeed, float initialAngle)
     {
-        
+        player = target;
+        radius = orbitRadius;
+        speed = orbitSpeed;
+        angle = initialAngle;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (player != null)
         {
-            // プレイヤーの現在位置を基準に円軌道を計算
+            // 角度を増やして円運動を作る
             angle += speed * Time.deltaTime * 2 * Mathf.PI;
 
+            // 円軌道の座標を計算
             float x = player.position.x + radius * Mathf.Cos(angle);
             float z = player.position.z + radius * Mathf.Sin(angle);
 
-            // 敵を新しい位置に移動
+            // 敵の位置を更新（高さはそのまま）
             transform.position = new Vector3(x, transform.position.y, z);
         }
     }
