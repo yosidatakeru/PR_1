@@ -113,7 +113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 15
   rotationSpeed: 60
-  detectionRadius: 1
+  detectionRadius: 2
 --- !u!54 &7278279146455356173
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -53,7 +53,7 @@ public class EnemyScript : MonoBehaviour
         scoreScript = GameObject.Find("ScoreText (TMP)").GetComponent<ScoreScript>();
         comboSceorwScript = GameObject.Find("ComboScore (TMP)").GetComponent<ComboSceorwScript>();
         comboGaugeScript = GameObject.Find("ComboGauge").GetComponent<ComboGaugeScript>();
-        behaviorattern = Random.Range(0, 1+1);
+        behaviorattern = 0; 
     }
 
 
@@ -67,51 +67,36 @@ public class EnemyScript : MonoBehaviour
        
         switch (behaviorattern)
         {
-
+           //左
            case 0:
-             
-             transform.position += Speed * transform.right * Time.deltaTime;
-             if (transform.position.x > 10.0f)
-             {
-                 Speed *= -1;
-             }
-             if (transform.position.x < -20.0f)
-             {
-                 Speed *= -1;
-             } 
-
+             transform.position -= Speed * transform.right * Time.deltaTime;
              break;
-
+            //右
             case 1:
 
-                transform.position += Speed * transform.up * Time.deltaTime;
-                if (transform.position.y > 15.0f)
-                {
-                    Speed *= -1;
-                }
-                if (transform.position.y < -5.0f)
-                {
-                    Speed *= -1;
-                }
-
-                break;
-
-            case 2:
-
-                transform.position += Speed * transform.up * Time.deltaTime;
                 transform.position += Speed * transform.right * Time.deltaTime;
-                if (transform.position.y > 15.0f|| transform.position.x > 10.0f)
-                {
-                    Speed *= -1;
-                }
-                if (transform.position.y < -5.0f|| transform.position.x < -20.0f)
-                {
-                    Speed *= -1;
-                }
                 break;
+             //上
+             case 2:
+                
+                 transform.position += Speed * transform.up * Time.deltaTime;
+                 break;
+             //下
+             case 3:
+
+                 transform.position += Speed * transform.up * Time.deltaTime;
+                 break;
+              //何もしない
+              case 4:
+                 break;
+
+
+
+
+
         }
-            
-    
+
+
 
 
 
@@ -137,7 +122,7 @@ public class EnemyScript : MonoBehaviour
     //敵の当たり判定
     void OnCollisionEnter(Collision collision)
     {
-        //Debug.Log(enemySpawnScript.enemySpawns);
+       
       
         if (collision.gameObject.tag == "Bullet")
         {
@@ -149,9 +134,9 @@ public class EnemyScript : MonoBehaviour
 
             comboGaugeScript.Gauge = 600;
 
-          //スコア刑の処理
-          //ここ調整する
-          score =  comboSceorwScript.conboScore * destroyScore / 2;
+            //スコア刑の処理
+            //ここ調整する
+            score =  comboSceorwScript.conboScore * destroyScore / 2;
 
             //スコアの受け渡い
             scoreScript.score += destroyScore + score;

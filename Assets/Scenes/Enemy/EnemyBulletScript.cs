@@ -19,6 +19,23 @@ public class EnemyBulletScript : MonoBehaviour
         //’e‚ğ5•b‚²Á‹
         Destroy(gameObject, 5);
         //’e‚ğ‘O‚É”ò‚Î‚·
-        transform.position += speed * transform.forward * Time.deltaTime;
+        transform.position -= speed * transform.forward * Time.deltaTime;
+    }
+
+    //“–‚½‚è”»’è
+    void OnCollisionEnter(Collision collision)
+    {
+        //Debug.Log(enemySpawnScript.enemySpawns);
+
+        if (collision.gameObject.tag == "Player")
+        {
+            GetComponent<SphereCollider>().enabled = false;
+            //“G‚ğÁ‚·/
+            Destroy(gameObject);
+
+
+
+        }
+
     }
 }

@@ -27,7 +27,7 @@ public class GroundScript : MonoBehaviour
         transform.position -= speed * transform.forward * Time.deltaTime;
 
         // z 座標が -100 に近い場合にリセット
-        if (transform.position.z <=-550) // 誤差を許容した比較
+        if (transform.position.z <=-500) // 誤差を許容した比較
         {
             Vector3 newPosition = transform.position;
             newPosition.z = groundPos.z;

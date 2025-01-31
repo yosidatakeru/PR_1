@@ -13,7 +13,7 @@ public class EnemySpawnScript : MonoBehaviour
     //地上の敵
     public GameObject groundEnemy;
     //敵のスポンジ時間の制御
-    int enemeSoawn = 5;
+   // int enemeSoawn = 5;
     //スポーン数
     public int enemySpawns = 5;
     //エネミーの座標
@@ -40,7 +40,7 @@ public class EnemySpawnScript : MonoBehaviour
 
 
       　//敵が出てくる時間
-        enemeSoawn--;
+       
         //ス本させるOBJを後ろに進める
        // transform.position += spawnSpeed * transform.forward * Time.deltaTime;
 
@@ -49,7 +49,7 @@ public class EnemySpawnScript : MonoBehaviour
        // Debug.Log(defeats);
        
 
-        if (enemeSoawn < 0&& enemySpawns > 5  )
+        if (enemySpawns > 0 )
         {
 
             //敵のスポーン位置
@@ -60,21 +60,19 @@ public class EnemySpawnScript : MonoBehaviour
            
             //オブジェクトのスポーン
             Instantiate(enemy, new Vector3(EnemePos.x, EnemePos.y, EnemePos.z), Quaternion.identity);
-          //  Instantiate(groundEnemy, new Vector3(EnemePos.x, EnemePos.y, EnemePos.z), Quaternion.identity);
-          //スポーンするたびに減らす
+            //スポーンするたびに減らす
             enemySpawns--;
-            //次の敵のスポーンまでの時間
-            enemeSoawn = 10;
+                     
 
 
         }
         
         //一定数倒すとリスポーン
-        if (defeats == 5)
-        {
-            enemySpawns = 10;
-            defeats = 0;
-        }
+        //if (defeats == 5)
+        //{
+        //    enemySpawns = 10;
+        //    defeats = 0;
+        //}
 
     }
 
