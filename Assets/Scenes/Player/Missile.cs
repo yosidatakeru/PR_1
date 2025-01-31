@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Missile : MonoBehaviour
 {
-    public float speed = 15f; // ’e‚Ì‘¬“x
+    public float speed = 10f; // ’e‚Ì‘¬“x
     public float rotationSpeed = 30f; // ‰ñ“]‘¬“x
-    public float detectionRadius = 2.0f; // Õ“Ë”»’è‚Ì”¼Œa
+    public float detectionRadius = 4.0f; // Õ“Ë”»’è‚Ì”¼Œa
 
 
     private Transform target; // ƒ^[ƒQƒbƒg
@@ -48,12 +48,12 @@ public class Missile : MonoBehaviour
 
 
     }
-
+   
     void FixedUpdate()
     {
         if (target == null)
         {
-            Destroy(gameObject);
+           // Destroy(gameObject);
             return;
         }
 
@@ -83,7 +83,7 @@ public class Missile : MonoBehaviour
         if (Physics.SphereCast(transform.position, detectionRadius, transform.forward, out hit, detectionDistance, enemyLayer))
         {
             Debug.Log("Missile hit detected (SphereCast): " + hit.collider.gameObject.name);
-            Explode();
+            //Explode();
         }
         else
         {

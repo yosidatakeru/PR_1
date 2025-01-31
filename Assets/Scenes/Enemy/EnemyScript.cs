@@ -53,7 +53,7 @@ public class EnemyScript : MonoBehaviour
         scoreScript = GameObject.Find("ScoreText (TMP)").GetComponent<ScoreScript>();
         comboSceorwScript = GameObject.Find("ComboScore (TMP)").GetComponent<ComboSceorwScript>();
         comboGaugeScript = GameObject.Find("ComboGauge").GetComponent<ComboGaugeScript>();
-        behaviorattern = 0; 
+        behaviorattern = 4; 
     }
 
 
@@ -126,10 +126,10 @@ public class EnemyScript : MonoBehaviour
       
         if (collision.gameObject.tag == "Bullet")
         {
-            GetComponent<BoxCollider>().enabled = false;
+           
             Instantiate(particle, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
             //ìñÇΩÇ¡ÇΩÇÁè¡ñ≈
-            GetComponent<MeshRenderer>().enabled = false;
+           // GetComponent<MeshRenderer>().enabled = false;
             enemySpawnScript.defeats += 1;
 
             comboGaugeScript.Gauge = 600;

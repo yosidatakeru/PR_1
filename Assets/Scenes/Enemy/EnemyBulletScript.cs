@@ -19,7 +19,7 @@ public class EnemyBulletScript : MonoBehaviour
         //’e‚ğ5•b‚²Á‹
         Destroy(gameObject, 5);
         //’e‚ğ‘O‚É”ò‚Î‚·
-        transform.position -= speed * transform.forward * Time.deltaTime;
+        transform.position += speed * transform.forward * Time.deltaTime;
     }
 
     //“–‚½‚è”»’è

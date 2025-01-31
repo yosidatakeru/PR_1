@@ -10,7 +10,7 @@ public class EnemySpawnerScript : MonoBehaviour
     private int enemyCount = 8;     // ƒXƒ|[ƒ“‚·‚é“G‚Ì”
     private float spawnRadius = 8f; // ƒXƒ|[ƒ“‚·‚é‰~‚Ì”¼Œa
     private float orbitSpeed = 0.5f;  // “G‚Ì‰ñ“]‘¬“x
-    private float speed = 3.0f;//‰ñ“]²‚ÌˆÚ“®
+    private float speed = 0.0f;//‰ñ“]²‚ÌˆÚ“®
     void Start()
     {
         SpawnEnemies();
