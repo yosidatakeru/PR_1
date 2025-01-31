@@ -97,7 +97,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.5
+  m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &-1395743875043951048
 MonoBehaviour:
@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 15
-  rotationSpeed: 60
+  rotationSpeed: 30
   detectionRadius: 2
 --- !u!54 &7278279146455356173
 Rigidbody:

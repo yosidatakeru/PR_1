@@ -5,7 +5,7 @@ using UnityEngine;
 public class Missile : MonoBehaviour
 {
     public float speed = 15f; // ’e‚Ì‘¬“x
-    public float rotationSpeed = 60f; // ‰ñ“]‘¬“x
+    public float rotationSpeed = 30f; // ‰ñ“]‘¬“x
     public float detectionRadius = 2.0f; // Õ“Ë”»’è‚Ì”¼Œa
 
 
