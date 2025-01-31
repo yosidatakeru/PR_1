@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b599c05157359f54ab95e11b7baf9b18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyScript: {fileID: -8520400454004890777, guid: b1450a47da7edba489755bc05757b0e0, type: 3}
   enemy: {fileID: 7016990535425608541, guid: b1450a47da7edba489755bc05757b0e0, type: 3}
+  groundEnemy: {fileID: 6258392484756212181, guid: 942081e8ca2d3634eaca04f8f4f96efd, type: 3}
   enemySpawns: 5
   defeats: 0
