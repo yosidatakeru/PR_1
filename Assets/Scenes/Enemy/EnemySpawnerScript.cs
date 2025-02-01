@@ -11,6 +11,8 @@ public class EnemySpawnerScript : MonoBehaviour
     private float spawnRadius = 8f; // スポーンする円の半径
     private float orbitSpeed = 0.5f;  // 敵の回転速度
     private float speed = 0.0f;//回転軸の移動
+    Vector3 spawnPosition = new Vector3(0,0,0);
+    public string arrangement = "beside";
     void Start()
     {
         SpawnEnemies();
@@ -24,9 +26,26 @@ public class EnemySpawnerScript : MonoBehaviour
 
             // スポーン位置の計算
             float x = player.position.x + spawnRadius * Mathf.Cos(angle);
+            float y = player.position.x + spawnRadius * Mathf.Cos(angle);
             float z = player.position.z + spawnRadius * Mathf.Sin(angle);
-            Vector3 spawnPosition = new Vector3(x, player.position.y, z);
+            switch (arrangement) 
+            {
+                case "beside":
+                  //横にスポーン
+                  spawnPosition = new Vector3(x, player.position.y, z);
+                  break;
 
+                case "vertical":
+                  //縦にスポーン
+                    spawnPosition = new Vector3(transform.position.x, y, z);
+                    break;
+                case "0":
+                    //何もしない
+                    break;
+            }
+
+          
+           
             // 敵を生成
             GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
 

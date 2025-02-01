@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class ScoreMangerScript : MonoBehaviour
 {
-    private Transform player;  // 追従するターゲット（プレイヤー）
+    private Transform ChaseAndOrbitObject;  // 追従するターゲット
     private float radius;      // 軌道半径
     private float speed;       // 回転速度
+   // public stri rotationDirection = "Right"; // 回転方向を指定（"Up", "Down", "Left", "Right"）
     private float angle;       // 現在の角度
-
+    float x= 0;
+    float y= 0;
+    float z= 0;
+    public string move = "0";
     public void Setup(Transform target, float orbitRadius, float orbitSpeed, float initialAngle)
     {
-        player = target;
+        ChaseAndOrbitObject = target;
         radius = orbitRadius;
         speed = orbitSpeed;
         angle = initialAngle;
@@ -19,17 +23,24 @@ public class ScoreMangerScript : MonoBehaviour
 
     void Update()
     {
-        if (player != null)
+            angle += speed * Time.deltaTime;
+
+        switch (move) 
         {
-            // 角度を増やして円運動を作る
-            angle += speed * Time.deltaTime * 2 * Mathf.PI;
-
-            // 円軌道の座標を計算
-            float x = player.position.x + radius * Mathf.Cos(angle);
-            float z = player.position.z + radius * Mathf.Sin(angle);
-
-            // 敵の位置を更新（高さはそのまま）
-            transform.position = new Vector3(x, transform.position.y, z);
+            case "0":
+                // 円軌道の座標を計算
+                //-右から左
+                //+左から右
+                x = ChaseAndOrbitObject.position.x + radius * Mathf.Cos(angle);
+                z = ChaseAndOrbitObject.position.z + radius * Mathf.Sin(angle);
+                y = ChaseAndOrbitObject.position.y - radius * Mathf.Cos(angle);
+                // 敵の位置を更新（高さはそのまま）
+                 transform.position = new Vector3(x, transform.position.y, z);
+               // transform.position = new Vector3(transform.position.x, y, z);
+                break;
+        
         }
+        　　
+
     }
 }

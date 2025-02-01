@@ -107,10 +107,10 @@ public class Missile : MonoBehaviour
     {
         Debug.Log("Collision detected with: " + collision.gameObject.name);
 
-        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("EnemyBullet"))
-        {
-            Explode();
-        }
+        //if (collision.gameObject.CompareTag("Enemy"))
+        //{
+        //    Explode();
+        //}
     }
 
     void Explode()
