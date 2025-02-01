@@ -77,7 +77,7 @@ public  class PlayerScript : MonoBehaviour
 
 
         // Dキー（右移動）
-        if (Input.GetKey(KeyCode.D) && transform.position.x <= 10.0f)
+        if (Input.GetKey(KeyCode.D) && transform.position.x <= 20.0f)
         {
             transform.position += playerSpeed * Vector3.right * Time.deltaTime;
 

@@ -53,7 +53,7 @@ public class EnemyScript : MonoBehaviour
         scoreScript = GameObject.Find("ScoreText (TMP)").GetComponent<ScoreScript>();
         comboSceorwScript = GameObject.Find("ComboScore (TMP)").GetComponent<ComboSceorwScript>();
         comboGaugeScript = GameObject.Find("ComboGauge").GetComponent<ComboGaugeScript>();
-        behaviorattern = 4; 
+        behaviorattern = 0; 
     }
 
 
@@ -67,33 +67,30 @@ public class EnemyScript : MonoBehaviour
        
         switch (behaviorattern)
         {
-           //¶
-           case 0:
-             transform.position -= Speed * transform.right * Time.deltaTime;
+
+            case 0:
+                //‰½‚à‚µ‚È‚¢
              break;
-            //‰E
+           
             case 1:
-
-                transform.position += Speed * transform.right * Time.deltaTime;
+                //¶
+                transform.position -= Speed * transform.right * Time.deltaTime;
                 break;
-             //ã
+           
              case 2:
-                
-                 transform.position += Speed * transform.up * Time.deltaTime;
+                //‰E
+                transform.position += Speed * transform.right * Time.deltaTime;
                  break;
-             //‰º
+           
              case 3:
-
-                 transform.position += Speed * transform.up * Time.deltaTime;
+                //ã
+                transform.position += Speed * transform.up * Time.deltaTime;
                  break;
-              //‰½‚à‚µ‚È‚¢
-              case 4:
+            
+             case 4:
+                //‰º
+                transform.position += Speed * transform.up * Time.deltaTime;
                  break;
-
-
-
-
-
         }
 
 
@@ -116,6 +113,22 @@ public class EnemyScript : MonoBehaviour
             timeUntilNextShot = bulletTimerReset;
 
         }
+
+        if (transform.position.x >= 250 || transform.position.x <= -250)
+        {
+            Destroy(gameObject);
+        }
+
+        if (transform.position.y >= 250)
+        {
+            Destroy(gameObject);
+        }
+
+        if (transform.position.y >= 100)
+        {
+            Destroy(gameObject);
+        }
+
 
     }
 

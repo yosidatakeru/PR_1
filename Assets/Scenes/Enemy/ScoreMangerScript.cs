@@ -7,38 +7,102 @@ public class ScoreMangerScript : MonoBehaviour
     private Transform ChaseAndOrbitObject;  // 追従するターゲット
     private float radius;      // 軌道半径
     private float speed;       // 回転速度
-   // public stri rotationDirection = "Right"; // 回転方向を指定（"Up", "Down", "Left", "Right"）
     private float angle;       // 現在の角度
     float x= 0;
     float y= 0;
     float z= 0;
-    public string move = "0";
-    public void Setup(Transform target, float orbitRadius, float orbitSpeed, float initialAngle)
+    public int move = 2;
+    public void Setup(Transform target, float orbitRadius, float orbitSpeed, float initialAngle,int move_)
     {
         ChaseAndOrbitObject = target;
         radius = orbitRadius;
         speed = orbitSpeed;
         angle = initialAngle;
+        //move = move_;
     }
 
     void Update()
     {
+        //回転し方の制御
             angle += speed * Time.deltaTime;
 
         switch (move) 
-        {
-            case "0":
+        {   // -右から左
+            //+左から右
+            case 0:
+              //何もしない
+                break;
+            case 1:
+                //右から左
                 // 円軌道の座標を計算
-                //-右から左
-                //+左から右
+                x = ChaseAndOrbitObject.position.x - radius * Mathf.Cos(angle);
+                z = ChaseAndOrbitObject.position.z + radius * Mathf.Sin(angle);
+                // 敵の位置を更新（高さはそのまま）
+                transform.position = new Vector3(x, transform.position.y, z);
+                break;
+            case 2:
+                //左から右
+                // 円軌道の座標を計算
                 x = ChaseAndOrbitObject.position.x + radius * Mathf.Cos(angle);
                 z = ChaseAndOrbitObject.position.z + radius * Mathf.Sin(angle);
                 y = ChaseAndOrbitObject.position.y - radius * Mathf.Cos(angle);
-                // 敵の位置を更新（高さはそのまま）
-                 transform.position = new Vector3(x, transform.position.y, z);
-               // transform.position = new Vector3(transform.position.x, y, z);
+                
+                transform.position = new Vector3(x, transform.position.y, z);
                 break;
-        
+            case 3:
+                //下から上に
+                // 円軌道の座標を計算
+                z = ChaseAndOrbitObject.position.z + radius * Mathf.Sin(angle);
+                y = ChaseAndOrbitObject.position.y + radius * Mathf.Cos(angle);
+               
+                transform.position = new Vector3(transform.position.x, y, z);
+                break;
+            case 4:
+                //上から下
+                // 円軌道の座標を計算
+                z = ChaseAndOrbitObject.position.z + radius * Mathf.Sin(angle);
+                y = ChaseAndOrbitObject.position.y - radius * Mathf.Cos(angle);
+                
+                transform.position = new Vector3(transform.position.x, y, z);
+                break;
+            case 5:
+                //右下から左上
+                x = ChaseAndOrbitObject.position.x - radius * Mathf.Cos(angle);
+                z = ChaseAndOrbitObject.position.z + radius * Mathf.Sin(angle);
+                y = ChaseAndOrbitObject.position.y + radius * Mathf.Cos(angle);
+
+                transform.position = new Vector3(x, transform.position.y, z);
+                transform.position = new Vector3(transform.position.x, y, z);
+                break;
+            case 6:
+                //左上から右下
+                x = ChaseAndOrbitObject.position.x + radius * Mathf.Cos(angle);
+                z = ChaseAndOrbitObject.position.z + radius * Mathf.Sin(angle);
+                y = ChaseAndOrbitObject.position.y - radius * Mathf.Cos(angle);
+
+                transform.position = new Vector3(x, transform.position.y, z);
+                transform.position = new Vector3(transform.position.x, y, z);
+                break;
+
+            case 7:
+                //左下から右上
+                x = ChaseAndOrbitObject.position.x + radius * Mathf.Cos(angle);
+                z = ChaseAndOrbitObject.position.z + radius * Mathf.Sin(angle);
+                y = ChaseAndOrbitObject.position.y + radius * Mathf.Cos(angle);
+
+                transform.position = new Vector3(x, transform.position.y, z);
+                transform.position = new Vector3(transform.position.x, y, z);
+                break;
+            case 8:
+                //右上から左下
+                x = ChaseAndOrbitObject.position.x + radius * Mathf.Cos(angle);
+                z = ChaseAndOrbitObject.position.z + radius * Mathf.Sin(angle);
+                y = ChaseAndOrbitObject.position.y - radius * Mathf.Cos(angle);
+
+                transform.position = new Vector3(x, transform.position.y, z);
+                transform.position = new Vector3(transform.position.x, y, z);
+                break;
+
         }
         　　
 
