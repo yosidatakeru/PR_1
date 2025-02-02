@@ -114,18 +114,22 @@ public class EnemyScript : MonoBehaviour
 
         }
 
+        //カメラ外に出たら消す
         if (transform.position.x >= 250 || transform.position.x <= -250)
         {
+            enemySpawnScript.defeats += 1;
             Destroy(gameObject);
         }
 
         if (transform.position.y >= 250)
         {
+            enemySpawnScript.defeats += 1;
             Destroy(gameObject);
         }
 
-        if (transform.position.y >= 100)
+        if (transform.position.y >= 100　|| transform.position.y <= -100)
         {
+            enemySpawnScript.defeats += 1;
             Destroy(gameObject);
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,14 +12,16 @@ public class ScoreMangerScript : MonoBehaviour
     float x= 0;
     float y= 0;
     float z= 0;
-    public int move = 2;
-    public void Setup(Transform target, float orbitRadius, float orbitSpeed, float initialAngle,int move_)
+    public int move = 0;
+    int spawnRadiusmove = 0;
+    public void Setup(Transform target, float orbitRadius, float orbitSpeed, float initialAngle,int move_, int spawnRadiusmove_)
     {
         ChaseAndOrbitObject = target;
         radius = orbitRadius;
         speed = orbitSpeed;
         angle = initialAngle;
-        //move = move_;
+        move = move_;
+        spawnRadiusmove = spawnRadiusmove_;
     }
 
     void Update()
@@ -104,7 +107,27 @@ public class ScoreMangerScript : MonoBehaviour
                 break;
 
         }
-        Å@Å@
+        switch (spawnRadiusmove)
+        {
+            case 0:
+                //âΩÇ‡ÇµÇ»Ç¢
+                break;
+            case 1:
+                radius+=0.01f;
+                speed = 0.5f;
+
+                break;
+            case 2:
+                radius -= 0.01f;
+                speed = 0.5f;
+                break;
+
+
+
+
+        }
 
     }
+
+  
 }

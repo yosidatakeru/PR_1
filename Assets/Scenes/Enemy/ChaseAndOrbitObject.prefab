@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6258392484756212181
+--- !u!1 &8684014838292132087
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,8 +8,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6258392484756212180}
-  - component: {fileID: 494169536}
+  - component: {fileID: 2177794293306977294}
+  - component: {fileID: -4874613419182597215}
   m_Layer: 0
   m_Name: ChaseAndOrbitObject
   m_TagString: Untagged
@@ -17,32 +17,39 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6258392484756212180
+--- !u!4 &2177794293306977294
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6258392484756212181}
+  m_GameObject: {fileID: 8684014838292132087}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 40}
+  m_LocalPosition: {x: 0, y: 0, z: 6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &494169536
+--- !u!114 &-4874613419182597215
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6258392484756212181}
+  m_GameObject: {fileID: 8684014838292132087}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b7271da596f23449aea8e35e279d8f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 9220623983507094963, guid: 5d02838f2f4afdf44b3264f0191c5e53, type: 3}
-  player: {fileID: 6258392484756212180}
+  player: {fileID: 2177794293306977294}
+  enemyCount: 0
+  spawnRadius: 1
+  orbitSpeed: 3
+  speed: 0
+  arrangement: 1
+  move: 1
+  centerMovement: 0

@@ -593,7 +593,6 @@ GameObject:
   - component: {fileID: 3358015607471353988}
   - component: {fileID: 3358015607471353989}
   - component: {fileID: 3358015607471353987}
-  - component: {fileID: 7973136012278567454}
   m_Layer: 3
   m_Name: Rikka_IFO_spaceship_SRP_N10_R_01
   m_TagString: Enemy
@@ -666,16 +665,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnemyBullet: {fileID: 599098366658475669, guid: c7cf2d5b90cc44744b03406503a9e5aa, type: 3}
   particle: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
---- !u!65 &7973136012278567454
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9220623983507094963}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
