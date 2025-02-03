@@ -12,7 +12,7 @@ public class TitlePlayerScript : MonoBehaviour
 
     //ˆÚ“®
     Vector3 playerPosition = new Vector3(5f, 0f, 0f);
-    float PositionSpeed = 0.0002f;
+    float PositionSpeed = 0.0005f;
     bool position = false;
     void Start()
     {

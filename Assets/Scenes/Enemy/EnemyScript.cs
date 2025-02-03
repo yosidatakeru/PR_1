@@ -28,7 +28,7 @@ public class EnemyScript : MonoBehaviour
 
     int score = 0;
 
-    int destroyScore = 100;
+    int destroyScore = 10;
 
     public GameObject particle;
 
@@ -115,23 +115,23 @@ public class EnemyScript : MonoBehaviour
         }
 
         //カメラ外に出たら消す
-        if (transform.position.x >= 250 || transform.position.x <= -250)
-        {
-            enemySpawnScript.defeats += 1;
-            Destroy(gameObject);
-        }
+        //if (transform.position.x >= 250 || transform.position.x <= -250)
+        //{
+        //    enemySpawnScript.defeats += 1;
+        //    Destroy(gameObject);
+        //}
 
-        if (transform.position.y >= 250)
-        {
-            enemySpawnScript.defeats += 1;
-            Destroy(gameObject);
-        }
+        //if (transform.position.y >= 250)
+        //{
+        //    enemySpawnScript.defeats += 1;
+        //    Destroy(gameObject);
+        //}
 
-        if (transform.position.y >= 100　|| transform.position.y <= -100)
-        {
-            enemySpawnScript.defeats += 1;
-            Destroy(gameObject);
-        }
+        //if (transform.position.y >= 100　|| transform.position.y <= -100)
+        //{
+        //    enemySpawnScript.defeats += 1;
+        //    Destroy(gameObject);
+        //}
 
 
     }
@@ -147,13 +147,13 @@ public class EnemyScript : MonoBehaviour
             Instantiate(particle, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
             //当たったら消滅
            // GetComponent<MeshRenderer>().enabled = false;
-            enemySpawnScript.defeats += 1;
+            //enemySpawnScript.defeats += 1;
 
             comboGaugeScript.Gauge = 600;
 
             //スコア刑の処理
             //ここ調整する
-            score =  comboSceorwScript.conboScore * destroyScore / 2;
+            score =  comboSceorwScript.conboScore * destroyScore /9;
 
             //スコアの受け渡い
             scoreScript.score += destroyScore + score;

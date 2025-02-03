@@ -113,12 +113,12 @@ public class ScoreMangerScript : MonoBehaviour
                 //‰½‚à‚µ‚È‚¢
                 break;
             case 1:
-                radius+=0.01f;
+                radius+=0.1f;
                 speed = 0.5f;
 
                 break;
             case 2:
-                radius -= 0.01f;
+                radius -= 0.1f;
                 speed = 0.5f;
                 break;
 

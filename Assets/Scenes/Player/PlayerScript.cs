@@ -18,12 +18,16 @@ public  class PlayerScript : MonoBehaviour
 
     int bulletNexst = 10;
 
+ 
+
     Vector3 playerRotation = Vector3.zero;
-  
+   
     // Start is called before the first frame update
     void Start()
     {
         playerRotation = Vector3.zero;
+        
+
     }
 
     
@@ -131,5 +135,6 @@ public  class PlayerScript : MonoBehaviour
 }
 
     
-
 }
+
+

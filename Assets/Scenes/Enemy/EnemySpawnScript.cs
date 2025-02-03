@@ -2,11 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-
+using System.IO;
+using UnityEngine.UIElements;
 
 
 public class EnemySpawnScript : MonoBehaviour
 {
+ 
+
+
+
 
     //敵
     public GameObject enemy;
@@ -26,9 +31,9 @@ public class EnemySpawnScript : MonoBehaviour
     //撃破数
     public int defeats = 0;
     int wave = 0;
-   public EnemySpawnerScript enemyScript;
+    public EnemySpawnerScript enemyScript;
     int Spawnstime = 1200;
-    
+
 
     // Start is called before the first frame update
     void Start()
@@ -76,7 +81,7 @@ public class EnemySpawnScript : MonoBehaviour
                     //オブジェクトのスポーン
                     ChaseAndOrbit = Instantiate(ChaseAndOrbit, new Vector3(EnemePos.x, EnemePos.y, EnemePos.z), Quaternion.identity);
                     enemyScript = ChaseAndOrbit.GetComponent<EnemySpawnerScript>();
-                    enemyScript.enemyCount = 10;
+                    enemyScript.enemyCount = 1;
                     enemyScript.spawnRadius = 3f;
                     enemyScript.orbitSpeed = 2f;
                     enemyScript.arrangement = 1;
@@ -97,12 +102,12 @@ public class EnemySpawnScript : MonoBehaviour
                     //敵のスポーン位置
 
 
-                  
+
                     EnemePos.x -= 5;
                     //オブジェクトのスポーン
                     ChaseAndOrbit = Instantiate(ChaseAndOrbit, new Vector3(EnemePos.x, EnemePos.y, EnemePos.z), Quaternion.identity);
                     enemyScript = ChaseAndOrbit.GetComponent<EnemySpawnerScript>();
-                    enemyScript.enemyCount = 10;
+                    enemyScript.enemyCount = 1;
                     enemyScript.spawnRadius = 3f;
                     enemyScript.orbitSpeed = 2f;
                     enemyScript.arrangement = 1;
@@ -117,16 +122,19 @@ public class EnemySpawnScript : MonoBehaviour
                 break;
 
             case 2:
-                 //準備   
+                //準備   
 
-                 break;
+                break;
 
         }
 
 
-        
+
     }
 }
 
+   
 
+
+     
     

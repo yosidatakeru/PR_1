@@ -31,7 +31,7 @@ public class SphereSpawnScript : MonoBehaviour
             positionL.y = Random.Range(-4f, 4f) + transform.position.y;
             positionL.z = Random.Range(-14f, -17f) + transform.position.z;
             Instantiate(sphere, new Vector3(positionL.x, positionL.y, positionL.z), Quaternion.identity);
-            Spawntaim = 800;
+            Spawntaim = 400;
         }
     }
 }

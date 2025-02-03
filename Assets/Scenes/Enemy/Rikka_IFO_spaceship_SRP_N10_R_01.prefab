@@ -664,4 +664,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemyBullet: {fileID: 599098366658475669, guid: c7cf2d5b90cc44744b03406503a9e5aa, type: 3}
-  particle: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
+  particle: {fileID: 2499354421883142258, guid: f0576baf986c2144fa54395405611e0a, type: 3}

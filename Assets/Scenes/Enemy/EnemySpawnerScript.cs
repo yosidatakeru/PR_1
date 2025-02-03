@@ -3,8 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using System.ComponentModel;
+
 public class EnemySpawnerScript : MonoBehaviour
 {
+   
     // Start is called before the first frame update
     public GameObject enemyPrefab; // 敵のプレハブ
     public Transform player;       // プレイヤー

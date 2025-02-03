@@ -15,8 +15,8 @@ public class effectScript : MonoBehaviour
     void Update()
     {
         //’e‚ğ5•b‚²Á‹
-        Destroy(gameObject, 5);
+        Destroy(gameObject, 2);
         
-        transform.position += speed * transform.forward * Time.deltaTime;
+       // transform.position += speed * transform.forward * Time.deltaTime;
     }
 }
