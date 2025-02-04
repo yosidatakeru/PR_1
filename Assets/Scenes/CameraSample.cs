@@ -21,6 +21,7 @@ public class CameraSample : MonoBehaviour
         }
     }
 
+
     void Update()
     {
         if (player == null) return; // ƒvƒŒƒCƒ„[‚ª–¢İ’è‚È‚çˆ—‚µ‚È‚¢

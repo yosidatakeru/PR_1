@@ -72,6 +72,7 @@ public  class PlayerScript : MonoBehaviour
         }
         else
         {
+
             targetRotation.x = Mathf.Lerp(targetRotation.x, 0, Time.deltaTime * rotationSpeed);
         }
 
