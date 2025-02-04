@@ -9,7 +9,7 @@ public  class PlayerScript : MonoBehaviour
 {
     public GameObject Bullet;
     //プレイヤーの移動スピード
-    public float playerSpeed = 10;
+    public float playerSpeed = 15;
 
 
 
