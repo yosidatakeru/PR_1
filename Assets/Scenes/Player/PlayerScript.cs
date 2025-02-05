@@ -23,10 +23,23 @@ public  class PlayerScript : MonoBehaviour
     private Vector3 targetRotation;    // 目標の回転値
 
 
+    public AudioClip shootSound; // 効果音
+    private AudioSource audioSource;
+
+    public int frameInterval = 30; // 30フレームごとに再生
+    private int frameCount = 0;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
         playerRotation = Vector3.zero;
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
 
 
     }
@@ -48,12 +61,18 @@ public  class PlayerScript : MonoBehaviour
         playerRotation = Vector3.Lerp(playerRotation, targetRotation, Time.deltaTime * rotationSpeed);
         transform.rotation = Quaternion.Euler(playerRotation);
 
+        frameCount++;
 
 
         timeUntilNextShot--;
         if (Input.GetKey(KeyCode.Space) && timeUntilNextShot <= 0)
         {
-
+         
+            if (frameCount >= frameInterval)
+            {
+                audioSource.PlayOneShot(shootSound, 0.7f); // 音量 70%
+                frameCount = 0; // カウンターリセット
+            }
 
             Instantiate(Bullet, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
 
