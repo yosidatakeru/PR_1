@@ -10,6 +10,8 @@ public class EnemySpawnerScript : MonoBehaviour
    
     // Start is called before the first frame update
     public GameObject enemyPrefab; // 敵のプレハブ
+  
+
     public Transform player;       // プレイヤー
     public int enemyCount = 0;     // スポーンする敵の数
     public float spawnRadius = 0; // スポーンする円の半径
@@ -57,7 +59,7 @@ public class EnemySpawnerScript : MonoBehaviour
                     break;
                 case 2:
                     
-                    y = player.position.x + spawnRadius * Mathf.Cos(angle);
+                    y = player.position.y + spawnRadius * Mathf.Cos(angle);
                     z = player.position.z + spawnRadius * Mathf.Sin(angle);
                     //縦にスポーン
                     spawnPosition = new Vector3(x, player.position.y, z);
@@ -98,6 +100,16 @@ public class EnemySpawnerScript : MonoBehaviour
                 transform.position -= speed * transform.right * Time.deltaTime;
                 break;
 
+            case 5:
+                //前
+                transform.position += speed * transform.forward * Time.deltaTime;
+                break;
+
+            case 6:
+                //後
+                transform.position -= speed * transform.forward * Time.deltaTime;
+                break;
+
 
 
         }
@@ -106,20 +118,7 @@ public class EnemySpawnerScript : MonoBehaviour
 
 
 
-        if (transform.position.x >= 250 * (spawnRadius * 2)|| transform.position.x <= -250 * (spawnRadius * 2))
-        {
-            Destroy(gameObject);
-        }
-
-        if (transform.position.y >= 250 * (spawnRadius * 2) )
-        {
-            Destroy(gameObject);
-        }
-
-        if (transform.position.y >= 200 * (spawnRadius * 2)|| transform.position.y <= -200 * (spawnRadius * 2))
-        {
-            Destroy(gameObject);
-        }
+       
     }
 
    

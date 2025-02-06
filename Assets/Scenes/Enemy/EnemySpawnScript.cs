@@ -18,7 +18,7 @@ public class EnemySpawnScript : MonoBehaviour
     //地上の敵
     public GameObject ChaseAndOrbit;
 
-
+    public GameObject woll;
     Transform player;
     //敵のスポンジ時間の制御
     // int enemeSoawn = 5;
@@ -33,108 +33,206 @@ public class EnemySpawnScript : MonoBehaviour
     int wave = 0;
     public EnemySpawnerScript enemyScript;
     int Spawnstime = 1200;
-
+    Vector3 enemyPosition = new Vector3(0, 0, 0);
+    int time = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         //  enemeSoawn = 5;
         // enemySpawnerScript = GameObject.Find("ChaseAndOrbitObject").GetComponent<EnemySpawnerScript>();
-
+        InvokeRepeating("RepeatMethod", 1f, 1f);
     }
 
     //設定項目
-
+    void RepeatMethod()
+    {
+        // ここに毎秒実行したい処理を書く
+        time++;
+        Debug.Log(time);
+    }
     // Update is called once per frame
     void Update()
     {
 
-
-
+        
         switch (wave)
         {
             case 0:
                 //ゲーム開始の処理
-                enemySpawns = 8;
+                enemySpawns = 6;
                 wave = 1;
                 break;
             case 1:
+                //enemyCount ＝ 0；　　　　　// スポーンする敵の数
+                //arrangement = 0;//どう配置するか（横１縦２）
+                //spawnRadius = 0f; // スポーンする円の半径
+                //centerMovement = 0;//移動の設定(左1右2上3下4前5後6)
+                //speed = 0.0f;//回転軸の移動
+                //move = 2;//回転させ方の設定(左1右2上3下4左斜め上5左斜め下6右斜め上7右斜め下8)
+                //orbitSpeed = 0f;  // 敵の回転速度
+                // spawnRadiusmove = 1;//拡大と収縮
+                //Vector3 enemyPosition = new Vector3(40, 0, 30);
+                //SpawnEnemy(enemyPosition, 8, 2, 3f, 1, 6f, 2, 5f, 0);
+
+               
+                EnemePos.x = -20;
+                EnemePos.y = -9;
+                EnemePos.z = 300;
+
+                enemyPosition = new Vector3(40, 0, 30);
+               
+                    for (int i = 0; i <= enemySpawns - 1; i++)
+                    {
+                        //敵のスポーン位置
+
+                       // woll = Instantiate(woll, new Vector3(EnemePos.x, EnemePos.y, EnemePos.z), Quaternion.identity);
+                        //EnemePos.x += 30;
 
 
-                EnemePos.x = 40;
-                EnemePos.y = 0;
-                EnemePos.z = 30;
-                for (int i = 0; i <= enemySpawns - 1; i++)
-                {
-                    //敵のスポーン位置
+                        enemyPosition.x += 5;
+                        SpawnEnemy(enemyPosition, 5, 2, 3f, 1, 20f, 2, 5f, 0);
 
 
-                    //enemyCount = 2;     // スポーンする敵の数
-                    //spawnRadius = 3f; // スポーンする円の半径
-                    //orbitSpeed = 2f;  // 敵の回転速度
-                    //speed = 0.0f;//回転軸の移動
-                    //arrangement = 1;//どう配置するか（横１縦２）
-                    //move = 2;//回転させ方の設定
-                    //centerMovement = 0;//移動の設定
-                    // spawnRadiusmove = 1;//拡大と収縮
-                    EnemePos.x += 5;
-                    //オブジェクトのスポーン
-                    ChaseAndOrbit = Instantiate(ChaseAndOrbit, new Vector3(EnemePos.x, EnemePos.y, EnemePos.z), Quaternion.identity);
-                    enemyScript = ChaseAndOrbit.GetComponent<EnemySpawnerScript>();
-                    enemyScript.enemyCount = 1;
-                    enemyScript.spawnRadius = 3f;
-                    enemyScript.orbitSpeed = 2f;
-                    enemyScript.arrangement = 1;
-                    enemyScript.speed = 4.0f;//回転軸の移動
-                    enemyScript.move = 5;
-                    enemyScript.centerMovement = 1;
-                    enemyScript.spawnRadiusmove = 0;
-                    //スポーンするたびに減らす
-                    //enemySpawns--;
-                }
-
-                EnemePos.x = -40;
-                EnemePos.y = 0;
-                EnemePos.z = 30;
-
-                for (int i = 0; i <= enemySpawns - 1; i++)
-                {
-                    //敵のスポーン位置
-
-
-
-                    EnemePos.x -= 5;
-                    //オブジェクトのスポーン
-                    ChaseAndOrbit = Instantiate(ChaseAndOrbit, new Vector3(EnemePos.x, EnemePos.y, EnemePos.z), Quaternion.identity);
-                    enemyScript = ChaseAndOrbit.GetComponent<EnemySpawnerScript>();
-                    enemyScript.enemyCount = 1;
-                    enemyScript.spawnRadius = 3f;
-                    enemyScript.orbitSpeed = 2f;
-                    enemyScript.arrangement = 1;
-                    enemyScript.speed = 4.0f;//回転軸の移動
-                    enemyScript.move = 7;
-                    enemyScript.centerMovement = 2;
-                    enemyScript.spawnRadiusmove = 0;
-                    //スポーンするたびに減らす
-                    //enemySpawns--;
-                }
+                       
+                    }
+                
                 wave = 2;
                 break;
 
             case 2:
                 //準備   
-
+                enemySpawns = 3;
+                if (time == 6)
+                {
+                    wave = 3;
+                }
                 break;
 
+            case 3:
+                //準備   
+                enemyPosition = new Vector3(-40, 0, -10);
+                for (int i = 0; i <= enemySpawns - 1; i++) 
+                {
+                    enemyPosition.x += 20;
+                    SpawnEnemy(enemyPosition, 10, 1, 3f, 5, 20f, 5, 5f, 0);
+                }
+
+                wave = 4;
+                break;
+
+            case 4:
+                //準備   
+
+                if (time == 20)
+                {
+                    enemySpawns = 8;
+                    wave = 5;
+                }
+                break;
+
+            case 5:
+                //準備   
+
+                enemyPosition = new Vector3(-40, 0,30 );
+                for (int i = 0; i <= enemySpawns - 1; i++)
+                {
+                    enemyPosition.x -= 5;
+                    SpawnEnemy(enemyPosition, 10, 2, 3f, 2, 15f, 5, 5f, 0);
+                }
+                wave = 6;
+                break;
+
+
+            case 6:
+                //準備   
+
+                if (time == 30)
+                {
+                    wave = 7;
+                }
+                break;
+
+            case 7:
+                //準備   
+
+                enemyPosition = new Vector3(40, 0, 30);
+                for (int i = 0; i <= enemySpawns - 1; i++)
+                {
+                    enemyPosition.x += 5;
+                    SpawnEnemy(enemyPosition, 10, 1, 5f, 1, 15f, 7, 5f, 0);
+                }
+                wave = 8;
+                
+                break;
+
+            case 8:
+                //準備   
+
+                if (time == 45)
+                {
+                    wave = 9;
+                }
+                break;
+
+            case 9:
+                //準備   
+
+                enemyPosition = new Vector3(40, 0, 30);
+                for (int i = 0; i <= enemySpawns - 1; i++)
+                {
+                    enemyPosition.x += 5;
+                    SpawnEnemy(enemyPosition, 10, 1, 8f, 1, 15f, 7, 5f, 0);
+                }
+               
+
+                enemyPosition = new Vector3(-40, 0, 30);
+                for (int i = 0; i <= enemySpawns - 1; i++)
+                {
+                    enemyPosition.x -= 5;
+                    SpawnEnemy(enemyPosition, 10, 2, 3f, 2, 15f, 5, 5f, 0);
+                }
+                wave = 10;
+                break;
+
+            case 10:
+                //準備   
+
+                if (time == 45)
+                {
+                    
+                }
+                break;
         }
 
+        void SpawnEnemy(Vector3 spawnPosition, int enemyCount, int arrangement, float spawnRadius, int centerMovement, float speed, int move, float orbitSpeed, int spawnRadiusMove)
+        {
+            
 
+            // オブジェクトのスポーン
+            GameObject ChaseAndOrbitInstance = Instantiate(ChaseAndOrbit, spawnPosition, Quaternion.identity);
 
+            // スポーンした敵のスクリプトを取得
+            EnemySpawnerScript enemyScript = ChaseAndOrbitInstance.GetComponent<EnemySpawnerScript>();
+
+           
+
+            // 敵の設定を行う
+            enemyScript.enemyCount = enemyCount;
+            enemyScript.arrangement = arrangement;
+            enemyScript.spawnRadius = spawnRadius;
+            enemyScript.centerMovement = centerMovement;
+            enemyScript.speed = speed;
+            enemyScript.move = move;
+            enemyScript.orbitSpeed = orbitSpeed;
+            enemyScript.spawnRadiusmove = spawnRadiusMove;
+        }
+        
     }
 }
 
-   
 
 
-     
-    
+
+
+

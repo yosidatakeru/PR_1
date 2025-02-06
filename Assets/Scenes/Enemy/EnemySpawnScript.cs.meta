@@ -6,6 +6,7 @@ MonoImporter:
   defaultReferences:
   - enemy: {fileID: 7016990535425608541, guid: b1450a47da7edba489755bc05757b0e0, type: 3}
   - ChaseAndOrbit: {fileID: 8684014838292132087, guid: 942081e8ca2d3634eaca04f8f4f96efd, type: 3}
+  - woll: {fileID: 2125503682285085024, guid: 9eac91a39aeb055489496245d304b362, type: 3}
   - enemyScript: {fileID: -4874613419182597215, guid: 942081e8ca2d3634eaca04f8f4f96efd, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}

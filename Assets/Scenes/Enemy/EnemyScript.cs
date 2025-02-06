@@ -12,6 +12,8 @@ public class EnemyScript : MonoBehaviour
     EnemySpawnScript enemySpawn;
     //弾のオブジェクトの呼び出し
     public GameObject EnemyBullet;
+
+
     //後ろに下がるスピード
     float enemySpeed = 100;
     //敵のスピード
@@ -23,7 +25,7 @@ public class EnemyScript : MonoBehaviour
 
     //敵の動き制御
     int behaviorattern = 0;
-
+   
     int comboScore = 0;
 
     int score = 0;
@@ -40,11 +42,12 @@ public class EnemyScript : MonoBehaviour
 
     private ComboGaugeScript comboGaugeScript;
 
-    private GameObject EnemySpawnObject; 
+    private GameObject EnemySpawnObject;
 
+    public AudioClip deathSound;  // 敵が死んだときの効果音
 
-
- // Start is called before the first frame update
+    public  GameObject EnemyDestroyObject;
+    // Start is called before the first frame update
     void Start()
     {
         timeUntilNextShot = Random.Range(300, 600);
@@ -53,7 +56,11 @@ public class EnemyScript : MonoBehaviour
         scoreScript = GameObject.Find("ScoreText (TMP)").GetComponent<ScoreScript>();
         comboSceorwScript = GameObject.Find("ComboScore (TMP)").GetComponent<ComboSceorwScript>();
         comboGaugeScript = GameObject.Find("ComboGauge").GetComponent<ComboGaugeScript>();
-        behaviorattern = 0; 
+        behaviorattern = 0;
+
+        Invoke(nameof(DelayedDestroy), 10.0f); // 2秒後に実行
+
+
     }
 
 
@@ -114,24 +121,7 @@ public class EnemyScript : MonoBehaviour
 
         }
 
-        //カメラ外に出たら消す
-        //if (transform.position.x >= 250 || transform.position.x <= -250)
-        //{
-        //    enemySpawnScript.defeats += 1;
-        //    Destroy(gameObject);
-        //}
-
-        //if (transform.position.y >= 250)
-        //{
-        //    enemySpawnScript.defeats += 1;
-        //    Destroy(gameObject);
-        //}
-
-        //if (transform.position.y >= 100　|| transform.position.y <= -100)
-        //{
-        //    enemySpawnScript.defeats += 1;
-        //    Destroy(gameObject);
-        //}
+        
 
 
     }
@@ -150,7 +140,8 @@ public class EnemyScript : MonoBehaviour
             //enemySpawnScript.defeats += 1;
 
             comboGaugeScript.Gauge = 600;
-
+            // 敵が死んだときの効果音を再生
+          
             //スコア刑の処理
             //ここ調整する
             score =  comboSceorwScript.conboScore * destroyScore /9;
@@ -169,8 +160,13 @@ public class EnemyScript : MonoBehaviour
         }
        
     }
-     
-    
 
-    
+
+    void DelayedDestroy()
+    {
+        enemySpawnScript.defeats += 1;
+        Instantiate(EnemyDestroyObject, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
+        Destroy(gameObject);
+    }
+
 }
