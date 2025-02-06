@@ -307,6 +307,7 @@ public class EnemySpawnScript : MonoBehaviour
 
             case 17:
 
+
                 //ƒNƒŠƒA‚âğŒ
                 wave = 18;
 
