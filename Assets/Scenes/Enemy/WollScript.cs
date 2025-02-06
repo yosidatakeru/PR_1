@@ -18,5 +18,7 @@ public class WollScript : MonoBehaviour
         {
             transform.position += Speed * transform.up * Time.deltaTime;
         }
+
+        
     }
 }

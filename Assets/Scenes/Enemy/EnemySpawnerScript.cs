@@ -114,8 +114,8 @@ public class EnemySpawnerScript : MonoBehaviour
 
         }
 
-     
 
+        Destroy(gameObject, 30);
 
 
        

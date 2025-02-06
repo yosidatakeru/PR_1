@@ -30,7 +30,7 @@ public class EnemySpawnScript : MonoBehaviour
     //float spawnSpeed = 100;
     //撃破数
     public int defeats = 0;
-    int wave = 0;
+    public int wave = 0;
     public EnemySpawnerScript enemyScript;
     int Spawnstime = 1200;
     Vector3 enemyPosition = new Vector3(0, 0, 0);
@@ -76,9 +76,7 @@ public class EnemySpawnScript : MonoBehaviour
                 //SpawnEnemy(enemyPosition, 8, 2, 3f, 1, 6f, 2, 5f, 0);
 
                
-                EnemePos.x = -20;
-                EnemePos.y = -9;
-                EnemePos.z = 300;
+               
 
                 enemyPosition = new Vector3(40, 0, 30);
                
@@ -168,7 +166,7 @@ public class EnemySpawnScript : MonoBehaviour
 
             case 8:
                 //準備   
-
+                //45
                 if (time == 45)
                 {
                     wave = 9;
@@ -197,11 +195,121 @@ public class EnemySpawnScript : MonoBehaviour
 
             case 10:
                 //準備   
-
-                if (time == 45)
+                //55
+                if (time == 55)
                 {
-                    
+                    enemySpawns = 5;
+                    wave = 11;
                 }
+                break;
+
+            case 11:
+                //準備   
+
+               
+                    EnemePos.x = -35;
+                    EnemePos.y = -9;
+                    EnemePos.z = 325;
+
+                    for (int i = 0; i <= enemySpawns - 1; i++)
+                    {
+                        //敵のスポーン位置
+
+                         woll = Instantiate(woll, new Vector3(EnemePos.x, EnemePos.y, EnemePos.z), Quaternion.identity);
+                        EnemePos.x += 10;
+                        EnemePos.z +=5 ;
+
+                                            
+                    }
+                wave = 12;
+                break;
+
+            case 12:
+                //準備   
+                //70
+                if (time == 70)
+                {
+                    enemySpawns = 5;
+                    wave = 13;
+                }
+
+                break;
+
+            case 13:
+                //準備   
+                enemyPosition = new Vector3(40, 0, 30);
+                for (int i = 0; i <= enemySpawns - 1; i++)
+                {
+                    enemyPosition.x += 5;
+                    SpawnEnemy(enemyPosition, 10, 1, 8f, 1, 15f, 7, 5f, 0);
+                }
+
+
+                enemyPosition = new Vector3(-40, 0, 30);
+                for (int i = 0; i <= enemySpawns - 1; i++)
+                {
+                    enemyPosition.x -= 5;
+                    SpawnEnemy(enemyPosition, 10, 2, 3f, 2, 15f, 5, 5f, 0);
+                }
+
+                //EnemePos.x = +35;
+                //EnemePos.y = -9;
+                //EnemePos.z = 325;
+
+                //for (int i = 0; i <= enemySpawns - 1; i++)
+                //{
+                //    //敵のスポーン位置
+
+                //     woll = Instantiate(woll, new Vector3(EnemePos.x, EnemePos.y, EnemePos.z), Quaternion.identity);
+                //    EnemePos.x -= 10;
+                //    EnemePos.z += 5;
+
+
+                //}
+                wave = 14;
+                break;
+
+             case 14:
+                  if (time == 80)
+                 {
+                  enemySpawns = 10;
+                  wave = 15;
+                 }
+                break;
+
+            case 15:
+                enemyPosition = new Vector3(40, 0, 30);
+                for (int i = 0; i <= enemySpawns - 1; i++)
+                {
+                    enemyPosition.x += 5;
+                    SpawnEnemy(enemyPosition, 12, 1, 8f, 1, 15f, 7, 3f, 0);
+                }
+
+
+                enemyPosition = new Vector3(-40, 0, 30);
+                for (int i = 0; i <= enemySpawns - 1; i++)
+                {
+                    enemyPosition.x -= 5;
+                    SpawnEnemy(enemyPosition, 12, 2, 3f, 2, 15f, 5, 1f, 0);
+                }
+                wave = 16;
+                
+                break;
+
+            case 16:
+
+                if (time == 95)
+                {
+                    wave = 17;
+                }
+               
+                break;
+
+            case 17:
+
+                //クリアや条件
+                wave = 18;
+
                 break;
         }
 
