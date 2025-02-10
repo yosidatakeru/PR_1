@@ -16,7 +16,7 @@ public class EnemyBulletScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //’e‚ğ5•b‚²Á‹
+        
         if (transform.position.z <= -10) 
         {
             Destroy(gameObject);

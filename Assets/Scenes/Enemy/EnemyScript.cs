@@ -15,9 +15,9 @@ public class EnemyScript : MonoBehaviour
 
 
     //後ろに下がるスピード
-    float enemySpeed = 100;
+    float enemySpeed = 0;
     //敵のスピード
-    float Speed = 4.0f;
+    float Speed = 0;
     //敵の攻撃制御
     int timeUntilNextShot = 0;
     //弾の制御乱数

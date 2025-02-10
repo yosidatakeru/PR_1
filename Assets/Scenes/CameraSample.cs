@@ -5,9 +5,9 @@ using UnityEngine;
 public class CameraSample : MonoBehaviour
 {
     public Transform player; // プレイヤーのTransformをアサイン
-    public Vector3 offset = new Vector3(0, 1, -3); // カメラのオフセット
+    public Vector3 offset = new Vector3(0, 0, -3); // カメラのオフセット
     public float smoothSpeed = 10.0f; // カメラの追尾速度
-    public float maxTiltAngle = 15.0f; // カメラの最大傾き角度
+    public float maxTiltAngle = 90.0f; // カメラの最大傾き角度
     public float tiltSpeed = 5.0f; // カメラの傾きスムーズ速度
 
     private Vector3 lastPlayerPosition; // 前フレームのプレイヤー位置
@@ -36,7 +36,7 @@ public class CameraSample : MonoBehaviour
         float speedX = (player.position.x - lastPlayerPosition.x) / Time.deltaTime;
 
         // 傾きを計算（スムーズに変化させる）
-        float targetTilt = Mathf.Clamp(speedX / 10f, -1f, 1f) * maxTiltAngle;
+        float targetTilt = Mathf.Clamp(speedX / 10f, -45f, 45f) * maxTiltAngle;
         tiltAmount = Mathf.Lerp(tiltAmount, targetTilt, tiltSpeed * Time.deltaTime);
 
         // カメラの回転をスムーズに適用（Z軸を傾ける）

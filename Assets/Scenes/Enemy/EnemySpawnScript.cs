@@ -39,6 +39,8 @@ public class EnemySpawnScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+          wave = 0;
+         time = 0;
         //  enemeSoawn = 5;
         // enemySpawnerScript = GameObject.Find("ChaseAndOrbitObject").GetComponent<EnemySpawnerScript>();
         InvokeRepeating("RepeatMethod", 1f, 1f);
@@ -64,14 +66,7 @@ public class EnemySpawnScript : MonoBehaviour
                 wave = 1;
                 break;
             case 1:
-                //enemyCount ＝ 0；　　　　　// スポーンする敵の数
-                //arrangement = 0;//どう配置するか（横１縦２）
-                //spawnRadius = 0f; // スポーンする円の半径
-                //centerMovement = 0;//移動の設定(左1右2上3下4前5後6)
-                //speed = 0.0f;//回転軸の移動
-                //move = 2;//回転させ方の設定(左1右2上3下4左斜め上5左斜め下6右斜め上7右斜め下8)
-                //orbitSpeed = 0f;  // 敵の回転速度
-                // spawnRadiusmove = 1;//拡大と収縮
+              
                 //Vector3 enemyPosition = new Vector3(40, 0, 30);
                 //SpawnEnemy(enemyPosition, 8, 2, 3f, 1, 6f, 2, 5f, 0);
 
@@ -84,9 +79,7 @@ public class EnemySpawnScript : MonoBehaviour
                     {
                         //敵のスポーン位置
 
-                       // woll = Instantiate(woll, new Vector3(EnemePos.x, EnemePos.y, EnemePos.z), Quaternion.identity);
-                        //EnemePos.x += 30;
-
+                       
 
                         enemyPosition.x += 5;
                         SpawnEnemy(enemyPosition, 5, 2, 3f, 1, 20f, 2, 5f, 0);
@@ -324,7 +317,14 @@ public class EnemySpawnScript : MonoBehaviour
             // スポーンした敵のスクリプトを取得
             EnemySpawnerScript enemyScript = ChaseAndOrbitInstance.GetComponent<EnemySpawnerScript>();
 
-           
+            //enemyCount ＝ 0；　　　　　// スポーンする敵の数
+            //arrangement = 0;//どう配置するか（横１縦２）
+            //spawnRadius = 0f; // スポーンする円の半径
+            //centerMovement = 0;//移動の設定(左1右2上3下4前5後6)
+            //speed = 0.0f;//回転軸の移動
+            //move = 2;//回転させ方の設定(左1右2上3下4左斜め上5左斜め下6右斜め上7右斜め下8)
+            //orbitSpeed = 0f;  // 敵の回転速度
+            // spawnRadiusmove = 1;//拡大と収縮
 
             // 敵の設定を行う
             enemyScript.enemyCount = enemyCount;

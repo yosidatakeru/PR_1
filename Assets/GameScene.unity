@@ -14,8 +14,8 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: 0.8018868, g: 0.54013884, b: 0.54013884, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.01
   m_LinearFogStart: 0
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.5015748, g: 0.27015787, b: 0.21001217, a: 1}
+  m_IndirectSpecularColor: {r: 0.4257929, g: 0.22290048, b: 0.17299902, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -296,7 +296,7 @@ MonoBehaviour:
   detectionSize: {x: 20, y: 15, z: 100}
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 0
   maxTargets: 5
   markerPrefab: {fileID: 4721010129987615511, guid: 09a9441fbb6726443a8984680e5833d3, type: 3}
 --- !u!54 &189048057
@@ -684,8 +684,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemy: {fileID: 9220623983507094963, guid: 5d02838f2f4afdf44b3264f0191c5e53, type: 3}
   ChaseAndOrbit: {fileID: 8684014838292132087, guid: 942081e8ca2d3634eaca04f8f4f96efd, type: 3}
-  enemySpawns: 5
+  woll: {fileID: 2125503682285085024, guid: 9eac91a39aeb055489496245d304b362, type: 3}
+  enemySpawns: 0
   defeats: 0
+  wave: 0
   enemyScript: {fileID: -4874613419182597215, guid: 942081e8ca2d3634eaca04f8f4f96efd, type: 3}
 --- !u!54 &963448366
 Rigidbody:
