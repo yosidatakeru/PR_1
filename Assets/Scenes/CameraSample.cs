@@ -7,7 +7,7 @@ public class CameraSample : MonoBehaviour
     public Transform player; // プレイヤーのTransformをアサイン
     public Vector3 offset = new Vector3(0, 0, -3); // カメラのオフセット
     public float smoothSpeed = 10.0f; // カメラの追尾速度
-    public float maxTiltAngle = 90.0f; // カメラの最大傾き角度
+    public float maxTiltAngle = 25.0f; // カメラの最大傾き角度
     public float tiltSpeed = 5.0f; // カメラの傾きスムーズ速度
 
     private Vector3 lastPlayerPosition; // 前フレームのプレイヤー位置
