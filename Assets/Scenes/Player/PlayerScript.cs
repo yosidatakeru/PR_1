@@ -93,6 +93,7 @@ public  class PlayerScript : MonoBehaviour
         else if (moveX < 0) targetRotation.z = Mathf.Min(targetRotation.z + 2, 35); // 左移動
         else targetRotation.z = Mathf.Lerp(targetRotation.z, 0, Time.deltaTime * rotationSpeed);
 
+        //デバックのために残しとく
         // Wキー（前方移動）
         if (Input.GetKey(KeyCode.W) && transform.position.y <= 15.0f)
         {
