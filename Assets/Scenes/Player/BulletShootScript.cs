@@ -8,7 +8,7 @@ public class BulletShootScript : MonoBehaviour
     public float speed = 20f;//弾の速さ
     public float lifetime = 5f;
     public float homingStrength = 5f;    // 誘導の強さ
-    public float detectionRadius = 15f;  // 検出範囲
+    public float detectionRadius = 5f;  // 検出範囲
     private Rigidbody rb;                // 物理エンジン
     private GameObject target;           // 追尾するターゲット
   
@@ -19,8 +19,12 @@ public class BulletShootScript : MonoBehaviour
 
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
+
         // プレイヤーの位置を取得
         GameObject player = GameObject.FindGameObjectWithTag("Frame");
+        // 近くの敵を探してターゲットに設定
+        target = FindClosestEnemy();
         if (player != null)
         {
             // 発射方向を計算（正規化して速度に影響を与えないようにする）
@@ -42,14 +46,54 @@ public class BulletShootScript : MonoBehaviour
     {
 
         // ターゲット位置に向かって移動
-
-        //// 目標地点に到達したら削除
-        //if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
-        //{
-        //    Destroy(gameObject);
-        //}
         transform.position += moveDirection * speed * Time.deltaTime;
 
 
     }
+
+    void FixedUpdate()
+    {
+        if (target == null)
+        {
+            target = FindClosestEnemy();  // 近くの敵を探す
+        }
+
+        if (target != null)
+        {
+            // ターゲット方向に少しずつ誘導
+            Vector3 directionToTarget = (target.transform.position - transform.position).normalized;
+            moveDirection = Vector3.Lerp(moveDirection, directionToTarget, homingStrength * Time.fixedDeltaTime);
+        }
+
+        // 弾を移動させる
+        rb.velocity = moveDirection * speed;
+    }
+
+    // 最も近い敵を探す
+    GameObject FindClosestEnemy()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject closestEnemy = null;
+        float closestDistance = detectionRadius;
+
+        foreach (GameObject enemy in enemies)
+        {
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            if (distance < closestDistance)
+            {
+                closestEnemy = enemy;
+                closestDistance = distance;
+            }
+        }
+
+        return closestEnemy;
+    }
+
+    // 検出範囲を可視化（シーンビュー）
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;  // 赤色で表示
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);  // 検出範囲を球体で描画
+    }
 }
+
