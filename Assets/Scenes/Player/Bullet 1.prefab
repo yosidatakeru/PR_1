@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 5654207607022152307}
   - component: {fileID: 3069233405715183946}
   - component: {fileID: -3999744716447511250}
-  - component: {fileID: -7951208427140372707}
   - component: {fileID: 7133733909324949575}
+  - component: {fileID: -5590731250020722854}
   m_Layer: 0
   m_Name: Bullet 1
   m_TagString: Bullet
@@ -99,7 +99,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.15
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &3069233405715183946
 Rigidbody:
@@ -131,18 +131,6 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-7951208427140372707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6875484042809996762}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa46cabdb2a95f14583f710a7b4912f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7133733909324949575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,5 +143,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb1d205331d7ad44a8ef87c3a806452b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 20
   lifetime: 5
+--- !u!114 &-5590731250020722854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6875484042809996762}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa46cabdb2a95f14583f710a7b4912f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  homingStrength: 10
+  detectionRadius: 50

@@ -10,6 +10,13 @@ public class ReticleFollowCameraScript2 : MonoBehaviour
     void Start()
     {
         transform.position = new Vector3(0f, 0f, -16f);
+
+        Renderer renderer = GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off; // ‰e‚ð“Š‰e‚µ‚È‚¢
+            renderer.receiveShadows = false; // ‰e‚ðŽó‚¯Žæ‚ç‚È‚¢
+        }
     }
 
     // Update is called once per frame
@@ -18,6 +25,8 @@ public class ReticleFollowCameraScript2 : MonoBehaviour
       
 
         transform.LookAt(player);
+        
+
     }
 }
 

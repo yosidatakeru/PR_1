@@ -57,37 +57,42 @@ public class EnemySpawnScript : MonoBehaviour
     void Update()
     {
 
-        
+
         switch (wave)
         {
             case 0:
                 //ゲーム開始の処理
                 enemySpawns = 6;
-                wave = 1;
+                //デバック用
+                if(Input.GetKeyDown(KeyCode.Space))
+                {
+                    wave = 1;
+                }
+                
                 break;
             case 1:
-              
+
                 //Vector3 enemyPosition = new Vector3(40, 0, 30);
                 //SpawnEnemy(enemyPosition, 8, 2, 3f, 1, 6f, 2, 5f, 0);
 
-               
-               
+
+
 
                 enemyPosition = new Vector3(40, 0, 30);
-               
-                    for (int i = 0; i <= enemySpawns - 1; i++)
-                    {
-                        //敵のスポーン位置
 
-                       
-
-                        enemyPosition.x += 5;
-                        SpawnEnemy(enemyPosition, 5, 2, 3f, 1, 20f, 2, 5f, 0);
+                for (int i = 0; i <= enemySpawns - 1; i++)
+                {
+                    //敵のスポーン位置
 
 
-                       
-                    }
-                
+
+                    enemyPosition.x += 5;
+                    SpawnEnemy(enemyPosition, 5, 2, 3f, 1, 20f, 2, 5f, 0);
+
+
+
+                }
+
                 wave = 2;
                 break;
 
@@ -103,7 +108,7 @@ public class EnemySpawnScript : MonoBehaviour
             case 3:
                 //準備   
                 enemyPosition = new Vector3(-40, 0, -10);
-                for (int i = 0; i <= enemySpawns - 1; i++) 
+                for (int i = 0; i <= enemySpawns - 1; i++)
                 {
                     enemyPosition.x += 20;
                     SpawnEnemy(enemyPosition, 10, 1, 3f, 5, 20f, 5, 5f, 0);
@@ -125,7 +130,7 @@ public class EnemySpawnScript : MonoBehaviour
             case 5:
                 //準備   
 
-                enemyPosition = new Vector3(-40, 0,30 );
+                enemyPosition = new Vector3(-40, 0, 30);
                 for (int i = 0; i <= enemySpawns - 1; i++)
                 {
                     enemyPosition.x -= 5;
@@ -154,7 +159,7 @@ public class EnemySpawnScript : MonoBehaviour
                     SpawnEnemy(enemyPosition, 10, 1, 5f, 1, 15f, 7, 5f, 0);
                 }
                 wave = 8;
-                
+
                 break;
 
             case 8:
@@ -175,7 +180,7 @@ public class EnemySpawnScript : MonoBehaviour
                     enemyPosition.x += 5;
                     SpawnEnemy(enemyPosition, 10, 1, 8f, 1, 15f, 7, 5f, 0);
                 }
-               
+
 
                 enemyPosition = new Vector3(-40, 0, 30);
                 for (int i = 0; i <= enemySpawns - 1; i++)
@@ -199,21 +204,21 @@ public class EnemySpawnScript : MonoBehaviour
             case 11:
                 //準備   
 
-               
-                    EnemePos.x = -35;
-                    EnemePos.y = -9;
-                    EnemePos.z = 325;
 
-                    for (int i = 0; i <= enemySpawns - 1; i++)
-                    {
-                        //敵のスポーン位置
+                EnemePos.x = -35;
+                EnemePos.y = -9;
+                EnemePos.z = 325;
 
-                         woll = Instantiate(woll, new Vector3(EnemePos.x, EnemePos.y, EnemePos.z), Quaternion.identity);
-                        EnemePos.x += 10;
-                        EnemePos.z +=5 ;
+                for (int i = 0; i <= enemySpawns - 1; i++)
+                {
+                    //敵のスポーン位置
 
-                                            
-                    }
+                    woll = Instantiate(woll, new Vector3(EnemePos.x, EnemePos.y, EnemePos.z), Quaternion.identity);
+                    EnemePos.x += 10;
+                    EnemePos.z += 5;
+
+
+                }
                 wave = 12;
                 break;
 
@@ -262,12 +267,12 @@ public class EnemySpawnScript : MonoBehaviour
                 wave = 14;
                 break;
 
-             case 14:
-                  if (time == 80)
-                 {
-                  enemySpawns = 10;
-                  wave = 15;
-                 }
+            case 14:
+                if (time == 80)
+                {
+                    enemySpawns = 10;
+                    wave = 15;
+                }
                 break;
 
             case 15:
@@ -286,7 +291,7 @@ public class EnemySpawnScript : MonoBehaviour
                     SpawnEnemy(enemyPosition, 12, 2, 3f, 2, 15f, 5, 1f, 0);
                 }
                 wave = 16;
-                
+
                 break;
 
             case 16:
@@ -295,7 +300,7 @@ public class EnemySpawnScript : MonoBehaviour
                 {
                     wave = 17;
                 }
-               
+
                 break;
 
             case 17:

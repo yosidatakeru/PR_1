@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2125503681227702544}
   m_Layer: 0
   m_Name: woll
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 2125503682285085029}
   m_Layer: 0
   m_Name: floor
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

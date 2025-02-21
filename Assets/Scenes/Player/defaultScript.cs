@@ -11,6 +11,8 @@ public class defaultScript : MonoBehaviour
     private CapsuleCollider capsuleCollider; // プレイヤーの当たり判定用
 
     private ComboGaugeScript comboGaugeScript;
+
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -39,7 +41,7 @@ public class defaultScript : MonoBehaviour
         {
             comboGaugeScript.Gauge = 0;
             scoreScript.score -= 100;
-
+          
             // 無敵状態にする
             StartCoroutine(BlinkAndInvincible());
         }

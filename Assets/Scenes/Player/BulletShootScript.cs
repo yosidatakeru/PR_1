@@ -5,8 +5,13 @@ using UnityEngine;
 
 public class BulletShootScript : MonoBehaviour
 {
-    public float speed = 10f;
+    public float speed = 20f;//弾の速さ
     public float lifetime = 5f;
+    public float homingStrength = 5f;    // 誘導の強さ
+    public float detectionRadius = 15f;  // 検出範囲
+    private Rigidbody rb;                // 物理エンジン
+    private GameObject target;           // 追尾するターゲット
+  
     private Vector3 moveDirection; // 発射方向
 
     // Start is called before the first frame update

@@ -38,7 +38,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
         //OnDrawGizmosSelected();
 
         // スペースキーが押されている間、敵を検出
-        if (Input.GetKeyDown(KeyCode.E) && detectionCoroutine == null)
+        if (Input.GetKeyDown(KeyCode.E) && detectionCoroutine == null || Input.GetButton("RB") && detectionCoroutine == null)
         {
             if (!isDetecting)
             {
@@ -51,7 +51,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
         }
 
         // スペースキーを離した瞬間に弾を発射
-        if (Input.GetKeyUp(KeyCode.E))
+        if (Input.GetKeyUp(KeyCode.E) || Input.GetButtonUp("RB"))
         {
             if (isDetecting)
             {
@@ -163,14 +163,30 @@ public class EnemyDetectorAndShooter : MonoBehaviour
             return;
         }
 
+
+
         // 敵を距離順にソート
         List<Transform> sortedEnemies = hits
             .OrderBy(hit => Vector3.Distance(transform.position, hit.transform.position))
             .Select(hit => hit.transform)
             .ToList();
+        Vector3 playerForward = transform.forward; // プレイヤーの前方ベクトル
 
-        foreach (Transform enemy in sortedEnemies)
+
+        foreach (Collider hit in hits.OrderBy(hit => Vector3.Distance(transform.position, hit.transform.position)))
         {
+            Transform enemy = hit.transform;
+
+            // 敵の方向ベクトルを計算
+            Vector3 toEnemy = (enemy.position - transform.position).normalized;
+
+            // ドット積を使って前方のみを判定（0 以上なら前方）
+            if (Vector3.Dot(playerForward, toEnemy) < 0)
+            {
+                Debug.Log($"敵 {enemy.name} は後ろにいるため無視します。");
+                continue;
+            }
+
             if (!detectedEnemies.Contains(enemy))
             {
                 detectedEnemies.Add(enemy);
@@ -182,12 +198,29 @@ public class EnemyDetectorAndShooter : MonoBehaviour
                     activeMarkers.Add(marker);
                 }
 
-                if (detectedEnemies.Count >= maxTargets)
-                {
-                    break;
-                }
+                if (detectedEnemies.Count >= maxTargets) break;
             }
         }
+
+        //foreach (Transform enemy in sortedEnemies)
+        //{
+        //    if (!detectedEnemies.Contains(enemy))
+        //    {
+        //        detectedEnemies.Add(enemy);
+        //        Debug.Log($"敵 {enemy.name} を検出しました！");
+
+        //        if (activeMarkers.Count < maxTargets)
+        //        {
+        //            GameObject marker = Instantiate(markerPrefab, enemy.position, Quaternion.identity);
+        //            activeMarkers.Add(marker);
+        //        }
+
+        //        if (detectedEnemies.Count >= maxTargets)
+        //        {
+        //            break;
+        //        }
+        //    }
+        //}
 
     }
 

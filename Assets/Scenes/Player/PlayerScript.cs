@@ -18,7 +18,7 @@ public  class PlayerScript : MonoBehaviour
     ////弾のインタバル制御
     int timeUntilNextShot = 0;
 
-    int bulletNexst = 60;
+    int bulletNexst = 10;
 
     public float rotationSpeed = 5.0f; // 回転の慣性調整
     private Vector3 playerRotation;    // 現在の回転値
