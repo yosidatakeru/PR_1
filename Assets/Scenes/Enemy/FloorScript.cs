@@ -15,7 +15,7 @@ public class FloorScript : MonoBehaviour
     void Update()
     {
 
-        transform.position -= speed * transform.forward * Time.deltaTime;
+        
         if (transform.position.z <= -300) // Œë·‚ð‹–—e‚µ‚½”äŠr
         {
 

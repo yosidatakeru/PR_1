@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ReticleFollowCameraScript : MonoBehaviour
@@ -18,14 +19,20 @@ public class ReticleFollowCameraScript : MonoBehaviour
     private Vector3 initialPosition; // 初期位置
     private Vector3 offset;
     private float radius;
-    public float fixedZ = 10f; // Z座標の固定値
+  //  public float fixedZ = 10f; // Z座標の固定値
+
+    private float previousPlayerZ; // 追加: プレイヤーの前フレームのZ座標
+
+    public float distanceAhead = 10f; // プレイヤーの前方に配置する距離
 
 
     void Start()
     {
       
-        transform.position = new Vector3(0f, 0f, 10f);
+        transform.position = new Vector3(0f, 0f, player.position.z + distanceAhead);
+        previousPlayerZ = player.position.z; // 初期Z座標を保存
     }
+
 
     // Update is called once per frame
     void Update()
@@ -46,11 +53,12 @@ public class ReticleFollowCameraScript : MonoBehaviour
         {
             playerPosition = false;
         }
-              
-           
-        
-                
-         
+
+
+
+        float deltaZ = player.position.z - previousPlayerZ; // プレイヤーのZ移動量を計算
+
+
 
 
         if (playerPosition == false)
@@ -66,8 +74,10 @@ public class ReticleFollowCameraScript : MonoBehaviour
             // **Y座標が -15 以下にならないように制限**
             newPosition.y = Mathf.Clamp(newPosition.y, -5.0f, Mathf.Infinity);
 
-
             newPosition = ClampToCameraBounds(newPosition);
+
+            // プレイヤーの前進に合わせてZ座標を更新
+            newPosition.z += deltaZ;
 
             // 位置を更新
             transform.position = newPosition;
@@ -76,13 +86,17 @@ public class ReticleFollowCameraScript : MonoBehaviour
 
             // X・Y座標のみプレイヤーに追従し、Z座標は固定
             Vector3 targetPosition = player.position + offset;
-            targetPosition.z = fixedZ;
+            targetPosition.z = player.position.z + distanceAhead;
+
+
 
             // 滑らかに追従
             transform.position = Vector3.Lerp(transform.position, targetPosition, speed * Time.deltaTime);
+
+           
         }
 
-
+        previousPlayerZ = player.position.z; // 現在のZ座標を保存
         //デバック用
         if (Input.GetKey(KeyCode.UpArrow) && transform.position.y <= 15.0f)
         {

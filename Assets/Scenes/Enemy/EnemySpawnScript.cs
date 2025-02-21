@@ -56,261 +56,282 @@ public class EnemySpawnScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
-        switch (wave)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            case 0:
-                //ゲーム開始の処理
-                enemySpawns = 6;
-                //デバック用
-                if(Input.GetKeyDown(KeyCode.Space))
-                {
-                    wave = 1;
-                }
-                
-                break;
-            case 1:
+            Vector3 enemyPosition = new Vector3(0, 0, 30);
 
-                //Vector3 enemyPosition = new Vector3(40, 0, 30);
-                //SpawnEnemy(enemyPosition, 8, 2, 3f, 1, 6f, 2, 5f, 0);
+            SpawnEnemy(enemyPosition, 8, 2, 3f, 1, 0f, 2, 5f, 0);
+
+
+            enemyPosition = new Vector3(0, 0, 30);
+
+            for (int i = 0; i <= enemySpawns - 1; i++)
+            {
+                //敵のスポーン位置
 
 
 
-
-                enemyPosition = new Vector3(40, 0, 30);
-
-                for (int i = 0; i <= enemySpawns - 1; i++)
-                {
-                    //敵のスポーン位置
+                enemyPosition.x += 5;
+                SpawnEnemy(enemyPosition, 8, 2, 3f, 1, 0f, 2, 5f, 0);
 
 
 
-                    enemyPosition.x += 5;
-                    SpawnEnemy(enemyPosition, 5, 2, 3f, 1, 20f, 2, 5f, 0);
-
-
-
-                }
-
-                wave = 2;
-                break;
-
-            case 2:
-                //準備   
-                enemySpawns = 3;
-                if (time == 6)
-                {
-                    wave = 3;
-                }
-                break;
-
-            case 3:
-                //準備   
-                enemyPosition = new Vector3(-40, 0, -10);
-                for (int i = 0; i <= enemySpawns - 1; i++)
-                {
-                    enemyPosition.x += 20;
-                    SpawnEnemy(enemyPosition, 10, 1, 3f, 5, 20f, 5, 5f, 0);
-                }
-
-                wave = 4;
-                break;
-
-            case 4:
-                //準備   
-
-                if (time == 20)
-                {
-                    enemySpawns = 8;
-                    wave = 5;
-                }
-                break;
-
-            case 5:
-                //準備   
-
-                enemyPosition = new Vector3(-40, 0, 30);
-                for (int i = 0; i <= enemySpawns - 1; i++)
-                {
-                    enemyPosition.x -= 5;
-                    SpawnEnemy(enemyPosition, 10, 2, 3f, 2, 15f, 5, 5f, 0);
-                }
-                wave = 6;
-                break;
-
-
-            case 6:
-                //準備   
-
-                if (time == 30)
-                {
-                    wave = 7;
-                }
-                break;
-
-            case 7:
-                //準備   
-
-                enemyPosition = new Vector3(40, 0, 30);
-                for (int i = 0; i <= enemySpawns - 1; i++)
-                {
-                    enemyPosition.x += 5;
-                    SpawnEnemy(enemyPosition, 10, 1, 5f, 1, 15f, 7, 5f, 0);
-                }
-                wave = 8;
-
-                break;
-
-            case 8:
-                //準備   
-                //45
-                if (time == 45)
-                {
-                    wave = 9;
-                }
-                break;
-
-            case 9:
-                //準備   
-
-                enemyPosition = new Vector3(40, 0, 30);
-                for (int i = 0; i <= enemySpawns - 1; i++)
-                {
-                    enemyPosition.x += 5;
-                    SpawnEnemy(enemyPosition, 10, 1, 8f, 1, 15f, 7, 5f, 0);
-                }
-
-
-                enemyPosition = new Vector3(-40, 0, 30);
-                for (int i = 0; i <= enemySpawns - 1; i++)
-                {
-                    enemyPosition.x -= 5;
-                    SpawnEnemy(enemyPosition, 10, 2, 3f, 2, 15f, 5, 5f, 0);
-                }
-                wave = 10;
-                break;
-
-            case 10:
-                //準備   
-                //55
-                if (time == 55)
-                {
-                    enemySpawns = 5;
-                    wave = 11;
-                }
-                break;
-
-            case 11:
-                //準備   
-
-
-                EnemePos.x = -35;
-                EnemePos.y = -9;
-                EnemePos.z = 325;
-
-                for (int i = 0; i <= enemySpawns - 1; i++)
-                {
-                    //敵のスポーン位置
-
-                    woll = Instantiate(woll, new Vector3(EnemePos.x, EnemePos.y, EnemePos.z), Quaternion.identity);
-                    EnemePos.x += 10;
-                    EnemePos.z += 5;
-
-
-                }
-                wave = 12;
-                break;
-
-            case 12:
-                //準備   
-                //70
-                if (time == 70)
-                {
-                    enemySpawns = 5;
-                    wave = 13;
-                }
-
-                break;
-
-            case 13:
-                //準備   
-                enemyPosition = new Vector3(40, 0, 30);
-                for (int i = 0; i <= enemySpawns - 1; i++)
-                {
-                    enemyPosition.x += 5;
-                    SpawnEnemy(enemyPosition, 10, 1, 8f, 1, 15f, 7, 5f, 0);
-                }
-
-
-                enemyPosition = new Vector3(-40, 0, 30);
-                for (int i = 0; i <= enemySpawns - 1; i++)
-                {
-                    enemyPosition.x -= 5;
-                    SpawnEnemy(enemyPosition, 10, 2, 3f, 2, 15f, 5, 5f, 0);
-                }
-
-                //EnemePos.x = +35;
-                //EnemePos.y = -9;
-                //EnemePos.z = 325;
-
-                //for (int i = 0; i <= enemySpawns - 1; i++)
-                //{
-                //    //敵のスポーン位置
-
-                //     woll = Instantiate(woll, new Vector3(EnemePos.x, EnemePos.y, EnemePos.z), Quaternion.identity);
-                //    EnemePos.x -= 10;
-                //    EnemePos.z += 5;
-
-
-                //}
-                wave = 14;
-                break;
-
-            case 14:
-                if (time == 80)
-                {
-                    enemySpawns = 10;
-                    wave = 15;
-                }
-                break;
-
-            case 15:
-                enemyPosition = new Vector3(40, 0, 30);
-                for (int i = 0; i <= enemySpawns - 1; i++)
-                {
-                    enemyPosition.x += 5;
-                    SpawnEnemy(enemyPosition, 12, 1, 8f, 1, 15f, 7, 3f, 0);
-                }
-
-
-                enemyPosition = new Vector3(-40, 0, 30);
-                for (int i = 0; i <= enemySpawns - 1; i++)
-                {
-                    enemyPosition.x -= 5;
-                    SpawnEnemy(enemyPosition, 12, 2, 3f, 2, 15f, 5, 1f, 0);
-                }
-                wave = 16;
-
-                break;
-
-            case 16:
-
-                if (time == 95)
-                {
-                    wave = 17;
-                }
-
-                break;
-
-            case 17:
-
-
-                //クリアや条件
-                wave = 18;
-
-                break;
+            }
         }
+
+        //switch (wave)
+        //{
+        //    case 0:
+        //        //ゲーム開始の処理
+        //        enemySpawns = 6;
+        //        //デバック用
+        //        if(Input.GetKeyDown(KeyCode.Space))
+        //        {
+        //            wave = 1;
+        //        }
+
+        //        break;
+        //    case 1:
+
+        //        //Vector3 enemyPosition = new Vector3(40, 0, 30);
+        //        //SpawnEnemy(enemyPosition, 8, 2, 3f, 1, 6f, 2, 5f, 0);
+
+
+
+
+        //        enemyPosition = new Vector3(40, 0, 30);
+
+        //        for (int i = 0; i <= enemySpawns - 1; i++)
+        //        {
+        //            //敵のスポーン位置
+
+
+
+        //            enemyPosition.x += 5;
+        //            SpawnEnemy(enemyPosition, 5, 2, 3f, 1, 20f, 2, 5f, 0);
+
+
+
+        //        }
+
+        //        wave = 2;
+        //        break;
+
+        //    case 2:
+        //        //準備   
+        //        enemySpawns = 3;
+        //        if (time == 6)
+        //        {
+        //            wave = 3;
+        //        }
+        //        break;
+
+        //    case 3:
+        //        //準備   
+        //        enemyPosition = new Vector3(-40, 0, -10);
+        //        for (int i = 0; i <= enemySpawns - 1; i++)
+        //        {
+        //            enemyPosition.x += 20;
+        //            SpawnEnemy(enemyPosition, 10, 1, 3f, 5, 20f, 5, 5f, 0);
+        //        }
+
+        //        wave = 4;
+        //        break;
+
+        //    case 4:
+        //        //準備   
+
+        //        if (time == 20)
+        //        {
+        //            enemySpawns = 8;
+        //            wave = 5;
+        //        }
+        //        break;
+
+        //    case 5:
+        //        //準備   
+
+        //        enemyPosition = new Vector3(-40, 0, 30);
+        //        for (int i = 0; i <= enemySpawns - 1; i++)
+        //        {
+        //            enemyPosition.x -= 5;
+        //            SpawnEnemy(enemyPosition, 10, 2, 3f, 2, 15f, 5, 5f, 0);
+        //        }
+        //        wave = 6;
+        //        break;
+
+
+        //    case 6:
+        //        //準備   
+
+        //        if (time == 30)
+        //        {
+        //            wave = 7;
+        //        }
+        //        break;
+
+        //    case 7:
+        //        //準備   
+
+        //        enemyPosition = new Vector3(40, 0, 30);
+        //        for (int i = 0; i <= enemySpawns - 1; i++)
+        //        {
+        //            enemyPosition.x += 5;
+        //            SpawnEnemy(enemyPosition, 10, 1, 5f, 1, 15f, 7, 5f, 0);
+        //        }
+        //        wave = 8;
+
+        //        break;
+
+        //    case 8:
+        //        //準備   
+        //        //45
+        //        if (time == 45)
+        //        {
+        //            wave = 9;
+        //        }
+        //        break;
+
+        //    case 9:
+        //        //準備   
+
+        //        enemyPosition = new Vector3(40, 0, 30);
+        //        for (int i = 0; i <= enemySpawns - 1; i++)
+        //        {
+        //            enemyPosition.x += 5;
+        //            SpawnEnemy(enemyPosition, 10, 1, 8f, 1, 15f, 7, 5f, 0);
+        //        }
+
+
+        //        enemyPosition = new Vector3(-40, 0, 30);
+        //        for (int i = 0; i <= enemySpawns - 1; i++)
+        //        {
+        //            enemyPosition.x -= 5;
+        //            SpawnEnemy(enemyPosition, 10, 2, 3f, 2, 15f, 5, 5f, 0);
+        //        }
+        //        wave = 10;
+        //        break;
+
+        //    case 10:
+        //        //準備   
+        //        //55
+        //        if (time == 55)
+        //        {
+        //            enemySpawns = 5;
+        //            wave = 11;
+        //        }
+        //        break;
+
+        //    case 11:
+        //        //準備   
+
+
+        //        EnemePos.x = -35;
+        //        EnemePos.y = -9;
+        //        EnemePos.z = 325;
+
+        //        for (int i = 0; i <= enemySpawns - 1; i++)
+        //        {
+        //            //敵のスポーン位置
+
+        //            woll = Instantiate(woll, new Vector3(EnemePos.x, EnemePos.y, EnemePos.z), Quaternion.identity);
+        //            EnemePos.x += 10;
+        //            EnemePos.z += 5;
+
+
+        //        }
+        //        wave = 12;
+        //        break;
+
+        //    case 12:
+        //        //準備   
+        //        //70
+        //        if (time == 70)
+        //        {
+        //            enemySpawns = 5;
+        //            wave = 13;
+        //        }
+
+        //        break;
+
+        //    case 13:
+        //        //準備   
+        //        enemyPosition = new Vector3(40, 0, 30);
+        //        for (int i = 0; i <= enemySpawns - 1; i++)
+        //        {
+        //            enemyPosition.x += 5;
+        //            SpawnEnemy(enemyPosition, 10, 1, 8f, 1, 15f, 7, 5f, 0);
+        //        }
+
+
+        //        enemyPosition = new Vector3(-40, 0, 30);
+        //        for (int i = 0; i <= enemySpawns - 1; i++)
+        //        {
+        //            enemyPosition.x -= 5;
+        //            SpawnEnemy(enemyPosition, 10, 2, 3f, 2, 15f, 5, 5f, 0);
+        //        }
+
+        //        //EnemePos.x = +35;
+        //        //EnemePos.y = -9;
+        //        //EnemePos.z = 325;
+
+        //        //for (int i = 0; i <= enemySpawns - 1; i++)
+        //        //{
+        //        //    //敵のスポーン位置
+
+        //        //     woll = Instantiate(woll, new Vector3(EnemePos.x, EnemePos.y, EnemePos.z), Quaternion.identity);
+        //        //    EnemePos.x -= 10;
+        //        //    EnemePos.z += 5;
+
+
+        //        //}
+        //        wave = 14;
+        //        break;
+
+        //    case 14:
+        //        if (time == 80)
+        //        {
+        //            enemySpawns = 10;
+        //            wave = 15;
+        //        }
+        //        break;
+
+        //    case 15:
+        //        enemyPosition = new Vector3(40, 0, 30);
+        //        for (int i = 0; i <= enemySpawns - 1; i++)
+        //        {
+        //            enemyPosition.x += 5;
+        //            SpawnEnemy(enemyPosition, 12, 1, 8f, 1, 15f, 7, 3f, 0);
+        //        }
+
+
+        //        enemyPosition = new Vector3(-40, 0, 30);
+        //        for (int i = 0; i <= enemySpawns - 1; i++)
+        //        {
+        //            enemyPosition.x -= 5;
+        //            SpawnEnemy(enemyPosition, 12, 2, 3f, 2, 15f, 5, 1f, 0);
+        //        }
+        //        wave = 16;
+
+        //        break;
+
+        //    case 16:
+
+        //        if (time == 95)
+        //        {
+        //            wave = 17;
+        //        }
+
+        //        break;
+
+        //    case 17:
+
+
+        //        //クリアや条件
+        //        wave = 18;
+
+        //        break;
+        //}
 
         void SpawnEnemy(Vector3 spawnPosition, int enemyCount, int arrangement, float spawnRadius, int centerMovement, float speed, int move, float orbitSpeed, int spawnRadiusMove)
         {
@@ -332,7 +353,7 @@ public class EnemySpawnScript : MonoBehaviour
             // spawnRadiusmove = 1;//拡大と収縮
 
             // 敵の設定を行う
-            enemyScript.enemyCount = enemyCount;
+            enemyScript.enemyCount = enemyCount;　
             enemyScript.arrangement = arrangement;
             enemyScript.spawnRadius = spawnRadius;
             enemyScript.centerMovement = centerMovement;

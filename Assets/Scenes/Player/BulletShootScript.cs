@@ -7,8 +7,8 @@ public class BulletShootScript : MonoBehaviour
 {
     public float speed = 20f;//弾の速さ
     public float lifetime = 5f;
-    public float homingStrength = 5f;    // 誘導の強さ
-    public float detectionRadius = 5f;  // 検出範囲
+    public float homingStrength = 15f;    // 誘導の強さ
+    public float detectionRadius = 0.2f;  // 検出範囲
     private Rigidbody rb;                // 物理エンジン
     private GameObject target;           // 追尾するターゲット
   

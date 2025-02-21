@@ -37,7 +37,7 @@ public class defaultScript : MonoBehaviour
     {
         if (isInvincible) return; // –³“G’†‚Íƒ_ƒ[ƒW‚ğó‚¯‚È‚¢
 
-        if (collision.gameObject.tag == "EnemyBullet")
+        if (collision.gameObject.tag == "EnemyBullet"|| collision.gameObject.tag == "EnemyWoll")
         {
             comboGaugeScript.Gauge = 0;
             scoreScript.score -= 100;

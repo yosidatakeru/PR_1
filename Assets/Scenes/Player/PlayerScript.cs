@@ -11,8 +11,9 @@ public  class PlayerScript : MonoBehaviour
     public GameObject Bullet;
     //プレイヤーの移動スピード
     public float playerSpeed = 15;
-   
 
+    //Z方向に進むスピード
+    public float playerZSpeed=20f;
   
 
     ////弾のインタバル制御
@@ -93,6 +94,11 @@ public  class PlayerScript : MonoBehaviour
         else if (moveX < 0) targetRotation.z = Mathf.Min(targetRotation.z + 2, 35); // 左移動
         else targetRotation.z = Mathf.Lerp(targetRotation.z, 0, Time.deltaTime * rotationSpeed);
 
+
+
+
+        //前に移動
+       // transform.position += playerZSpeed * Vector3.forward * Time.deltaTime;
         //デバックのために残しとく
         // Wキー（前方移動）
         if (Input.GetKey(KeyCode.W) && transform.position.y <= 15.0f)
