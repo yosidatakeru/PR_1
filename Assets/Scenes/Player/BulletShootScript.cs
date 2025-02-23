@@ -95,5 +95,21 @@ public class BulletShootScript : MonoBehaviour
         Gizmos.color = Color.red;  // ÔF‚Å•\¦
         Gizmos.DrawWireSphere(transform.position, detectionRadius);  // ŒŸo”ÍˆÍ‚ğ‹…‘Ì‚Å•`‰æ
     }
+    void OnCollisionEnter(Collision collision)
+    {
+       
+
+        if (collision.gameObject.tag == "EnemyWoll")
+        {
+            GetComponent<SphereCollider>().enabled = false;
+          
+            Destroy(gameObject);
+
+
+
+        }
+
+    }
+
 }
 

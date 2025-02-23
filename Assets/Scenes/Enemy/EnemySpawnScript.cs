@@ -60,7 +60,7 @@ public class EnemySpawnScript : MonoBehaviour
         {
             Vector3 enemyPosition = new Vector3(0, 0, 30);
 
-            SpawnEnemy(enemyPosition, 8, 2, 3f, 1, 0f, 2, 5f, 0);
+            SpawnEnemy(enemyPosition, 8, 2, 3f, 1, 0f, 2, 0f, 0);
 
 
             enemyPosition = new Vector3(0, 0, 30);
@@ -72,7 +72,7 @@ public class EnemySpawnScript : MonoBehaviour
 
 
                 enemyPosition.x += 5;
-                SpawnEnemy(enemyPosition, 8, 2, 3f, 1, 0f, 2, 5f, 0);
+                SpawnEnemy(enemyPosition, 5, 2, 3f, 1, 0f, 2, 0.1f, 0);
 
 
 

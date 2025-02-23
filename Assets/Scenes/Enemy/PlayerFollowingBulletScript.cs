@@ -48,5 +48,15 @@ public class PlayerFollowingBulletScript : MonoBehaviour
 
 
         }
+
+        if (collision.gameObject.tag == "EnemyWoll")
+        {
+            GetComponent<SphereCollider>().enabled = false;
+
+            Destroy(gameObject);
+
+
+
+        }
     }
 }

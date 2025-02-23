@@ -24,7 +24,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
     private List<GameObject> activeMarkers = new List<GameObject>(); // 配置されたマーカーのリスト
     private bool isDetecting = false; // 検出中フラグ
     private Coroutine detectionCoroutine; // 索敵用コルーチン
-   
+    bool isBlocked = false;
 
     // Start is called before the first frame update
     void Start()
@@ -35,8 +35,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //OnDrawGizmosSelected();
-
+       
         // スペースキーが押されている間、敵を検出
         if (Input.GetKeyDown(KeyCode.E) && detectionCoroutine == null || Input.GetButton("RB") && detectionCoroutine == null)
         {
@@ -68,9 +67,19 @@ public class EnemyDetectorAndShooter : MonoBehaviour
             // 状態をリセット
             isDetecting = false;
 
+
+
             // マーカーを削除
             ClearMarkers();
         }
+
+        //OnDrawGizmosSelected();
+
+        if (detectedEnemies.Count > 0)
+        {
+            CheckForObstacles();
+        }
+
         if (detectionCoroutine == null)
         {
             isDetecting = false;
@@ -79,6 +88,69 @@ public class EnemyDetectorAndShooter : MonoBehaviour
 
        
     }
+
+
+    /// <summary>
+    /// ロックオンしている敵が障害物の後ろに入ったらロック解除
+    /// </summary>
+    void CheckForObstacles()
+    {
+        for (int i = detectedEnemies.Count - 1; i >= 0; i--)
+        {
+            Transform enemy = detectedEnemies[i];
+
+            if (enemy == null)
+            {
+                // 敵が削除された場合もロック解除
+                RemoveTarget(i);
+                continue;
+            }
+
+            Vector3 rayStart = transform.position + Vector3.up * 1.5f; // 少し上からRayを撃つ
+            Vector3 enemyCenter = enemy.GetComponent<Collider>().bounds.center; // 敵の中心
+
+            Vector3 direction = (enemyCenter - rayStart).normalized;
+            float distance = Vector3.Distance(rayStart, enemyCenter);
+
+            RaycastHit[] hits = Physics.RaycastAll(rayStart, direction, distance);
+
+            bool isBlocked = false;
+            foreach (RaycastHit hit in hits)
+            {
+                if (hit.collider.CompareTag("EnemyWoll"))
+                {
+                    isBlocked = true;
+                    Debug.Log($"敵 {enemy.name} は障害物 {hit.collider.name} によって見えなくなりました。ロック解除。");
+                    break;
+                }
+            }
+
+            // **障害物があればロック解除**
+            if (isBlocked)
+            {
+                RemoveTarget(i);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 指定したインデックスの敵をリストから削除し、マーカーも消去
+    /// </summary>
+    void RemoveTarget(int index)
+    {
+        if (index < detectedEnemies.Count)
+        {
+            detectedEnemies.RemoveAt(index);
+        }
+
+        if (index < activeMarkers.Count)
+        {
+            Destroy(activeMarkers[index]);
+            activeMarkers.RemoveAt(index);
+        }
+    }
+
+
 
     private void OnDrawGizmos() // OnDrawGizmosSelected() → OnDrawGizmos()
     {
@@ -187,6 +259,33 @@ public class EnemyDetectorAndShooter : MonoBehaviour
                 continue;
             }
 
+            // **Raycastを使って遮蔽物チェック**
+            Vector3 rayStart = transform.position;
+            Vector3 rayEnd = enemy.position;
+            Vector3 direction = (rayEnd - rayStart).normalized;
+            float distance = Vector3.Distance(rayStart, rayEnd);
+
+            RaycastHit hitInfo;
+            isBlocked = false;
+
+            if (Physics.Raycast(rayStart, direction, out hitInfo, distance))
+            {
+                if (hitInfo.collider != null && hitInfo.collider.CompareTag("EnemyWoll"))
+                {
+                    
+                    isBlocked = true;
+                    Debug.Log($"敵 {enemy.name} は '{hitInfo.collider.name}' (Obstacle) によってブロックされています。");
+                }
+            }
+
+            if (isBlocked)
+            {
+                continue;
+            }
+
+            
+
+
             if (!detectedEnemies.Contains(enemy))
             {
                 detectedEnemies.Add(enemy);
@@ -202,25 +301,8 @@ public class EnemyDetectorAndShooter : MonoBehaviour
             }
         }
 
-        //foreach (Transform enemy in sortedEnemies)
-        //{
-        //    if (!detectedEnemies.Contains(enemy))
-        //    {
-        //        detectedEnemies.Add(enemy);
-        //        Debug.Log($"敵 {enemy.name} を検出しました！");
-
-        //        if (activeMarkers.Count < maxTargets)
-        //        {
-        //            GameObject marker = Instantiate(markerPrefab, enemy.position, Quaternion.identity);
-        //            activeMarkers.Add(marker);
-        //        }
-
-        //        if (detectedEnemies.Count >= maxTargets)
-        //        {
-        //            break;
-        //        }
-        //    }
-        //}
+       
+       
 
     }
 
