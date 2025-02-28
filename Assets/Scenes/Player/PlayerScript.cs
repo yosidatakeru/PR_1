@@ -10,24 +10,29 @@ public  class PlayerScript : MonoBehaviour
 {
     public GameObject Bullet;
     //プレイヤーの移動スピード
-    public float playerSpeed = 15;
+     float playerSpeed = 20f;
 
     //Z方向に進むスピード
-    public float playerZSpeed=20f;
-  
+     float playerZSpeed = 20f;
 
     ////弾のインタバル制御
     int timeUntilNextShot = 0;
 
     int bulletNexst = 10;
 
-    public float rotationSpeed = 5.0f; // 回転の慣性調整
+    float rotationSpeed = 3.0f; // 回転の慣性調整
     private Vector3 playerRotation;    // 現在の回転値
     private Vector3 targetRotation;    // 目標の回転値
     float triggerValue;
     float moveX;
     float moveY;
-    // Start is called before the first frame update
+
+    float bounceDistance = 1.0f; // 弾かれる距離
+    float bounceDisableTime = 0.2f; // 操作無効時間
+    private bool isBounced = false; // 操作無効フラグ
+    private float bounceTimer = 0.0f; // 無効時間計測用
+    bool isBlockedForward = false; // 前進禁止フラグ
+
     void Start()
     {
         playerRotation = Vector3.zero;
@@ -41,32 +46,32 @@ public  class PlayerScript : MonoBehaviour
     {
 
         transform.rotation = Quaternion.Euler(playerRotation.x, playerRotation.y, playerRotation.z);
+       // プレイヤーの移動処理
+        if (isBounced)
+        {
+            bounceTimer -= Time.deltaTime;
+            if (bounceTimer <= 0)
+            {
+                isBounced = false; // 操作再開
+            }
+        }
+        else
+        {
+           // 通常の操作処理
+            MovePlayer();
+           
+        }
 
-       
-
-        // プレイヤーの移動処理
-        MovePlayer();
-
+        CheckForwardObstacle();
+        if (!isBlockedForward)
+        {
+            transform.position += playerZSpeed * Vector3.forward * Time.deltaTime;
+        }
         // 慣性をつけて回転をスムーズにする
         playerRotation = Vector3.Lerp(playerRotation, targetRotation, Time.deltaTime * rotationSpeed);
         transform.rotation = Quaternion.Euler(playerRotation);
-
-
-        triggerValue = Input.GetAxis("RightTrigger");
-        timeUntilNextShot--;
-        if (Input.GetKey(KeyCode.Space) && timeUntilNextShot <= 0 || triggerValue > 0.1f&& timeUntilNextShot <= 0)
-        {
-
-
-            Instantiate(Bullet, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
-
-
-            timeUntilNextShot = bulletNexst;
-
-        }
-        //トリガーの取得
-       
-      
+        // 弾の発射処理
+        HandleShooting();
 
     }
     void MovePlayer()
@@ -78,11 +83,12 @@ public  class PlayerScript : MonoBehaviour
 
         // キーボード & コントローラー両対応の移動処理
         Vector3 move = new Vector3(moveX, moveY, 0) * playerSpeed * Time.deltaTime;
+       
         Vector3 newPosition = transform.position + move;
 
         // 移動制限（範囲: X[-20,20], Y[-5,15]）
-        newPosition.x = Mathf.Clamp(newPosition.x, -20.0f, 20.0f);
-        newPosition.y = Mathf.Clamp(newPosition.y, -5.0f, 15.0f);
+        //newPosition.x;
+        // newPosition.y = Mathf.Clamp(newPosition.y, -5.0f, 25.0f);
         transform.position = newPosition;
 
         // 機体の傾き調整（ターゲット回転）
@@ -98,13 +104,13 @@ public  class PlayerScript : MonoBehaviour
 
 
         //前に移動
-       // transform.position += playerZSpeed * Vector3.forward * Time.deltaTime;
-        //デバックのために残しとく
-        // Wキー（前方移動）
-        if (Input.GetKey(KeyCode.W) && transform.position.y <= 15.0f)
+       
+        ////デバックのために残しとく
+        //// Wキー（前方移動）
+        if (Input.GetKey(KeyCode.W))
         {
             transform.position += playerSpeed * Vector3.up * Time.deltaTime;
-            targetRotation.x = Mathf.Max(targetRotation.x - 10, -35);
+            //targetRotation.x = Mathf.Max(targetRotation.x - 10, -35);
         }
         else
         {
@@ -113,7 +119,7 @@ public  class PlayerScript : MonoBehaviour
         }
 
         // Sキー（後方移動）
-        if (Input.GetKey(KeyCode.S) && transform.position.y >= -5.0f)
+        if (Input.GetKey(KeyCode.S))
         {
             transform.position -= playerSpeed * Vector3.up * Time.deltaTime;
             targetRotation.x = Mathf.Min(targetRotation.x + 2, 20);
@@ -124,10 +130,10 @@ public  class PlayerScript : MonoBehaviour
         }
 
         // Dキー（右移動）
-        if (Input.GetKey(KeyCode.D) && transform.position.x <= 20.0f)
+        if (Input.GetKey(KeyCode.D))
         {
             transform.position += playerSpeed * Vector3.right * Time.deltaTime;
-            targetRotation.z = Mathf.Max(targetRotation.z - 2, -35);
+            //targetRotation.z = Mathf.Max(targetRotation.z - 2, -35);
         }
         else
         {
@@ -135,7 +141,7 @@ public  class PlayerScript : MonoBehaviour
         }
 
         // Aキー（左移動）
-        if (Input.GetKey(KeyCode.A) && transform.position.x >= -20.0f)
+        if (Input.GetKey(KeyCode.A))
         {
             transform.position -= playerSpeed * Vector3.right * Time.deltaTime;
             targetRotation.z = Mathf.Min(targetRotation.z + 2, 35);
@@ -145,7 +151,75 @@ public  class PlayerScript : MonoBehaviour
             targetRotation.z = Mathf.Lerp(targetRotation.z, 0, Time.deltaTime * rotationSpeed);
         }
     }
+    void CheckForwardObstacle()
+    {
+        if (isBlockedForward)
+        {
+            if (!Physics.Raycast(transform.position, Vector3.forward, 1.0f)) // 1m前方に障害物がなければ
+            {
+                isBlockedForward = false; // 前進を許可
+            }
+        }
+    }
+    void HandleShooting()
+    {
+        triggerValue = Input.GetAxis("RightTrigger");
+        timeUntilNextShot--;
+
+        if ((Input.GetKey(KeyCode.Space) || triggerValue > 0.1f) && timeUntilNextShot <= 0)
+        {
+            Instantiate(Bullet, transform.position, Quaternion.identity);
+            timeUntilNextShot = bulletNexst;
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("EnemyWoll"))
+        {
+            ContactPoint contact = collision.contacts[0]; // 最初の接触点
+            Vector3 normal = contact.normal;  // 衝突法線
+
+            Debug.Log("衝突検出: " + collision.gameObject.name + " / 法線: " + normal);
+
+            Vector3 bounceDirection = Vector3.zero; // 弾かれる方向
+
+            // **正面からの衝突（Z軸）**
+            if (normal.z < -0.7f) // ほぼ正面から当たった場合
+            {
+                if (normal.z < -0.7f) // ほぼ正面から当たった場合
+                {
+                    isBlockedForward = true; // 前進を禁止
+                }
+
+            }
+            // **横方向の衝突（X軸）**
+            else if (Mathf.Abs(normal.x) > Mathf.Abs(normal.z) && Mathf.Abs(normal.x) > Mathf.Abs(normal.y))
+            {
+                bounceDirection.x = -Mathf.Sign(normal.x); // 右の壁なら左へ、左の壁なら右へ
+            }
+            // **上下方向の衝突（Y軸）**
+            else if (Mathf.Abs(normal.y) > Mathf.Abs(normal.z))
+            {
+                bounceDirection.y = -Mathf.Sign(normal.y); // 天井なら下へ、床なら上へ
+            }
+
+            // **弾かれる処理**
+            transform.position -= bounceDirection * bounceDistance;
+
+            Debug.Log("弾かれる方向: " + bounceDirection);
+
+            // **一定時間操作を無効化**
+            isBounced = true;
+            bounceTimer = bounceDisableTime;
+        }
+       
+    }
+
+   
 }
+  
+
 
   
 

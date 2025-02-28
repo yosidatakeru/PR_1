@@ -25,7 +25,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
     private bool isDetecting = false; // 検出中フラグ
     private Coroutine detectionCoroutine; // 索敵用コルーチン
     bool isBlocked = false;
-
+    public bool isBlockedForward = false; // 前進禁止フラグ
     // Start is called before the first frame update
     void Start()
     {

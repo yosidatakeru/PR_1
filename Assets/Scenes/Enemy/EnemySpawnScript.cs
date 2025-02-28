@@ -51,7 +51,7 @@ public class EnemySpawnScript : MonoBehaviour
     {
         // ‚±‚±‚É–ˆ•bÀs‚µ‚½‚¢ˆ—‚ğ‘‚­
         time++;
-        Debug.Log(time);
+      //  Debug.Log(time);
     }
     // Update is called once per frame
     void Update()
