@@ -3,14 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public  class PlayerScript : MonoBehaviour
 {
     public GameObject Bullet;
+ 
     //プレイヤーの移動スピード
-     float playerSpeed = 20f;
+    float playerSpeed = 20f;
 
     //Z方向に進むスピード
      float playerZSpeed = 20f;
@@ -32,7 +34,9 @@ public  class PlayerScript : MonoBehaviour
     private bool isBounced = false; // 操作無効フラグ
     private float bounceTimer = 0.0f; // 無効時間計測用
     bool isBlockedForward = false; // 前進禁止フラグ
+    public float checkDistance = 0.1f; // 障害物チェック距離
 
+   
     void Start()
     {
         playerRotation = Vector3.zero;
@@ -44,10 +48,11 @@ public  class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+       
         transform.rotation = Quaternion.Euler(playerRotation.x, playerRotation.y, playerRotation.z);
        // プレイヤーの移動処理
-        if (isBounced)
+       
+         if (isBounced)
         {
             bounceTimer -= Time.deltaTime;
             if (bounceTimer <= 0)
@@ -57,12 +62,11 @@ public  class PlayerScript : MonoBehaviour
         }
         else
         {
-           // 通常の操作処理
+            // 通常の操作処理
             MovePlayer();
-           
-        }
 
-        CheckForwardObstacle();
+        }
+       
         if (!isBlockedForward)
         {
             transform.position += playerZSpeed * Vector3.forward * Time.deltaTime;
@@ -70,10 +74,18 @@ public  class PlayerScript : MonoBehaviour
         // 慣性をつけて回転をスムーズにする
         playerRotation = Vector3.Lerp(playerRotation, targetRotation, Time.deltaTime * rotationSpeed);
         transform.rotation = Quaternion.Euler(playerRotation);
+
+        
+
         // 弾の発射処理
         HandleShooting();
 
     }
+
+    
+    
+
+   
     void MovePlayer()
     {
 
@@ -88,8 +100,19 @@ public  class PlayerScript : MonoBehaviour
 
         // 移動制限（範囲: X[-20,20], Y[-5,15]）
         //newPosition.x;
-        // newPosition.y = Mathf.Clamp(newPosition.y, -5.0f, 25.0f);
+        //newPosition.y = Mathf.Clamp(newPosition.y, -5.0f, 25.0f);
+        Collider[] hitColliders = Physics.OverlapBox(newPosition, transform.localScale / 2);
+
         transform.position = newPosition;
+
+        if (hitColliders.Length == 0)
+        {
+          
+        }
+
+       
+
+       
 
         // 機体の傾き調整（ターゲット回転）
         if (moveY > 0) targetRotation.x = Mathf.Max(targetRotation.x - 10, -35); // 前進
@@ -103,8 +126,8 @@ public  class PlayerScript : MonoBehaviour
 
 
 
-        //前に移動
-       
+        ////前に移動
+
         ////デバックのために残しとく
         //// Wキー（前方移動）
         if (Input.GetKey(KeyCode.W))
@@ -150,6 +173,7 @@ public  class PlayerScript : MonoBehaviour
         {
             targetRotation.z = Mathf.Lerp(targetRotation.z, 0, Time.deltaTime * rotationSpeed);
         }
+
     }
     void CheckForwardObstacle()
     {
@@ -184,38 +208,38 @@ public  class PlayerScript : MonoBehaviour
 
             Vector3 bounceDirection = Vector3.zero; // 弾かれる方向
 
-            // **正面からの衝突（Z軸）**
+            ////  **正面からの衝突（Z軸）**
             if (normal.z < -0.7f) // ほぼ正面から当たった場合
             {
-                if (normal.z < -0.7f) // ほぼ正面から当たった場合
-                {
                     isBlockedForward = true; // 前進を禁止
-                }
-
             }
             // **横方向の衝突（X軸）**
-            else if (Mathf.Abs(normal.x) > Mathf.Abs(normal.z) && Mathf.Abs(normal.x) > Mathf.Abs(normal.y))
+            if (Mathf.Abs(normal.x) > Mathf.Abs(normal.z) && Mathf.Abs(normal.x) > Mathf.Abs(normal.y))
             {
                 bounceDirection.x = -Mathf.Sign(normal.x); // 右の壁なら左へ、左の壁なら右へ
             }
-            // **上下方向の衝突（Y軸）**
-            else if (Mathf.Abs(normal.y) > Mathf.Abs(normal.z))
+           // **上下方向の衝突（Y軸）**
+            if (Mathf.Abs(normal.y) > Mathf.Abs(normal.z))
             {
                 bounceDirection.y = -Mathf.Sign(normal.y); // 天井なら下へ、床なら上へ
             }
-
-            // **弾かれる処理**
+           
+            //  **弾かれる処理 * *
             transform.position -= bounceDirection * bounceDistance;
 
             Debug.Log("弾かれる方向: " + bounceDirection);
 
-            // **一定時間操作を無効化**
-            isBounced = true;
+          //  **一定時間操作を無効化 * *
+           isBounced = true;
             bounceTimer = bounceDisableTime;
         }
+
        
     }
-
+    void FixedUpdate()
+    {
+        CheckForwardObstacle();
+    }
    
 }
   
