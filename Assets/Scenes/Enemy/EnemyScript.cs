@@ -58,7 +58,7 @@ public class EnemyScript : MonoBehaviour
         comboGaugeScript = GameObject.Find("ComboGauge").GetComponent<ComboGaugeScript>();
         behaviorattern = 0;
 
-        Invoke(nameof(DelayedDestroy), 10.0f); // 2ïbå„Ç…é¿çs
+       // Invoke(nameof(DelayedDestroy), 10.0f); // 2ïbå„Ç…é¿çs
 
 
     }

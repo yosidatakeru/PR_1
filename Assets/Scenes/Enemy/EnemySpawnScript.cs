@@ -56,28 +56,28 @@ public class EnemySpawnScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Vector3 enemyPosition = new Vector3(0, 0, 30);
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    Vector3 enemyPosition = new Vector3(0, 0, 30);
 
-            SpawnEnemy(enemyPosition, 8, 2, 3f, 1, 0f, 2, 0f, 0);
-
-
-            enemyPosition = new Vector3(0, 0, 30);
-
-            for (int i = 0; i <= enemySpawns - 1; i++)
-            {
-                //敵のスポーン位置
+        //    SpawnEnemy(enemyPosition, 8, 2, 3f, 1, 0f, 2, 0f, 0);
 
 
+        //    enemyPosition = new Vector3(0, 0, 30);
 
-                enemyPosition.x += 5;
-                SpawnEnemy(enemyPosition, 5, 2, 3f, 1, 0f, 2, 0.1f, 0);
+        //    for (int i = 0; i <= enemySpawns - 1; i++)
+        //    {
+        //        //敵のスポーン位置
 
 
 
-            }
-        }
+        //        enemyPosition.x += 5;
+        //        SpawnEnemy(enemyPosition, 5, 2, 3f, 1, 0f, 2, 0.1f, 0);
+
+
+
+        //    }
+        //}
 
         //switch (wave)
         //{

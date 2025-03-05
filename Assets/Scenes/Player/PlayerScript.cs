@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
@@ -29,8 +30,8 @@ public  class PlayerScript : MonoBehaviour
     float moveX;
     float moveY;
 
-    float bounceDistance = 1.0f; // 弾かれる距離
-    float bounceDisableTime = 0.2f; // 操作無効時間
+    float bounceDistance = 2.0f; // 弾かれる距離
+    float bounceDisableTime = 0.0f; // 操作無効時間
     private bool isBounced = false; // 操作無効フラグ
     private float bounceTimer = 0.0f; // 無効時間計測用
     bool isBlockedForward = false; // 前進禁止フラグ
@@ -105,9 +106,9 @@ public  class PlayerScript : MonoBehaviour
 
         transform.position = newPosition;
 
-        if (hitColliders.Length == 0)
+        if (transform.position.z >=1500)
         {
-          
+            SceneManager.LoadScene("ClearScene"); // "NextSceneName" を切り替えたいシーン名に変更
         }
 
        
@@ -197,7 +198,7 @@ public  class PlayerScript : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.CompareTag("EnemyWoll"))
         {
@@ -231,7 +232,9 @@ public  class PlayerScript : MonoBehaviour
 
           //  **一定時間操作を無効化 * *
            isBounced = true;
-            bounceTimer = bounceDisableTime;
+           bounceTimer = bounceDisableTime;
+
+           
         }
 
        

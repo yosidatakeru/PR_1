@@ -1,0 +1,63 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using static UnityEngine.ParticleSystem;
+using UnityEngine.SocialPlatforms.Impl;
+
+public class CanonScript : MonoBehaviour
+{
+    //エフェクト
+    public GameObject particle;
+    private ComboGaugeScript comboGaugeScript;
+    ComboSceorwScript comboSceorwScript;
+    ScoreScript scoreScript;
+    int score = 0;
+    int destroyScore = 10;
+    Vector3 particleposition = Vector3.zero;
+    // Start is called before the first frame update
+    void Start()
+    {
+        comboGaugeScript = GameObject.Find("ComboGauge").GetComponent<ComboGaugeScript>();
+        comboSceorwScript = GameObject.Find("ComboScore (TMP)").GetComponent<ComboSceorwScript>();
+        scoreScript = GameObject.Find("ScoreText (TMP)").GetComponent<ScoreScript>();
+        particleposition = new Vector3 (0, 3, 0);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Bullet")
+        {
+
+            Instantiate(particle, new Vector3(transform.position.x, transform.position.y + particleposition.y , transform.position.z), Quaternion.identity);
+            //当たったら消滅
+            // GetComponent<MeshRenderer>().enabled = false;
+            //enemySpawnScript.defeats += 1;
+
+            comboGaugeScript.Gauge = 600;
+            // 敵が死んだときの効果音を再生
+
+            //スコア刑の処理
+            //ここ調整する
+            score = comboSceorwScript.conboScore * destroyScore / 9;
+
+            //スコアの受け渡い
+            scoreScript.score += destroyScore + score;
+
+            comboSceorwScript.conboScore += 1;
+
+
+            //敵を消す/
+            Destroy(gameObject);
+
+
+
+        }
+
+    }
+}
