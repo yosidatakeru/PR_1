@@ -4527,6 +4527,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bridge
       objectReference: {fileID: 0}
+    - target: {fileID: 5570037374639908106, guid: 7785798412053a140be3f8f361049ed1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.548
+      objectReference: {fileID: 0}
     - target: {fileID: 8332720748398309812, guid: 7785798412053a140be3f8f361049ed1, type: 3}
       propertyPath: m_RootOrder
       value: 9
@@ -5641,7 +5645,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 782628380}
-  speed: 300
+  speed: 200
   maxRange: 200
   mainCamera: {fileID: 2086050644}
   distanceAhead: 10

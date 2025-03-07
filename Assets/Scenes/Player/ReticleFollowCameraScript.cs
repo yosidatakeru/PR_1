@@ -11,8 +11,7 @@ public class ReticleFollowCameraScript : MonoBehaviour
     public float speed = 30.0f;
 
     private bool playerPosition = false;
-    float moveX;
-    float moveY;
+    
 
     public float maxRange = 200f; // スティックの最大移動範囲（UI座標）
     public Camera mainCamera; // メインカメラ

@@ -106,14 +106,16 @@ public  class PlayerScript : MonoBehaviour
 
         transform.position = newPosition;
 
-        if (transform.position.z >=1500)
+
+        //消す予定
+        if (transform.position.z >= 1500)
         {
             SceneManager.LoadScene("ClearScene"); // "NextSceneName" を切り替えたいシーン名に変更
         }
 
-       
 
-       
+
+
 
         // 機体の傾き調整（ターゲット回転）
         if (moveY > 0) targetRotation.x = Mathf.Max(targetRotation.x - 10, -35); // 前進

@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BulletShootScript : MonoBehaviour
 {
-    public float speed = 20f;//弾の速さ
-    public float lifetime = 5f;
-    public float homingStrength = 15f;    // 誘導の強さ
-    public float detectionRadius = 0.2f;  // 検出範囲
+    float speed = 200f;//弾の速さ
+    float lifetime = 1f;//消すまでの時間
+    float homingStrength = 10f;    // 誘導の強さ
+    float detectionRadius = 10.0f;  // 検出範囲
     private Rigidbody rb;                // 物理エンジン
     private GameObject target;           // 追尾するターゲット
   
@@ -60,13 +61,24 @@ public class BulletShootScript : MonoBehaviour
 
         if (target != null)
         {
-            // ターゲット方向に少しずつ誘導
             Vector3 directionToTarget = (target.transform.position - transform.position).normalized;
-            moveDirection = Vector3.Lerp(moveDirection, directionToTarget, homingStrength * Time.fixedDeltaTime);
+
+            // 目標が近い場合は方向を完全に切り替える
+            float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+            if (distanceToTarget < 3.0f) // 近づいたら即ターゲット方向に変更
+            {
+                moveDirection = directionToTarget;
+            }
+            else
+            {
+                moveDirection = Vector3.Slerp(moveDirection, directionToTarget, homingStrength * 2 * Time.fixedDeltaTime).normalized;
+            }
         }
 
-        // 弾を移動させる
+        // Rigidbodyの速度を更新
         rb.velocity = moveDirection * speed;
+
+        Debug.DrawLine(transform.position, transform.position + moveDirection * 3.0f, Color.blue);
     }
 
     // 最も近い敵を探す
@@ -88,12 +100,16 @@ public class BulletShootScript : MonoBehaviour
 
         return closestEnemy;
     }
-
+   
     // 検出範囲を可視化（シーンビュー）
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;  // 赤色で表示
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);  // 検出範囲を球体で描画
+        //Gizmos.color = Color.red;  // 赤色で表示
+        //Gizmos.DrawWireSphere(transform.position, detectionRadius);  // 検出範囲を球体で描画
+
+        // 弾の移動方向を青い線で可視化
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(transform.position, transform.position + moveDirection * 3.0f);
     }
     void OnCollisionEnter(Collision collision)
     {
