@@ -77,3 +77,15 @@ crashlytics-build.properties
 /Assets/Scenes/BGM Folder
 /Assets/3D_Sci-fi_Spaceships_edit_Pack07f
 /Assets/Urban Skyscrapers
+/UserSettings/Layouts/CurrentMaximizeLayout.dwlt
+/UserSettings/EditorUserSettings.asset
+/UserSettings/Layouts/default-2021.dwlt
+/Assets/GameScene.unity
+/Assets/TitleScene.unity
+*.unity
+*.meta
+/Assets/TextMesh Pro/Examples & Extras/Resources/Fonts & Materials/Anton SDF.asset
+/Assets/TextMesh Pro/Examples & Extras/Resources/Fonts & Materials/Electronic Highway Sign SDF.asset
+/Assets/TextMesh Pro/Examples & Extras/Resources/Fonts & Materials/Oswald Bold SDF.asset
+/Assets/TextMesh Pro/Examples & Extras/Resources/Fonts & Materials/Roboto-Bold SDF.asset
+/Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset
