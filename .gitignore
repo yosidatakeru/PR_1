@@ -89,3 +89,10 @@ crashlytics-build.properties
 /Assets/TextMesh Pro/Examples & Extras/Resources/Fonts & Materials/Oswald Bold SDF.asset
 /Assets/TextMesh Pro/Examples & Extras/Resources/Fonts & Materials/Roboto-Bold SDF.asset
 /Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset
+/Assets/Scenes/Font Folder/FrancoisOne-Regular SDF.asset
+/Assets/Scenes/Player/player 1 1.prefab
+*.prefab
+/Assets/Scenes/Stage Folder/Stage1.prefab
+/Assets/Scenes/Stage Folder/Stage2.prefab
+*.mat
+/Assets/Scenes/GollObject.prefab
