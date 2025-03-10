@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class LockOnPlayerScript : MonoBehaviour
 {
-    public GameObject Player;
+
     // Start is called before the first frame update
+    private GameObject player;
     void Start()
     {
-        
+        player = GameObject.FindGameObjectWithTag("Player");  // "Player" タグを使ってプレイヤーを探す
     }
 
     // Update is called once per frame
@@ -20,7 +21,7 @@ public class LockOnPlayerScript : MonoBehaviour
     public void OnPlayerStay()
     {
 
-        this.transform.LookAt(Player.transform);
+        this.transform.LookAt(player.transform);
     }
 
     // プレイヤーが範囲から出た時の処理

@@ -37,8 +37,8 @@ public class EnemyDetectorAndShooter : MonoBehaviour
     {
        
         // スペースキーが押されている間、敵を検出
-        if (Input.GetKeyDown(KeyCode.E) && detectionCoroutine == null || Input.GetButton("RB") && detectionCoroutine == null)
-        {
+        //if (Input.GetKeyDown(KeyCode.E) && detectionCoroutine == null || Input.GetButton("RB") && detectionCoroutine == null)
+        //{
             if (!isDetecting)
             {
                 isDetecting = true;
@@ -47,10 +47,10 @@ public class EnemyDetectorAndShooter : MonoBehaviour
             }
 
 
-        }
+      //  }
 
         // スペースキーを離した瞬間に弾を発射
-        if (Input.GetKeyUp(KeyCode.E) || Input.GetButtonUp("RB"))
+        if (Input.GetKeyUp(KeyCode.E) || Input.GetButton("RB"))
         {
             if (isDetecting)
             {

@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
-public  class PlayerScript : MonoBehaviour
+public  class TutorialScenePlayerScript : MonoBehaviour
 {
     public GameObject Bullet;
  
@@ -16,7 +16,7 @@ public  class PlayerScript : MonoBehaviour
     float playerSpeed = 20f;
 
     //Z方向に進むスピード
-     float playerZSpeed = 20f;
+     float playerZSpeed = 0f;
 
     ////弾のインタバル制御
     int timeUntilNextShot = 0;
@@ -105,13 +105,6 @@ public  class PlayerScript : MonoBehaviour
         Collider[] hitColliders = Physics.OverlapBox(newPosition, transform.localScale / 2);
 
         transform.position = newPosition;
-
-
-        //消す予定
-        if (transform.position.z >= 1500)
-        {
-            SceneManager.LoadScene("ClearScene"); // "NextSceneName" を切り替えたいシーン名に変更
-        }
 
 
 

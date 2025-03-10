@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.SceneManagement;
 
 public class TitleSceneScript : MonoBehaviour
 {
-   
+    public CanvasGroup fadeCanvas;
+    public float fadeDuration = 10f;
+    private bool isFading = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,8 +21,22 @@ public class TitleSceneScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space)||Input.GetButtonDown("Abutton"))
         {
-            // シーンの切り替え (次のシーンの名前を指定)
-            SceneManager.LoadScene("GameScene"); // "NextSceneName" を切り替えたいシーン名に変更
+            StartCoroutine(FadeOut("TutorialScene")); 
+                                                             
+
+        }
+
+        IEnumerator FadeOut(string sceneName)
+        {
+            isFading = true;
+            fadeCanvas.blocksRaycasts = true;
+            for (float t = 0; t < fadeDuration; t += Time.deltaTime)
+            {
+                fadeCanvas.alpha = t / fadeDuration;
+                yield return null;
+            }
+            fadeCanvas.alpha = 1;
+            SceneManager.LoadScene(sceneName);
         }
     }
 }

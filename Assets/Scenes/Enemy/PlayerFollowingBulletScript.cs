@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerFollowingBulletScript : MonoBehaviour
 {
-    public float speed = 10f;
-    public float lifetime = 5f;
+    float speed = 80f;
+    float lifetime = 5f;
     private Vector3 targetPosition; // 発射時のプレイヤー位置
 
     void Start()
