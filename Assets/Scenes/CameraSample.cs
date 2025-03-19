@@ -6,9 +6,9 @@ public class CameraSample : MonoBehaviour
 {
     public Transform player; // プレイヤーのTransformをアサイン
     public Vector3 offset = new Vector3(0, 0, -3); // カメラのオフセット
-    public float smoothSpeed = 10.0f; // カメラの追尾速度
-    public float maxTiltAngle = 25.0f; // カメラの最大傾き角度
-    public float tiltSpeed = 5.0f; // カメラの傾きスムーズ速度
+    float smoothSpeed = 10.0f; // カメラの追尾速度
+    float maxTiltAngle = 25.0f; // カメラの最大傾き角度
+    float tiltSpeed = 5.0f; // カメラの傾きスムーズ速度
 
     private Vector3 lastPlayerPosition; // 前フレームのプレイヤー位置
     private float tiltAmount = 0f; // 現在の傾き
@@ -45,5 +45,7 @@ public class CameraSample : MonoBehaviour
 
         // 現在のプレイヤー位置を保存
         lastPlayerPosition = player.position;
+
+        transform.LookAt(player.position);
     }
 }

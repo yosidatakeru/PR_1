@@ -43,7 +43,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
             {
                 isDetecting = true;
                 detectionCoroutine = StartCoroutine(DetectEnemiesPeriodically());
-                Debug.Log("検出を開始...");
+              //  Debug.Log("検出を開始...");
             }
 
 
@@ -231,7 +231,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
 
         if (hits.Length == 0)
         {
-            Debug.Log("敵が見つかりませんでした。");
+           // Debug.Log("敵が見つかりませんでした。");
             return;
         }
 
@@ -255,7 +255,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
             // ドット積を使って前方のみを判定（0 以上なら前方）
             if (Vector3.Dot(playerForward, toEnemy) < 0)
             {
-                Debug.Log($"敵 {enemy.name} は後ろにいるため無視します。");
+               // Debug.Log($"敵 {enemy.name} は後ろにいるため無視します。");
                 continue;
             }
 

@@ -176,9 +176,11 @@ GameObject:
   m_Component:
   - component: {fileID: 2193113152578769397}
   - component: {fileID: 2193113152569687573}
+  - component: {fileID: 2532532485889784590}
+  - component: {fileID: 5665582093423782297}
   m_Layer: 0
   m_Name: Bagi_box_r2
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -224,6 +226,34 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2532532485889784590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2193113152579063253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ac19c09e9bc48241a70d16218380643, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  particle: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
+  brokenParts: []
+  destructionParticles: {fileID: 0}
+--- !u!65 &5665582093423782297
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2193113152579063253}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.04183, y: 1.7720902, z: 4.7070165}
+  m_Center: {x: -0.11076522, y: -0.15233359, z: -0.093423605}
 --- !u!1 &2193113152579063255
 GameObject:
   m_ObjectHideFlags: 0

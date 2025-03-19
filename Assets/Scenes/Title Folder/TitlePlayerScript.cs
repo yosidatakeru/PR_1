@@ -7,12 +7,12 @@ public class TitlePlayerScript : MonoBehaviour
     // Start is called before the first frame update
     //‰ñ“]
     Vector3  playerRotation = new Vector3(0f, 180f, 0f);
-    float RotationSpeed = 0.002f;
+    float RotationSpeed = 0.02f;
     bool Rotation = false;
 
     //ˆÚ“®
     Vector3 playerPosition = new Vector3(5f, 0f, 0f);
-    float PositionSpeed = 0.0005f;
+    float PositionSpeed = 0.005f;
     bool position = false;
     void Start()
     {

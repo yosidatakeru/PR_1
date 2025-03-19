@@ -29,7 +29,7 @@ public  class PlayerScript : MonoBehaviour
     float triggerValue;
     float moveX;
     float moveY;
-
+    float moveZ;
     float bounceDistance = 2.0f; // 弾かれる距離
     float bounceDisableTime = 0.0f; // 操作無効時間
     private bool isBounced = false; // 操作無効フラグ
@@ -94,24 +94,24 @@ public  class PlayerScript : MonoBehaviour
         moveX = Input.GetAxis("L_Stick_H"); // A（-1）D（+1）、Lスティック左右
         moveY = Input.GetAxis("L_Stick_V");   // W（+1）S（-1）、Lスティック上下
 
+       
         // キーボード & コントローラー両対応の移動処理
-        Vector3 move = new Vector3(moveX, moveY, 0) * playerSpeed * Time.deltaTime;
+        Vector3 move = new Vector3(moveX, moveY, moveZ) * playerSpeed * Time.deltaTime;
        
         Vector3 newPosition = transform.position + move;
 
         // 移動制限（範囲: X[-20,20], Y[-5,15]）
-        //newPosition.x;
-        //newPosition.y = Mathf.Clamp(newPosition.y, -5.0f, 25.0f);
+       
         Collider[] hitColliders = Physics.OverlapBox(newPosition, transform.localScale / 2);
 
         transform.position = newPosition;
 
 
-        //消す予定
-        if (transform.position.z >= 1500)
-        {
-            SceneManager.LoadScene("ClearScene"); // "NextSceneName" を切り替えたいシーン名に変更
-        }
+        ////消す予定
+        //if (transform.position.z >= 1500)
+        //{
+        //    SceneManager.LoadScene("ClearScene"); // "NextSceneName" を切り替えたいシーン名に変更
+        //}
 
 
 
@@ -242,6 +242,30 @@ public  class PlayerScript : MonoBehaviour
 
        
     }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        //Debug.Log(enemySpawnScript.enemySpawns);
+
+        if (collision.gameObject.tag == "PerspectiveOn")
+        {
+
+            Debug.Log("方向変換");
+
+
+        }
+
+        if (collision.gameObject.tag == "PerspectiveOff")
+        {
+
+            Debug.Log("方向変換2");
+
+
+        }
+
+    }
+
+
     void FixedUpdate()
     {
         CheckForwardObstacle();

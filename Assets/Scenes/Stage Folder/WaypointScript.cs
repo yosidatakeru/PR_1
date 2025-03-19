@@ -8,7 +8,7 @@ public class WaypointScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        mapSpawner = FindObjectOfType<MapSpawnerScript>();
     }
 
     // Update is called once per frame
@@ -22,7 +22,7 @@ public class WaypointScript : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             Debug.Log("É}ÉbÉvê∂ê¨Ç∆îjâÛ");
-            mapSpawner.LoadNextChunk(transform.position);
+            mapSpawner.LoadNextChunk(transform.position);        
             Destroy(gameObject);
           
         }

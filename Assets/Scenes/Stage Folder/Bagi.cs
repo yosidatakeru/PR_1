@@ -1,12 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.ParticleSystem;
-using UnityEngine.SocialPlatforms.Impl;
 
-public class CanonScript : MonoBehaviour
+public class Bagi : MonoBehaviour
 {
-    //エフェクト
     public GameObject particle;
     private ComboGaugeScript comboGaugeScript;
     ComboSceorwScript comboSceorwScript;
@@ -23,7 +20,6 @@ public class CanonScript : MonoBehaviour
         comboGaugeScript = GameObject.Find("ComboGauge").GetComponent<ComboGaugeScript>();
         comboSceorwScript = GameObject.Find("ComboScore (TMP)").GetComponent<ComboSceorwScript>();
         scoreScript = GameObject.Find("ScoreText (TMP)").GetComponent<ScoreScript>();
-        particleposition = new Vector3 (0, 3, 0);
     }
 
     // Update is called once per frame
@@ -37,13 +33,13 @@ public class CanonScript : MonoBehaviour
         if (collision.gameObject.tag == "Bullet")
         {
 
-            Instantiate(particle, new Vector3(transform.position.x, transform.position.y + particleposition.y , transform.position.z), Quaternion.identity);
+            Instantiate(particle, new Vector3(transform.position.x, transform.position.y + particleposition.y, transform.position.z), Quaternion.identity);
             //当たったら消滅
             // GetComponent<MeshRenderer>().enabled = false;
             //enemySpawnScript.defeats += 1;
 
             comboGaugeScript.Gauge = 600;
-           
+
             //スコアの処理
             //ここ調整する
             score = comboSceorwScript.conboScore * destroyScore / 9;
@@ -51,7 +47,7 @@ public class CanonScript : MonoBehaviour
             //スコアの受け渡い
             scoreScript.score += destroyScore + score;
 
-            comboSceorwScript.conboScore += comboup;
+            comboSceorwScript.conboScore += comboup ;
 
 
             //敵を消す/

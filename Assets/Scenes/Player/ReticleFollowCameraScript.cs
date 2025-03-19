@@ -75,24 +75,24 @@ public class ReticleFollowCameraScript : MonoBehaviour
 
             newPosition = ClampToCameraBounds(newPosition);
 
-            // プレイヤーの前進に合わせてZ座標を更新
-            newPosition.z += deltaZ;
+            // プレイヤーの後ろには行かないようにZ座標を制限
+            newPosition.z = Mathf.Max(newPosition.z + deltaZ, player.position.z + distanceAhead);
 
             // 位置を更新
             transform.position = newPosition;
-        }else if(playerPosition==true)
+        }
+        else if(playerPosition==true)
         {
 
-            // X・Y座標のみプレイヤーに追従し、Z座標は固定
+            // X・Y座標のみプレイヤーに追従し、Z座標はプレイヤーの前に固定
             Vector3 targetPosition = player.position + offset;
-            targetPosition.z = player.position.z + distanceAhead;
 
-
+            // Z座標がプレイヤーの前方に維持されるように制限
+            targetPosition.z = Mathf.Max(targetPosition.z, player.position.z + distanceAhead); // プレイヤーの後ろには行かない
 
             // 滑らかに追従
             transform.position = Vector3.Lerp(transform.position, targetPosition, speed * Time.deltaTime);
 
-           
         }
 
         previousPlayerZ = player.position.z; // 現在のZ座標を保存
