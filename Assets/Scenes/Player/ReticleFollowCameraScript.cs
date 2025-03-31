@@ -7,8 +7,8 @@ public class ReticleFollowCameraScript : MonoBehaviour
 {
     // Start is called before the first frame update
     public Transform player; // ÉvÉåÉCÉÑÅ[ÇÃTransform
-     private Vector3 moveDirection;
-    public float speed = 30.0f;
+    private Vector3 moveDirection;
+    float speed = 200.0f;
 
     private bool playerPosition = false;
     

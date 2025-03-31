@@ -13,7 +13,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
     public float detectionRadius = 20f; // 検出範囲
     
     //範囲設定
-    public Vector3 detectionSize = new Vector3(20f, 15f, 100f);
+    public Vector3 detectionSize = new Vector3(20f, 15f, 150f);
 
     public LayerMask enemyLayer; // 敵のレイヤーマスク
     public int maxTargets = 10; // 最大検出する敵の数
@@ -202,11 +202,11 @@ public class EnemyDetectorAndShooter : MonoBehaviour
 
     IEnumerator DetectEnemiesPeriodically()
     {
-            yield return new WaitForSeconds(0.5f);
+            
         while (isDetecting)
         {
             DetectAndAddEnemy();
-            yield return new WaitForSeconds(1f); // 1秒間隔で実行
+            yield return new WaitForSeconds(0.1f); // 1秒間隔で実行
         }
     }
 

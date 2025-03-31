@@ -8,7 +8,7 @@ public class MapSpawnerScript : MonoBehaviour
     private int currentIndex = 0;
  
     private List<GameObject> spawndChunks = new List<GameObject>();
-    private int maxSpawnedMaps = 5; // 同時に存在するマップパーツの最大数
+    private int maxSpawnedMaps = 2; // 同時に存在するマップパーツの最大数
 
     // Start is called before the first frame update
     void Start()

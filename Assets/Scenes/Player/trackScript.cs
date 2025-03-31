@@ -1,18 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class BulletShootScript : MonoBehaviour
+public class trackScript : MonoBehaviour
 {
-    float speed = 200f;//弾の速さ
+    float speed = 40f;//弾の速さ
     float lifetime = 1f;//消すまでの時間
     float homingStrength = 1f;    // 誘導の強さ
-    float detectionRadius = 5.0f;  // 検出範囲
+    float detectionRadius = 30.0f;  // 検出範囲
     private Rigidbody rb;                // 物理エンジン
     private GameObject target;           // 追尾するターゲット
-  
+
     private Vector3 moveDirection; // 発射方向
 
     // Start is called before the first frame update
@@ -58,7 +56,7 @@ public class BulletShootScript : MonoBehaviour
 
     void FixedUpdate()
     {
-       
+
         if (target != null)
         {
             Vector3 directionToTarget = (target.transform.position - transform.position).normalized;
@@ -100,23 +98,23 @@ public class BulletShootScript : MonoBehaviour
 
         return closestEnemy;
     }
-   
+
     // 検出範囲を可視化（シーンビュー）
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;  // 赤色で表示
         Gizmos.DrawWireSphere(transform.position, detectionRadius);  // 検出範囲を球体で描画
 
-      
+
     }
     void OnCollisionEnter(Collision collision)
     {
-       
+
 
         if (collision.gameObject.tag == "EnemyWoll")
         {
             GetComponent<SphereCollider>().enabled = false;
-          
+
             Destroy(gameObject);
 
 
@@ -124,6 +122,4 @@ public class BulletShootScript : MonoBehaviour
         }
 
     }
-
 }
-

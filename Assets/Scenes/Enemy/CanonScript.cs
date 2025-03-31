@@ -38,14 +38,11 @@ public class CanonScript : MonoBehaviour
         {
 
             Instantiate(particle, new Vector3(transform.position.x, transform.position.y + particleposition.y , transform.position.z), Quaternion.identity);
-            //当たったら消滅
-            // GetComponent<MeshRenderer>().enabled = false;
-            //enemySpawnScript.defeats += 1;
+           
 
             comboGaugeScript.Gauge = 600;
            
             //スコアの処理
-            //ここ調整する
             score = comboSceorwScript.conboScore * destroyScore / 9;
 
             //スコアの受け渡い

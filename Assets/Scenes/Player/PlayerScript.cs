@@ -11,19 +11,20 @@ using UnityEngine.UIElements;
 public  class PlayerScript : MonoBehaviour
 {
     public GameObject Bullet;
- 
+   
+
     //プレイヤーの移動スピード
-    float playerSpeed = 20f;
+    float playerSpeed = 30f;
 
     //Z方向に進むスピード
-     float playerZSpeed = 20f;
+     float playerZSpeed = 30f;
 
     ////弾のインタバル制御
     int timeUntilNextShot = 0;
 
-    int bulletNexst = 10;
+    int bulletNexst = 4;
 
-    float rotationSpeed = 3.0f; // 回転の慣性調整
+    float rotationSpeed = 5.0f; // 回転の慣性調整
     private Vector3 playerRotation;    // 現在の回転値
     private Vector3 targetRotation;    // 目標の回転値
     float triggerValue;
@@ -31,11 +32,11 @@ public  class PlayerScript : MonoBehaviour
     float moveY;
     float moveZ;
     float bounceDistance = 2.0f; // 弾かれる距離
-    float bounceDisableTime = 0.0f; // 操作無効時間
+    float bounceDisableTime = 0.3f; // 操作無効時間
     private bool isBounced = false; // 操作無効フラグ
-    private float bounceTimer = 0.5f; // 無効時間計測用
+    private float bounceTimer = 0.0f; // 無効時間計測用
     bool isBlockedForward = false; // 前進禁止フラグ
-    public float checkDistance = 0.1f; // 障害物チェック距離
+    public float checkDistance = 0.0f; // 障害物チェック距離
 
    
     void Start()
@@ -68,7 +69,7 @@ public  class PlayerScript : MonoBehaviour
 
         }
        
-        if (!isBlockedForward)
+        if (!isBlockedForward && isBounced == false)
         {
             transform.position += playerZSpeed * Vector3.forward * Time.deltaTime;
         }
@@ -107,11 +108,11 @@ public  class PlayerScript : MonoBehaviour
         transform.position = newPosition;
 
 
-        ////消す予定
-        //if (transform.position.z >= 1500)
-        //{
-        //    SceneManager.LoadScene("ClearScene"); // "NextSceneName" を切り替えたいシーン名に変更
-        //}
+
+        if (transform.position.z >= 3300)
+        {
+            SceneManager.LoadScene("ClearScene"); // "NextSceneName" を切り替えたいシーン名に変更
+        }
 
 
 
@@ -199,6 +200,8 @@ public  class PlayerScript : MonoBehaviour
             Instantiate(Bullet, transform.position, Quaternion.identity);
             timeUntilNextShot = bulletNexst;
         }
+
+       
     }
 
     void OnCollisionStay(Collision collision)
@@ -213,9 +216,10 @@ public  class PlayerScript : MonoBehaviour
             Vector3 bounceDirection = Vector3.zero; // 弾かれる方向
 
             ////  **正面からの衝突（Z軸）**
-            if (normal.z < -0.7f) // ほぼ正面から当たった場合
+            if (normal.z < checkDistance) // ほぼ正面から当たった場合
             {
-                    isBlockedForward = true; // 前進を禁止
+                isBlockedForward = true; // 前進を禁止
+                bounceDirection.z = -Mathf.Sign(normal.z);
             }
             // **横方向の衝突（X軸）**
             if (Mathf.Abs(normal.x) > Mathf.Abs(normal.z) && Mathf.Abs(normal.x) > Mathf.Abs(normal.y))
@@ -227,7 +231,9 @@ public  class PlayerScript : MonoBehaviour
             {
                 bounceDirection.y = -Mathf.Sign(normal.y); // 天井なら下へ、床なら上へ
             }
+
            
+
             //  **弾かれる処理 * *
             transform.position -= bounceDirection * bounceDistance;
 

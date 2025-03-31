@@ -273,6 +273,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particle: {fileID: 2499354421883142258, guid: f0576baf986c2144fa54395405611e0a, type: 3}
+  brokenParts: []
+  destructionParticles: {fileID: 0}
 --- !u!1 &4742489639751969818
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,7 +289,7 @@ GameObject:
   - component: {fileID: 3909552119037551479}
   - component: {fileID: 3909552119037551478}
   - component: {fileID: 3909552119037551472}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: canon_lvl_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -401,7 +403,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb88f38574f3bbb49bf08d5f3724e8f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 5968197473762795461, guid: c86aa2a7c101d4f468629fcc5ae35aeb, type: 3}
 --- !u!1 &4742489639751969820
 GameObject:
   m_ObjectHideFlags: 0
@@ -413,7 +414,7 @@ GameObject:
   - component: {fileID: 4742489639752134716}
   - component: {fileID: 4742489639750807580}
   - component: {fileID: 4742489639749710556}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: gunpoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

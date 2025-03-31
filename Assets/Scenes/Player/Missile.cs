@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Missile : MonoBehaviour
 {
-    public float speed = 10f; // ’e‚Ì‘¬“x
-    public float rotationSpeed = 30f; // ‰ñ“]‘¬“x
-    public float detectionRadius = 4.0f; // Õ“Ë”»’è‚Ì”¼Œa
+     float speed = 200f; // ’e‚Ì‘¬“x
+     float rotationSpeed = 30f; // ‰ñ“]‘¬“x
+     float detectionRadius = 4.0f; // Õ“Ë”»’è‚Ì”¼Œa
 
 
     private Transform target; // ƒ^[ƒQƒbƒg

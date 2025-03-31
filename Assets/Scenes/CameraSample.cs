@@ -7,11 +7,12 @@ public class CameraSample : MonoBehaviour
     public Transform player; // プレイヤーのTransformをアサイン
     public Vector3 offset = new Vector3(0, 0, -3); // カメラのオフセット
     float smoothSpeed = 10.0f; // カメラの追尾速度
-    float maxTiltAngle = 25.0f; // カメラの最大傾き角度
+    float maxTiltAngle = 2.0f; // カメラの最大傾き角度
     float tiltSpeed = 5.0f; // カメラの傾きスムーズ速度
 
     private Vector3 lastPlayerPosition; // 前フレームのプレイヤー位置
     private float tiltAmount = 0f; // 現在の傾き
+    private float tiltVelocity = 0f; // SmoothDamp用の速度変数
 
     void Start()
     {
@@ -20,7 +21,6 @@ public class CameraSample : MonoBehaviour
             lastPlayerPosition = player.position; // 初期位置を記録
         }
     }
-
 
     void Update()
     {
@@ -36,16 +36,15 @@ public class CameraSample : MonoBehaviour
         float speedX = (player.position.x - lastPlayerPosition.x) / Time.deltaTime;
 
         // 傾きを計算（スムーズに変化させる）
-        float targetTilt = Mathf.Clamp(speedX / 10f, -45f, 45f) * maxTiltAngle;
-        tiltAmount = Mathf.Lerp(tiltAmount, targetTilt, tiltSpeed * Time.deltaTime);
+        float targetTilt = Mathf.Clamp((speedX / 10f) * maxTiltAngle, -maxTiltAngle, maxTiltAngle);
+        tiltAmount = Mathf.SmoothDamp(tiltAmount, targetTilt, ref tiltVelocity, 0.2f);
 
-        // カメラの回転をスムーズに適用（Z軸を傾ける）
-        Quaternion targetRotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, -tiltAmount);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * tiltSpeed);
+        // プレイヤーの向きを基準にカメラの回転をスムーズに適用
+        Quaternion lookRotation = Quaternion.LookRotation(player.position - transform.position);
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation * Quaternion.Euler(0, 0, -tiltAmount), Time.deltaTime * smoothSpeed);
 
         // 現在のプレイヤー位置を保存
         lastPlayerPosition = player.position;
-
-        transform.LookAt(player.position);
     }
 }
+
