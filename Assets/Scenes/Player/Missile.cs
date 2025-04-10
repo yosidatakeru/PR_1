@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Missile : MonoBehaviour
 {
-     float speed = 200f; // ’e‚Ì‘¬“x
+     float speed = 150f; // ’e‚Ì‘¬“x
      float rotationSpeed = 30f; // ‰ñ“]‘¬“x
      float detectionRadius = 4.0f; // Õ“Ë”»’è‚Ì”¼Œa
 
@@ -97,7 +97,7 @@ public class Missile : MonoBehaviour
             if (col.CompareTag("Enemy"))
             {
                 Debug.Log("Missile hit detected (OverlapSphere): " + col.gameObject.name);
-              //  Explode();
+              
                 return;
             }
         }
@@ -107,16 +107,13 @@ public class Missile : MonoBehaviour
     {
         Debug.Log("Collision detected with: " + collision.gameObject.name);
 
-        //if (collision.gameObject.CompareTag("Enemy"))
-        //{
-        //    Explode();
-        //}
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            // ©g‚ğíœ
+            Destroy(gameObject);
+        }
     }
 
-    void Explode()
-    {
-        // ©g‚ğíœ
-        Destroy(gameObject);
-    }
+    
 
 }

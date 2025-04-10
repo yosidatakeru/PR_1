@@ -16,7 +16,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
     public Vector3 detectionSize = new Vector3(20f, 15f, 150f);
 
     public LayerMask enemyLayer; // 敵のレイヤーマスク
-    public int maxTargets = 10; // 最大検出する敵の数
+    int maxTargets = 10; // 最大検出する敵の数
     public GameObject markerPrefab; // 敵の位置を示す3Dモデル
 
 
@@ -36,9 +36,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
     void Update()
     {
        
-        // スペースキーが押されている間、敵を検出
-        //if (Input.GetKeyDown(KeyCode.E) && detectionCoroutine == null || Input.GetButton("RB") && detectionCoroutine == null)
-        //{
+            //敵の検出
             if (!isDetecting)
             {
                 isDetecting = true;
@@ -50,7 +48,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
       //  }
 
         // スペースキーを離した瞬間に弾を発射
-        if (Input.GetKeyUp(KeyCode.E) || Input.GetButton("RB"))
+        if (Input.GetKeyUp(KeyCode.E) || Input.GetButtonDown("RB"))
         {
             if (isDetecting)
             {

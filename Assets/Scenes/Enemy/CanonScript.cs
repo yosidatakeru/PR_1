@@ -8,6 +8,7 @@ public class CanonScript : MonoBehaviour
 {
     //エフェクト
     public GameObject particle;
+    public GameObject Score;
     private ComboGaugeScript comboGaugeScript;
     ComboSceorwScript comboSceorwScript;
     ScoreScript scoreScript;
@@ -36,7 +37,7 @@ public class CanonScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "Bullet")
         {
-
+          //  Instantiate(Score, new Vector3(transform.position.x, transform.position.y + particleposition.y, transform.position.z), Quaternion.identity);
             Instantiate(particle, new Vector3(transform.position.x, transform.position.y + particleposition.y , transform.position.z), Quaternion.identity);
            
 

@@ -5,13 +5,15 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public  class PlayerScript : MonoBehaviour
 {
     public GameObject Bullet;
-   
+    public ParticleSystem sparkR;
+    public ParticleSystem sparkL;
 
     //プレイヤーの移動スピード
     float playerSpeed = 30f;
@@ -51,55 +53,68 @@ public  class PlayerScript : MonoBehaviour
     void Update()
     {
        
-        transform.rotation = Quaternion.Euler(playerRotation.x, playerRotation.y, playerRotation.z);
-       // プレイヤーの移動処理
-       
-         if (isBounced)
-        {
-            bounceTimer -= Time.deltaTime;
-            if (bounceTimer <= 0)
-            {
-                isBounced = false; // 操作再開
-            }
-        }
-        else
-        {
-            // 通常の操作処理
-            MovePlayer();
+        // 通常の操作処理
+        MovePlayer();
 
-        }
+
        
-        if (!isBlockedForward && isBounced == false)
-        {
+        //if (!isBlockedForward && isBounced == false)
+        //{
             transform.position += playerZSpeed * Vector3.forward * Time.deltaTime;
-        }
+       // }
         // 慣性をつけて回転をスムーズにする
         playerRotation = Vector3.Lerp(playerRotation, targetRotation, Time.deltaTime * rotationSpeed);
         transform.rotation = Quaternion.Euler(playerRotation);
 
-        
+
 
         // 弾の発射処理
         HandleShooting();
+        //壁にぶつかった時の処理
+        if (transform.position.x >= 34.0f)
+        {
+            sparkR.Play(); // パーティクル再生
+
+        }
+        else 
+        {
+            sparkR.Stop(); // パーティクルストップ
+        }
+
+        if (transform.position.x <= -34.0f)
+        {
+            sparkL.Play(); // パーティクル再生
+
+        }
+        else
+        {
+            sparkL.Stop(); // パーティクルストップ
+        }
 
     }
 
-    
-    
 
-   
+
+
+
     void MovePlayer()
     {
+        Vector3 move = new Vector3(moveX, moveY, moveZ) * playerSpeed * Time.deltaTime;
+        Vector3 newPosition = transform.position + move;
 
+        // 移動範囲を制限
+        newPosition.x = Mathf.Clamp(newPosition.x, -34.8f, 34.8f);
+        newPosition.y = Mathf.Clamp(newPosition.y, -5f, 54f);
+
+
+        transform.position = newPosition;
 
         moveX = Input.GetAxis("L_Stick_H"); // A（-1）D（+1）、Lスティック左右
         moveY = Input.GetAxis("L_Stick_V");   // W（+1）S（-1）、Lスティック上下
 
        
         // キーボード & コントローラー両対応の移動処理
-        Vector3 move = new Vector3(moveX, moveY, moveZ) * playerSpeed * Time.deltaTime;
-       
-        Vector3 newPosition = transform.position + move;
+      
 
         // 移動制限（範囲: X[-20,20], Y[-5,15]）
        
@@ -114,7 +129,10 @@ public  class PlayerScript : MonoBehaviour
             SceneManager.LoadScene("ClearScene"); // "NextSceneName" を切り替えたいシーン名に変更
         }
 
-
+        if (Input.GetKey(KeyCode.G))
+        {
+            SceneManager.LoadScene("GameOverScene");
+        }
 
 
 
@@ -124,8 +142,8 @@ public  class PlayerScript : MonoBehaviour
         else if (moveY < 0) targetRotation.x = Mathf.Min(targetRotation.x + 2, 20); // 後退
         else targetRotation.x = Mathf.Lerp(targetRotation.x, 0, Time.deltaTime * rotationSpeed);
 
-        if (moveX > 0) targetRotation.z = Mathf.Max(targetRotation.z - 2, -35); // 右移動
-        else if (moveX < 0) targetRotation.z = Mathf.Min(targetRotation.z + 2, 35); // 左移動
+        if (moveX > 0) targetRotation.z = Mathf.Max(targetRotation.z - 2, -200); // 右移動
+        else if (moveX < 0) targetRotation.z = Mathf.Min(targetRotation.z + 2, 200); // 左移動
         else targetRotation.z = Mathf.Lerp(targetRotation.z, 0, Time.deltaTime * rotationSpeed);
 
 
@@ -161,7 +179,7 @@ public  class PlayerScript : MonoBehaviour
         if (Input.GetKey(KeyCode.D))
         {
             transform.position += playerSpeed * Vector3.right * Time.deltaTime;
-            //targetRotation.z = Mathf.Max(targetRotation.z - 2, -35);
+            targetRotation.z = Mathf.Max(targetRotation.z - 2, -35);
         }
         else
         {
@@ -180,16 +198,7 @@ public  class PlayerScript : MonoBehaviour
         }
 
     }
-    void CheckForwardObstacle()
-    {
-        if (isBlockedForward)
-        {
-            if (!Physics.Raycast(transform.position, Vector3.forward, 1.0f)) // 1m前方に障害物がなければ
-            {
-                isBlockedForward = false; // 前進を許可
-            }
-        }
-    }
+   
     void HandleShooting()
     {
         triggerValue = Input.GetAxis("RightTrigger");
@@ -208,40 +217,40 @@ public  class PlayerScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("EnemyWoll"))
         {
-            ContactPoint contact = collision.contacts[0]; // 最初の接触点
-            Vector3 normal = contact.normal;  // 衝突法線
+          //  ContactPoint contact = collision.contacts[0]; // 最初の接触点
+          //  Vector3 normal = contact.normal;  // 衝突法線
 
-            Debug.Log("衝突検出: " + collision.gameObject.name + " / 法線: " + normal);
+          //  Debug.Log("衝突検出: " + collision.gameObject.name + " / 法線: " + normal);
 
-            Vector3 bounceDirection = Vector3.zero; // 弾かれる方向
+          //  Vector3 bounceDirection = Vector3.zero; // 弾かれる方向
 
-            ////  **正面からの衝突（Z軸）**
-            if (normal.z < checkDistance) // ほぼ正面から当たった場合
-            {
-                isBlockedForward = true; // 前進を禁止
-                bounceDirection.z = -Mathf.Sign(normal.z);
-            }
-            // **横方向の衝突（X軸）**
-            if (Mathf.Abs(normal.x) > Mathf.Abs(normal.z) && Mathf.Abs(normal.x) > Mathf.Abs(normal.y))
-            {
-                bounceDirection.x = -Mathf.Sign(normal.x); // 右の壁なら左へ、左の壁なら右へ
-            }
-           // **上下方向の衝突（Y軸）**
-            if (Mathf.Abs(normal.y) > Mathf.Abs(normal.z))
-            {
-                bounceDirection.y = -Mathf.Sign(normal.y); // 天井なら下へ、床なら上へ
-            }
+          //  ////  **正面からの衝突（Z軸）**
+          //  if (normal.z < checkDistance) // ほぼ正面から当たった場合
+          //  {
+          //      //isBlockedForward = true; // 前進を禁止
+          //      //bounceDirection.z = -Mathf.Sign(normal.z);
+          //  }
+          //  // **横方向の衝突（X軸）**
+          //  if (Mathf.Abs(normal.x) > Mathf.Abs(normal.z) && Mathf.Abs(normal.x) > Mathf.Abs(normal.y))
+          //  {
+          //      bounceDirection.x = -Mathf.Sign(normal.x); // 右の壁なら左へ、左の壁なら右へ
+          //  }
+          // // **上下方向の衝突（Y軸）**
+          //  if (Mathf.Abs(normal.y) > Mathf.Abs(normal.z))
+          //  {
+          //      bounceDirection.y = -Mathf.Sign(normal.y); // 天井なら下へ、床なら上へ
+          //  }
 
            
 
-            //  **弾かれる処理 * *
-            transform.position -= bounceDirection * bounceDistance;
+          //  //  **弾かれる処理 * *
+          //  transform.position -= bounceDirection * bounceDistance;
 
-            Debug.Log("弾かれる方向: " + bounceDirection);
+          //  Debug.Log("弾かれる方向: " + bounceDirection);
 
-          //  **一定時間操作を無効化 * *
-           isBounced = true;
-           bounceTimer = bounceDisableTime;
+          ////  **一定時間操作を無効化 * *
+          // isBounced = true;
+          // bounceTimer = bounceDisableTime;
 
            
         }
@@ -272,10 +281,7 @@ public  class PlayerScript : MonoBehaviour
     }
 
 
-    void FixedUpdate()
-    {
-        CheckForwardObstacle();
-    }
+   
    
 }
   

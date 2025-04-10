@@ -273,6 +273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particle: {fileID: 2499354421883142258, guid: f0576baf986c2144fa54395405611e0a, type: 3}
+  Score: {fileID: 5034801784928566315, guid: e0582a226c6b23243b0b9976e1858959, type: 3}
   brokenParts: []
   destructionParticles: {fileID: 0}
 --- !u!1 &4742489639751969818
