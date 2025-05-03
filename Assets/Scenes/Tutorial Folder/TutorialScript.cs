@@ -8,6 +8,7 @@ public class TutorialScript : MonoBehaviour
     public CanvasGroup fadeCanvasIN;
     public CanvasGroup fadeCanvasOUT;
     public TutorialTextScript TutorialText;
+  
     float fadeDuration = 5f;
     private bool isFading = false;
     int tutorialManager = 0;
@@ -15,6 +16,7 @@ public class TutorialScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+      
         StartCoroutine(FadeIn()); // シーン開始時にフェードイン
     }
 
@@ -57,13 +59,14 @@ public class TutorialScript : MonoBehaviour
                 }
                 break;
             case 4:
-
+                
                 StartCoroutine(FadeOut("GameScene"));
 
                 break;
 
            
         }
+        
     }
 
     IEnumerator FadeIn()

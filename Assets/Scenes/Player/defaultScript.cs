@@ -40,7 +40,7 @@ public class defaultScript : MonoBehaviour
         if (collision.gameObject.tag == "EnemyBullet"|| collision.gameObject.tag == "EnemyWoll")
         {
             comboGaugeScript.Gauge = 0;
-            scoreScript.score -= 100;
+            ScoreScript.score -= 100;
           
             // ñ≥ìGèÛë‘Ç…Ç∑ÇÈ
             StartCoroutine(BlinkAndInvincible());

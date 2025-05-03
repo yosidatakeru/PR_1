@@ -16,7 +16,7 @@ public  class PlayerScript : MonoBehaviour
     public ParticleSystem sparkL;
 
     //プレイヤーの移動スピード
-    float playerSpeed = 30f;
+    float playerSpeed = 1f;
 
     //Z方向に進むスピード
      float playerZSpeed = 30f;
@@ -40,11 +40,16 @@ public  class PlayerScript : MonoBehaviour
     bool isBlockedForward = false; // 前進禁止フラグ
     public float checkDistance = 0.0f; // 障害物チェック距離
 
-   
+    Vector3 velocity; // ← プレイヤーの速度を保持する変数を用意
+    float damping = 1f; // ← 減速する速さ（慣性の強さ）
+    float maxSpeed = 30f;
+
+
     void Start()
     {
         playerRotation = Vector3.zero;
-       
+        sparkR.Stop();
+        sparkL.Stop();
     }
 
 
@@ -58,10 +63,10 @@ public  class PlayerScript : MonoBehaviour
 
 
        
-        //if (!isBlockedForward && isBounced == false)
-        //{
-            transform.position += playerZSpeed * Vector3.forward * Time.deltaTime;
-       // }
+        
+        
+        transform.position += playerZSpeed * Vector3.forward * Time.deltaTime;
+       
         // 慣性をつけて回転をスムーズにする
         playerRotation = Vector3.Lerp(playerRotation, targetRotation, Time.deltaTime * rotationSpeed);
         transform.rotation = Quaternion.Euler(playerRotation);
@@ -99,104 +104,45 @@ public  class PlayerScript : MonoBehaviour
 
     void MovePlayer()
     {
-        Vector3 move = new Vector3(moveX, moveY, moveZ) * playerSpeed * Time.deltaTime;
-        Vector3 newPosition = transform.position + move;
+        float inputX = Input.GetAxis("L_Stick_H");
+        float inputY = Input.GetAxis("L_Stick_V");
 
-        // 移動範囲を制限
+        if (Input.GetKey(KeyCode.D)) inputX += 1f;
+        if (Input.GetKey(KeyCode.A)) inputX -= 1f;
+        if (Input.GetKey(KeyCode.W)) inputY += 1f;
+        if (Input.GetKey(KeyCode.S)) inputY -= 1f;
+
+        Vector3 input = new Vector3(inputX, inputY, 0f);
+        if (input.magnitude > 1f) input.Normalize();
+
+        // 加速
+        velocity += input * playerSpeed;
+
+        // ★最高速度制限
+        if (velocity.magnitude > maxSpeed)
+        {
+            velocity = velocity.normalized * maxSpeed;
+        }
+
+        // 減衰
+        velocity = Vector3.Lerp(velocity, Vector3.zero, damping * Time.deltaTime);
+
+        // 移動
+        Vector3 newPosition = transform.position + velocity * Time.deltaTime;
+
         newPosition.x = Mathf.Clamp(newPosition.x, -34.8f, 34.8f);
         newPosition.y = Mathf.Clamp(newPosition.y, -5f, 54f);
 
-
         transform.position = newPosition;
 
-        moveX = Input.GetAxis("L_Stick_H"); // A（-1）D（+1）、Lスティック左右
-        moveY = Input.GetAxis("L_Stick_V");   // W（+1）S（-1）、Lスティック上下
-
-       
-        // キーボード & コントローラー両対応の移動処理
-      
-
-        // 移動制限（範囲: X[-20,20], Y[-5,15]）
-       
-        Collider[] hitColliders = Physics.OverlapBox(newPosition, transform.localScale / 2);
-
-        transform.position = newPosition;
-
-
-
-        if (transform.position.z >= 3300)
-        {
-            SceneManager.LoadScene("ClearScene"); // "NextSceneName" を切り替えたいシーン名に変更
-        }
-
-        if (Input.GetKey(KeyCode.G))
-        {
-            SceneManager.LoadScene("GameOverScene");
-        }
-
-
-
-
-        // 機体の傾き調整（ターゲット回転）
-        if (moveY > 0) targetRotation.x = Mathf.Max(targetRotation.x - 10, -35); // 前進
-        else if (moveY < 0) targetRotation.x = Mathf.Min(targetRotation.x + 2, 20); // 後退
+        // 傾き
+        if (velocity.y > 0.1f) targetRotation.x = Mathf.Max(targetRotation.x - 10, -35);
+        else if (velocity.y < -0.1f) targetRotation.x = Mathf.Min(targetRotation.x + 2, 20);
         else targetRotation.x = Mathf.Lerp(targetRotation.x, 0, Time.deltaTime * rotationSpeed);
 
-        if (moveX > 0) targetRotation.z = Mathf.Max(targetRotation.z - 2, -200); // 右移動
-        else if (moveX < 0) targetRotation.z = Mathf.Min(targetRotation.z + 2, 200); // 左移動
+        if (velocity.x > 0.1f) targetRotation.z = Mathf.Max(targetRotation.z - 2, -35);
+        else if (velocity.x < -0.1f) targetRotation.z = Mathf.Min(targetRotation.z + 2, 35);
         else targetRotation.z = Mathf.Lerp(targetRotation.z, 0, Time.deltaTime * rotationSpeed);
-
-
-
-
-        ////前に移動
-
-        ////デバックのために残しとく
-        //// Wキー（前方移動）
-        if (Input.GetKey(KeyCode.W))
-        {
-            transform.position += playerSpeed * Vector3.up * Time.deltaTime;
-            //targetRotation.x = Mathf.Max(targetRotation.x - 10, -35);
-        }
-        else
-        {
-
-            targetRotation.x = Mathf.Lerp(targetRotation.x, 0, Time.deltaTime * rotationSpeed);
-        }
-
-        // Sキー（後方移動）
-        if (Input.GetKey(KeyCode.S))
-        {
-            transform.position -= playerSpeed * Vector3.up * Time.deltaTime;
-            targetRotation.x = Mathf.Min(targetRotation.x + 2, 20);
-        }
-        else
-        {
-            targetRotation.x = Mathf.Lerp(targetRotation.x, 0, Time.deltaTime * rotationSpeed);
-        }
-
-        // Dキー（右移動）
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.position += playerSpeed * Vector3.right * Time.deltaTime;
-            targetRotation.z = Mathf.Max(targetRotation.z - 2, -35);
-        }
-        else
-        {
-            targetRotation.z = Mathf.Lerp(targetRotation.z, 0, Time.deltaTime * rotationSpeed);
-        }
-
-        // Aキー（左移動）
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.position -= playerSpeed * Vector3.right * Time.deltaTime;
-            targetRotation.z = Mathf.Min(targetRotation.z + 2, 35);
-        }
-        else
-        {
-            targetRotation.z = Mathf.Lerp(targetRotation.z, 0, Time.deltaTime * rotationSpeed);
-        }
-
     }
    
     void HandleShooting()
@@ -217,42 +163,42 @@ public  class PlayerScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("EnemyWoll"))
         {
-          //  ContactPoint contact = collision.contacts[0]; // 最初の接触点
-          //  Vector3 normal = contact.normal;  // 衝突法線
 
-          //  Debug.Log("衝突検出: " + collision.gameObject.name + " / 法線: " + normal);
+            ContactPoint contact = collision.contacts[0]; // 最初の接触点
+            Vector3 normal = contact.normal;  // 衝突法線
 
-          //  Vector3 bounceDirection = Vector3.zero; // 弾かれる方向
+            Debug.Log("衝突検出: " + collision.gameObject.name + " / 法線: " + normal);
 
-          //  ////  **正面からの衝突（Z軸）**
-          //  if (normal.z < checkDistance) // ほぼ正面から当たった場合
-          //  {
-          //      //isBlockedForward = true; // 前進を禁止
-          //      //bounceDirection.z = -Mathf.Sign(normal.z);
-          //  }
-          //  // **横方向の衝突（X軸）**
-          //  if (Mathf.Abs(normal.x) > Mathf.Abs(normal.z) && Mathf.Abs(normal.x) > Mathf.Abs(normal.y))
-          //  {
-          //      bounceDirection.x = -Mathf.Sign(normal.x); // 右の壁なら左へ、左の壁なら右へ
-          //  }
-          // // **上下方向の衝突（Y軸）**
-          //  if (Mathf.Abs(normal.y) > Mathf.Abs(normal.z))
-          //  {
-          //      bounceDirection.y = -Mathf.Sign(normal.y); // 天井なら下へ、床なら上へ
-          //  }
+            Vector3 bounceDirection = Vector3.zero; // 弾かれる方向
 
-           
+            ////  **正面からの衝突（Z軸）**
+            if (normal.z < checkDistance) // ほぼ正面から当たった場合
+            {
+                bounceDirection.x = -Mathf.Sign(normal.x);
+            }
+            // **横方向の衝突（X軸）**
+            if (Mathf.Abs(normal.x) > Mathf.Abs(normal.z) && Mathf.Abs(normal.x) > Mathf.Abs(normal.y))
+            {
+                bounceDirection.x = -Mathf.Sign(normal.x); // 右の壁なら左へ、左の壁なら右へ
+            }
+            // **上下方向の衝突（Y軸）**
+            if (Mathf.Abs(normal.y) > Mathf.Abs(normal.z))
+            {
+                bounceDirection.x = -Mathf.Sign(normal.x);// 天井なら下へ、床なら上へ
+            }
 
-          //  //  **弾かれる処理 * *
-          //  transform.position -= bounceDirection * bounceDistance;
 
-          //  Debug.Log("弾かれる方向: " + bounceDirection);
 
-          ////  **一定時間操作を無効化 * *
-          // isBounced = true;
-          // bounceTimer = bounceDisableTime;
+            //  **弾かれる処理 * *
+            transform.position -= bounceDirection * bounceDistance;
 
-           
+            Debug.Log("弾かれる方向: " + bounceDirection);
+
+            //  **一定時間操作を無効化 * *
+            isBounced = true;
+            bounceTimer = bounceDisableTime;
+
+
         }
 
        

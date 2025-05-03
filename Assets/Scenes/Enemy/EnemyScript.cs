@@ -28,7 +28,7 @@ public class EnemyScript : MonoBehaviour
    
     int comboScore = 0;
 
-    int score = 0;
+    int scoreReset = 0;
 
     int destroyScore = 10;
 
@@ -144,10 +144,10 @@ public class EnemyScript : MonoBehaviour
           
             //スコア刑の処理
             //ここ調整する
-            score =  comboSceorwScript.conboScore * destroyScore /9;
+            scoreReset =  comboSceorwScript.conboScore * destroyScore /9;
 
             //スコアの受け渡い
-            scoreScript.score += destroyScore + score;
+            ScoreScript.score += destroyScore + scoreReset;
 
             comboSceorwScript.conboScore += 1;
 

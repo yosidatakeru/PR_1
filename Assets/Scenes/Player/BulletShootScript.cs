@@ -54,11 +54,7 @@ public class BulletShootScript : MonoBehaviour
             target = FindClosestEnemy();  // ãﬂÇ≠ÇÃìGÇíTÇ∑
         }
 
-    }
 
-    void FixedUpdate()
-    {
-       
         if (target != null)
         {
             Vector3 directionToTarget = (target.transform.position - transform.position).normalized;
@@ -79,6 +75,12 @@ public class BulletShootScript : MonoBehaviour
         rb.velocity = moveDirection * speed;
 
         Debug.DrawLine(transform.position, transform.position + moveDirection * 3.0f, Color.blue);
+    }
+
+    void FixedUpdate()
+    {
+       
+       
     }
 
     // ç≈Ç‡ãﬂÇ¢ìGÇíTÇ∑

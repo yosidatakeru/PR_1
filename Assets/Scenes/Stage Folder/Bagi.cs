@@ -8,7 +8,7 @@ public class Bagi : MonoBehaviour
     private ComboGaugeScript comboGaugeScript;
     ComboSceorwScript comboSceorwScript;
     ScoreScript scoreScript;
-    int score = 0;
+    int scoreResult = 0;
     int destroyScore = 100;
     Vector3 particleposition = Vector3.zero;
     public GameObject[] brokenParts; // 敵が崩れるパーツ
@@ -42,10 +42,10 @@ public class Bagi : MonoBehaviour
 
             //スコアの処理
             //ここ調整する
-            score = comboSceorwScript.conboScore * destroyScore / 9;
+            scoreResult = comboSceorwScript.conboScore * destroyScore / 9;
 
             //スコアの受け渡い
-            scoreScript.score += destroyScore + score;
+            ScoreScript.score += destroyScore + scoreResult;
 
             comboSceorwScript.conboScore += comboup ;
 
