@@ -23,16 +23,31 @@ public class TrackingBilltScript : MonoBehaviour
             target = targetObj.transform;
         }
 
+        // ランダムな方向とスピード（ばらけ発射）
+        float angleX = Random.Range(-10f, 10f);
+        float angleY = Random.Range(-10f, 10f);
+        transform.rotation = Quaternion.Euler(angleX, angleY, 0f) * transform.rotation;
+        speed = Random.Range(15f, 30f);
+
         Destroy(gameObject, lifeTime);
     }
 
 
     void Update()
     {
-        // ミサイルは常に前進
+        // 常に前進（現在の向きに直進）
         transform.position += transform.forward * speed * Time.deltaTime;
 
-        // 一定時間後に追尾開始
+        if (target == null) return;
+
+        // Z座標が近づいたら追尾をやめてそのまま進む
+        if (isHoming && Mathf.Abs(transform.position.z - target.position.z) < 0.1f)
+        {
+            isHoming = false;
+            return;
+        }
+
+        // 一定時間経過後に追尾開始
         if (!isHoming)
         {
             homingTimer += Time.deltaTime;
@@ -40,16 +55,12 @@ public class TrackingBilltScript : MonoBehaviour
             {
                 isHoming = true;
             }
-            return;
+            return; // 追尾開始前は直進のみ
         }
 
-        if (target == null) return;
-
-        // ターゲット方向を算出
+        // なめらかにターゲット方向へ向く
         Vector3 direction = (target.position - transform.position).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-        // 自然な追尾回転（RotateTowards）
         transform.rotation = Quaternion.RotateTowards(
             transform.rotation,
             targetRotation,

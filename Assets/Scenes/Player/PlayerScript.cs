@@ -9,7 +9,7 @@ using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
-public  class PlayerScript : MonoBehaviour
+public class PlayerScript : MonoBehaviour
 {
     public GameObject Bullet;
     public ParticleSystem sparkR;
@@ -19,7 +19,7 @@ public  class PlayerScript : MonoBehaviour
     float playerSpeed = 1f;
 
     //Z方向に進むスピード
-     float playerZSpeed = 30f;
+    float playerZSpeed = 30f;
 
     ////弾のインタバル制御
     int timeUntilNextShot = 0;
@@ -44,6 +44,9 @@ public  class PlayerScript : MonoBehaviour
     float damping = 1f; // ← 減速する速さ（慣性の強さ）
     float maxSpeed = 30f;
 
+    private float rollZAngle = 0f; // ロール用のZ回転角
+    bool isRolling = false; // ロール中かどうか
+    float rollTime = 0.5f; // ロールの持続時間
 
     void Start()
     {
@@ -57,19 +60,26 @@ public  class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
+
+        if (Input.GetKeyDown(KeyCode.Q) && !isRolling)
+        {
+            StartCoroutine(DoBarrelRoll());
+        }
+
+        // 慣性をつけて回転をスムーズにする
+        playerRotation = Vector3.Lerp(playerRotation, targetRotation, Time.deltaTime * rotationSpeed);
+
+        // Z軸にrollZAngleを加算（playerRotation.z + rollZAngle）
+        transform.rotation = Quaternion.Euler(playerRotation.x, playerRotation.y, playerRotation.z + rollZAngle);
         // 通常の操作処理
         MovePlayer();
 
 
-       
-        
-        
+
+
+
         transform.position += playerZSpeed * Vector3.forward * Time.deltaTime;
-       
-        // 慣性をつけて回転をスムーズにする
-        playerRotation = Vector3.Lerp(playerRotation, targetRotation, Time.deltaTime * rotationSpeed);
-        transform.rotation = Quaternion.Euler(playerRotation);
+
 
 
 
@@ -81,7 +91,7 @@ public  class PlayerScript : MonoBehaviour
             sparkR.Play(); // パーティクル再生
 
         }
-        else 
+        else
         {
             sparkR.Stop(); // パーティクルストップ
         }
@@ -95,6 +105,8 @@ public  class PlayerScript : MonoBehaviour
         {
             sparkL.Stop(); // パーティクルストップ
         }
+
+
 
     }
 
@@ -144,7 +156,7 @@ public  class PlayerScript : MonoBehaviour
         else if (velocity.x < -0.1f) targetRotation.z = Mathf.Min(targetRotation.z + 2, 35);
         else targetRotation.z = Mathf.Lerp(targetRotation.z, 0, Time.deltaTime * rotationSpeed);
     }
-   
+
     void HandleShooting()
     {
         triggerValue = Input.GetAxis("RightTrigger");
@@ -156,7 +168,7 @@ public  class PlayerScript : MonoBehaviour
             timeUntilNextShot = bulletNexst;
         }
 
-       
+
     }
 
     void OnCollisionStay(Collision collision)
@@ -201,7 +213,7 @@ public  class PlayerScript : MonoBehaviour
 
         }
 
-       
+
     }
 
     void OnCollisionEnter(Collision collision)
@@ -227,8 +239,59 @@ public  class PlayerScript : MonoBehaviour
     }
 
 
-   
-   
+    IEnumerator DoBarrelRoll()
+    {
+        isRolling = true;
+        float elapsed = 0f;
+
+        float startZ = rollZAngle;
+        float endZ = startZ + 360f;
+
+        float repelInterval = 0.05f; // はじく処理の間隔（重すぎ防止）
+        float repelTimer = 0f;
+
+        while (elapsed < rollTime)
+        {
+            float t = elapsed / rollTime;
+            rollZAngle = Mathf.Lerp(startZ, endZ, t);
+            elapsed += Time.deltaTime;
+            repelTimer += Time.deltaTime;
+
+            if (repelTimer >= repelInterval)
+            {
+                RepelNearbyBullets();
+                repelTimer = 0f;
+            }
+
+            yield return null;
+        }
+
+        rollZAngle = endZ % 360f;
+        isRolling = false;
+    }
+
+    void RepelNearbyBullets()
+    {
+        float repelRadius = 5.0f; // はじく半径
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, repelRadius);
+
+        foreach (var hit in hitColliders)
+        {
+            if (hit.CompareTag("EnemyBullet"))
+            {
+                // 方法①: 弾を消す
+                // Destroy(hit.gameObject);
+
+               // EnemyBullet bulletScript = hit.GetComponent<EnemyBullet>();
+                //if (bulletScript != null)
+                //{
+                //    bulletScript.ReflectFrom(transform.position);
+                //}
+            }
+        }
+
+
+    }
 }
   
 
