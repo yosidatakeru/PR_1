@@ -11,152 +11,204 @@ using UnityEngine.UIElements;
 
 public class PlayerScript : MonoBehaviour
 {
+    // 発射する弾のプレハブ
     public GameObject Bullet;
+
+    // 右壁との接触時のパーティクル
     public ParticleSystem sparkR;
+    // 左壁との接触時のパーティクル
     public ParticleSystem sparkL;
 
-    //プレイヤーの移動スピード
+    // プレイヤーの操作による移動速度
     float playerSpeed = 1f;
+    // 前方への自動移動速度
+    float forwardSpeed = 30f;
 
-    //Z方向に進むスピード
-    float playerZSpeed = 30f;
-
-    ////弾のインタバル制御
+    // 次の弾が撃てるまでのクールタイム
     int timeUntilNextShot = 0;
+    // 弾の連射間隔（フレーム数）
+    int bulletNext = 4;
 
-    int bulletNexst = 4;
+    // 回転のスムーズさ
+    float rotationSpeed = 5.0f;
+    // 現在の回転
+    private Vector3 playerRotation;
 
-    float rotationSpeed = 5.0f; // 回転の慣性調整
-    private Vector3 playerRotation;    // 現在の回転値
-    private Vector3 targetRotation;    // 目標の回転値
+    // ターゲット回転値（傾き用）
+    private Vector3 targetRotation;
+
+    // トリガー入力
     float triggerValue;
-    float moveX;
-    float moveY;
-    float moveZ;
-    float bounceDistance = 2.0f; // 弾かれる距離
-    float bounceDisableTime = 0.3f; // 操作無効時間
-    private bool isBounced = false; // 操作無効フラグ
-    private float bounceTimer = 0.0f; // 無効時間計測用
-    bool isBlockedForward = false; // 前進禁止フラグ
-    public float checkDistance = 0.0f; // 障害物チェック距離
 
-    Vector3 velocity; // ← プレイヤーの速度を保持する変数を用意
-    float damping = 1f; // ← 減速する速さ（慣性の強さ）
+    // 壁にぶつかったときの反発距離
+    float bounceDistance = 2.0f;
+    // 反発後の一時的な操作無効時間
+    float bounceDisableTime = 0.3f;
+    private bool isBounced = false;
+    // 反発中フラグ
+    private float bounceTimer = 0.0f;
+    // 反発の残り時間
+
+    // 現在の速度
+    Vector3 velocity;
+    // 減速率
+    float damping = 1f;
+    // 最大速度
     float maxSpeed = 30f;
 
-    private float rollZAngle = 0f; // ロール用のZ回転角
-    bool isRolling = false; // ロール中かどうか
-    float rollTime = 0.5f; // ロールの持続時間
+    // ロール回転のZ角度
+    private float rollZAngle = 0f;
+    // バレルロール中かどうか
+    bool isRolling = false;
+    // ロール持続時間
+    float rollTime = 0.5f;
+
+    HPScript hpScript;
 
     void Start()
     {
+      
         playerRotation = Vector3.zero;
+       
         sparkR.Stop();
+       
         sparkL.Stop();
+
+        hpScript = GameObject.Find("HPGauge").GetComponent<HPScript>();
     }
 
-
-
-    // Update is called once per frame
     void Update()
     {
+        // 入力処理（ロール開始）
+        HandleInput();
+        
+        // 回転処理（傾きやロール）
+        UpdateRotation();
 
+        // 移動処理（通常）
+        UpdateMovement();
+
+        // 壁との接触エフェクト処理
+        UpdateParticles();
+
+        // 弾発射処理
+        HandleShooting();
+
+        // 反発タイマー更新
+        UpdateBounceTimer();
+    }
+
+    void HandleInput()
+    {
+        // バレルロール開始
         if (Input.GetKeyDown(KeyCode.Q) && !isRolling)
         {
             StartCoroutine(DoBarrelRoll());
         }
-
-        // 慣性をつけて回転をスムーズにする
-        playerRotation = Vector3.Lerp(playerRotation, targetRotation, Time.deltaTime * rotationSpeed);
-
-        // Z軸にrollZAngleを加算（playerRotation.z + rollZAngle）
-        transform.rotation = Quaternion.Euler(playerRotation.x, playerRotation.y, playerRotation.z + rollZAngle);
-        // 通常の操作処理
-        MovePlayer();
-
-
-
-
-
-        transform.position += playerZSpeed * Vector3.forward * Time.deltaTime;
-
-
-
-
-        // 弾の発射処理
-        HandleShooting();
-        //壁にぶつかった時の処理
-        if (transform.position.x >= 34.0f)
-        {
-            sparkR.Play(); // パーティクル再生
-
-        }
-        else
-        {
-            sparkR.Stop(); // パーティクルストップ
-        }
-
-        if (transform.position.x <= -34.0f)
-        {
-            sparkL.Play(); // パーティクル再生
-
-        }
-        else
-        {
-            sparkL.Stop(); // パーティクルストップ
-        }
-
-
-
     }
 
-
-
-
-
-    void MovePlayer()
+    // 回転（プレイヤー傾き + ロール）更新
+    void UpdateRotation()
     {
+        playerRotation = Vector3.Lerp(playerRotation, targetRotation, Time.deltaTime * rotationSpeed);
+        transform.rotation = Quaternion.Euler(playerRotation.x, playerRotation.y, playerRotation.z + rollZAngle);
+    }
+
+    // プレイヤーの移動処理
+    void UpdateMovement()
+    {
+        // 反発中は操作不能
+        if (isBounced) 
+        {
+            return;
+        }
+
+        // 入力取得
         float inputX = Input.GetAxis("L_Stick_H");
         float inputY = Input.GetAxis("L_Stick_V");
 
-        if (Input.GetKey(KeyCode.D)) inputX += 1f;
-        if (Input.GetKey(KeyCode.A)) inputX -= 1f;
-        if (Input.GetKey(KeyCode.W)) inputY += 1f;
-        if (Input.GetKey(KeyCode.S)) inputY -= 1f;
+        if (Input.GetKey(KeyCode.D))
+        { 
+            inputX += 1f;
+        }
+
+        if (Input.GetKey(KeyCode.A))
+        {
+            inputX -= 1f;
+        }
+        
+        if (Input.GetKey(KeyCode.W)) 
+        { 
+            inputY += 1f;
+        }
+
+        if (Input.GetKey(KeyCode.S)) 
+        {
+            inputY -= 1f; 
+        }
+
 
         Vector3 input = new Vector3(inputX, inputY, 0f);
-        if (input.magnitude > 1f) input.Normalize();
+        if (input.magnitude > 1f) 
+        { 
+            input.Normalize(); 
+        }
 
-        // 加速
+
+
+        // 加速度的な移動
         velocity += input * playerSpeed;
-
-        // ★最高速度制限
         if (velocity.magnitude > maxSpeed)
         {
             velocity = velocity.normalized * maxSpeed;
         }
 
-        // 減衰
+        // 徐々に減速
         velocity = Vector3.Lerp(velocity, Vector3.zero, damping * Time.deltaTime);
 
-        // 移動
-        Vector3 newPosition = transform.position + velocity * Time.deltaTime;
 
+
+        Vector3 newPosition = transform.position + velocity * Time.deltaTime;
         newPosition.x = Mathf.Clamp(newPosition.x, -34.8f, 34.8f);
         newPosition.y = Mathf.Clamp(newPosition.y, -5f, 54f);
-
         transform.position = newPosition;
 
+
+
         // 傾き
-        if (velocity.y > 0.1f) targetRotation.x = Mathf.Max(targetRotation.x - 10, -35);
-        else if (velocity.y < -0.1f) targetRotation.x = Mathf.Min(targetRotation.x + 2, 20);
-        else targetRotation.x = Mathf.Lerp(targetRotation.x, 0, Time.deltaTime * rotationSpeed);
+        if (velocity.y > 0.1f)
+        {
+            targetRotation.x = Mathf.Max(targetRotation.x - 10, -35);
+        }
+        else if (velocity.y < -0.1f)
+        {
+            targetRotation.x = Mathf.Min(targetRotation.x + 2, 20);
+        }
+        else
+        {
+            targetRotation.x = Mathf.Lerp(targetRotation.x, 0, Time.deltaTime * rotationSpeed);
+        }
 
-        if (velocity.x > 0.1f) targetRotation.z = Mathf.Max(targetRotation.z - 2, -35);
-        else if (velocity.x < -0.1f) targetRotation.z = Mathf.Min(targetRotation.z + 2, 35);
-        else targetRotation.z = Mathf.Lerp(targetRotation.z, 0, Time.deltaTime * rotationSpeed);
+
+        if (velocity.x > 0.1f)
+        {
+            targetRotation.z = Mathf.Max(targetRotation.z - 2, -35);
+        }
+        else if (velocity.x < -0.1f)
+        {
+            targetRotation.z = Mathf.Min(targetRotation.z + 2, 35);
+        }
+        else
+        {
+            targetRotation.z = Mathf.Lerp(targetRotation.z, 0, Time.deltaTime * rotationSpeed);
+        }
+
+        // 常に前方に進む
+        transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
+
+
     }
-
+    // 弾の発射処理
     void HandleShooting()
     {
         triggerValue = Input.GetAxis("RightTrigger");
@@ -164,101 +216,105 @@ public class PlayerScript : MonoBehaviour
 
         if ((Input.GetKey(KeyCode.Space) || triggerValue > 0.1f) && timeUntilNextShot <= 0)
         {
-            Instantiate(Bullet, transform.position, Quaternion.identity);
-            timeUntilNextShot = bulletNexst;
+            Vector3 muzzleOffset = transform.forward * 2f;
+            Instantiate(Bullet, transform.position + muzzleOffset, transform.rotation);
+            timeUntilNextShot = bulletNext;
+        }
+    }
+    // 壁エフェクトのオンオフ制御
+    void UpdateParticles()
+    {
+        if (transform.position.x >= 34.0f)
+        {
+            if (!sparkR.isPlaying) sparkR.Play();
+        }
+        else if (sparkR.isPlaying)
+        {
+            sparkR.Stop();
         }
 
-
+        if (transform.position.x <= -34.0f)
+        {
+            if (!sparkL.isPlaying) sparkL.Play();
+        }
+        else if (sparkL.isPlaying)
+        {
+            sparkL.Stop();
+        }
     }
-
+    // 反発後の無操作時間カウント
+    void UpdateBounceTimer()
+    {
+        if (isBounced)
+        {
+            bounceTimer -= Time.deltaTime;
+            if (bounceTimer <= 0f)
+            {
+                isBounced = false;
+            }
+        }
+    }
+    // 壁接触時に反発する処理
     void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.CompareTag("EnemyWoll"))
         {
+            ContactPoint contact = collision.contacts[0];
+            Vector3 normal = contact.normal;
+            Vector3 absNormal = new Vector3(Mathf.Abs(normal.x), Mathf.Abs(normal.y), Mathf.Abs(normal.z));
 
-            ContactPoint contact = collision.contacts[0]; // 最初の接触点
-            Vector3 normal = contact.normal;  // 衝突法線
+            Vector3 bounceDirection = Vector3.zero;
 
-            Debug.Log("衝突検出: " + collision.gameObject.name + " / 法線: " + normal);
+            if (absNormal.x > absNormal.y && absNormal.x > absNormal.z)
+                bounceDirection = new Vector3(-Mathf.Sign(normal.x), 0, 0);
+            else if (absNormal.y > absNormal.x && absNormal.y > absNormal.z)
+                bounceDirection = new Vector3(0, -Mathf.Sign(normal.y), 0);
+            else
+                bounceDirection = new Vector3(0, 0, -Mathf.Sign(normal.z));
 
-            Vector3 bounceDirection = Vector3.zero; // 弾かれる方向
-
-            ////  **正面からの衝突（Z軸）**
-            if (normal.z < checkDistance) // ほぼ正面から当たった場合
-            {
-                bounceDirection.x = -Mathf.Sign(normal.x);
-            }
-            // **横方向の衝突（X軸）**
-            if (Mathf.Abs(normal.x) > Mathf.Abs(normal.z) && Mathf.Abs(normal.x) > Mathf.Abs(normal.y))
-            {
-                bounceDirection.x = -Mathf.Sign(normal.x); // 右の壁なら左へ、左の壁なら右へ
-            }
-            // **上下方向の衝突（Y軸）**
-            if (Mathf.Abs(normal.y) > Mathf.Abs(normal.z))
-            {
-                bounceDirection.x = -Mathf.Sign(normal.x);// 天井なら下へ、床なら上へ
-            }
-
-
-
-            //  **弾かれる処理 * *
             transform.position -= bounceDirection * bounceDistance;
-
-            Debug.Log("弾かれる方向: " + bounceDirection);
-
-            //  **一定時間操作を無効化 * *
             isBounced = true;
             bounceTimer = bounceDisableTime;
 
-
+            Debug.Log("Bounce direction: " + bounceDirection);
         }
-
-
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        //Debug.Log(enemySpawnScript.enemySpawns);
-
-        if (collision.gameObject.tag == "PerspectiveOn")
+        if (collision.gameObject.CompareTag("PerspectiveOn"))
         {
-
             Debug.Log("方向変換");
-
-
         }
-
-        if (collision.gameObject.tag == "PerspectiveOff")
+        if (collision.gameObject.CompareTag("PerspectiveOff"))
         {
-
             Debug.Log("方向変換2");
-
-
         }
-
     }
-
-
+    // バレルロールの実行
     IEnumerator DoBarrelRoll()
     {
         isRolling = true;
         float elapsed = 0f;
 
         float startZ = rollZAngle;
-        float endZ = startZ + 360f;
+        int rollCount = 2;
+        float duration = 1.5f;
 
-        float repelInterval = 0.05f; // はじく処理の間隔（重すぎ防止）
+        float endZ = startZ + (360f * rollCount);
+        float repelInterval = 0.05f;
         float repelTimer = 0f;
 
-        while (elapsed < rollTime)
+        while (elapsed < duration)
         {
-            float t = elapsed / rollTime;
+            float t = elapsed / duration;
             rollZAngle = Mathf.Lerp(startZ, endZ, t);
             elapsed += Time.deltaTime;
             repelTimer += Time.deltaTime;
 
             if (repelTimer >= repelInterval)
             {
+                // 弾をはじく
                 RepelNearbyBullets();
                 repelTimer = 0f;
             }
@@ -266,40 +322,29 @@ public class PlayerScript : MonoBehaviour
             yield return null;
         }
 
-        rollZAngle = endZ % 360f;
+        rollZAngle = endZ % 720f;
         isRolling = false;
     }
 
+    // 近くの敵弾を削除（はじく処理）
     void RepelNearbyBullets()
     {
-        float repelRadius = 5.0f; // はじく半径
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, repelRadius);
+        float repelRadius = 5.0f;
+        int layerMask = 1 << LayerMask.NameToLayer("EnemyBullet");
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, repelRadius, layerMask);
 
         foreach (var hit in hitColliders)
         {
-            if (hit.CompareTag("EnemyBullet"))
-            {
-                // 方法①: 弾を消す
-                // Destroy(hit.gameObject);
+            TrackingBilltScript tracking = hit.GetComponent<TrackingBilltScript>();
+            PlayerFollowingBulletScript following = hit.GetComponent<PlayerFollowingBulletScript>();
+           // hpScript.Gauge += 10;
 
-               // EnemyBullet bulletScript = hit.GetComponent<EnemyBullet>();
-                //if (bulletScript != null)
-                //{
-                //    bulletScript.ReflectFrom(transform.position);
-                //}
+            if (tracking != null || following != null)
+            {
+                Destroy(hit.gameObject);
             }
         }
-
-
     }
 }
-  
-
 
   
-
-
-    
-
-
-

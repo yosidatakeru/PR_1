@@ -2,48 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class ComboGaugeScript : MonoBehaviour
+public class HPScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    // コンボゲージの値
     public float Gauge = 0;
-
-    // UIスライダーコンポーネント（インスペクターで設定）
-    public Slider comboGauge;
-
-    // CanvasGroup（透明度などを制御するため）
+    public Slider HPGauge;
     CanvasGroup canvasGroup;
-   
-
+    // Start is called before the first frame update
     void Start()
     {
-        // CanvasGroupを現在のGameObjectから取得
+
         canvasGroup = GetComponent<CanvasGroup>();
 
-        // コンボゲージを初期化
-        Gauge = 0;
+        // HPゲージを初期化
+        Gauge = 1000;
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if (Gauge >= 1000) 
+        {
+            Gauge = 1000;
+        }
+
         // スライダーにゲージの値を反映
-        comboGauge.value = Gauge;
+        HPGauge.value = Gauge;
 
         // ゲージが0以下なら非表示
         if (Gauge <= 0)
         {
             canvasGroup.alpha = 0;
-           
+
         }
-        else 
+        else
         {
             canvasGroup.alpha = 1;
         }
-
-        // 毎フレームゲージを減少させる
-        Gauge--;
-       
     }
 }

@@ -6,7 +6,7 @@ using static UnityEngine.GraphicsBuffer;
 public class TrackingBilltScript : MonoBehaviour
 {
     string targetTag = "Player";
-    float speed = 30f;
+    float speed = 40f;
     float rotateSpeed = 1000f;
     float lifeTime = 10f;
     float homingDelay = 0.5f; // 追尾開始までの遅延
@@ -67,8 +67,21 @@ public class TrackingBilltScript : MonoBehaviour
             rotateSpeed * Time.deltaTime
         );
     }
+    public void SetNewTarget(Vector3 newTargetPosition)
+    {
+        // 一時的な仮ターゲットとして Transform を生成（破棄されないように管理しても良い）
+        GameObject dummyTarget = new GameObject("ReflectedTarget");
+        dummyTarget.transform.position = newTargetPosition;
+        target = dummyTarget.transform;
 
-   
+        // 追尾状態を強制ONにする
+        isHoming = true;
+        homingTimer = homingDelay; // すぐ追尾に移る
+
+        // 速度・回転速度を反射用に調整してもよい
+        speed = Mathf.Max(speed, 20f);
+    }
+
 }
 
 

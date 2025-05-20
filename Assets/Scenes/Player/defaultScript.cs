@@ -11,11 +11,12 @@ public class defaultScript : MonoBehaviour
     private CapsuleCollider capsuleCollider; // プレイヤーの当たり判定用
 
     private ComboGaugeScript comboGaugeScript;
+    HPScript hpScript;
 
-   
     // Start is called before the first frame update
     void Start()
     {
+        hpScript = GameObject.Find("HPGauge").GetComponent<HPScript>();
         comboGaugeScript = GameObject.Find("ComboGauge").GetComponent<ComboGaugeScript>();
         isInvincible = false;
         invincibleTime = 2.0f;
@@ -41,7 +42,7 @@ public class defaultScript : MonoBehaviour
         {
             comboGaugeScript.Gauge = 0;
             ScoreScript.score -= 100;
-          
+            hpScript.Gauge -= 200;
             // 無敵状態にする
             StartCoroutine(BlinkAndInvincible());
         }

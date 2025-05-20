@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class PlayerFollowingBulletScript : MonoBehaviour
 {
-    float speed = 80f;
-    float lifetime = 5f;
-    private Vector3 targetPosition; // 発射時のプレイヤー位置
+    public float speed = 80f;
+    public float lifetime = 100f;
+    public Vector3 targetPosition;
+    private Vector3 direction;
 
     void Start()
     {
-        // 発射された瞬間のプレイヤー位置を取得
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
@@ -18,45 +18,40 @@ public class PlayerFollowingBulletScript : MonoBehaviour
         }
         else
         {
-            // プレイヤーがいない場合は前方に飛ぶ
             targetPosition = transform.position + transform.forward * 10f;
         }
-
-       
     }
 
     void Update()
     {
-        // ターゲット位置に向かって移動
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 
-        // 目標地点に到達したら削除
         if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+        {
+            Destroy(gameObject);
+        }
+
+        lifetime -= Time.deltaTime;
+        if (lifetime <= 0f)
         {
             Destroy(gameObject);
         }
     }
 
+    public void SetNewTarget(Vector3 newTarget)
+    {
+        targetPosition = newTarget ;
+
+        // タグを「Bullet」に変更（反射後の状態）
+        gameObject.tag = "Bullet";
+    }
+
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("EnemyWoll"))
         {
-            GetComponent<SphereCollider>().enabled = false;
-            //敵を消す/
+            GetComponent<Collider>().enabled = false;
             Destroy(gameObject);
-
-
-
-        }
-
-        if (collision.gameObject.tag == "EnemyWoll")
-        {
-            GetComponent<SphereCollider>().enabled = false;
-
-            Destroy(gameObject);
-
-
-
         }
     }
 }
