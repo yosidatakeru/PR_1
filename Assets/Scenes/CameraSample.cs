@@ -6,8 +6,8 @@ public class CameraSample : MonoBehaviour
 {
     public Transform player;
 
-    Vector3 defaultOffset = new Vector3(0, 0, -6); // 通常時のオフセット
-    Vector3 newOffset = new Vector3(-4, 3, 10);    // 切り替え後のオフセット
+    Vector3 defaultOffset = new Vector3(0, 0, -6);
+    Vector3 newOffset = new Vector3(-4, 3, 10);
 
     float smoothSpeed = 5.0f;
     float maxTiltAngle = 2.0f;
@@ -17,15 +17,26 @@ public class CameraSample : MonoBehaviour
     private float tiltAmount = 0f;
     private float tiltVelocity = 0f;
 
-    float forwardTriggerZ = 3000f;
+    float forwardTriggerZ = 3300f;
 
     private bool hasSwitched = false;
+
+    // 演出関連
+    private bool isStarting = true;
+    private float startDuration = 5.0f;
+    private float startTimer = 0f;
+    private Vector3 startOffset = new Vector3(-4, -3, 10); // スタート演出時のカメラ位置
 
     void Start()
     {
         if (player != null)
         {
             lastPlayerPosition = player.position;
+            transform.position = player.position + startOffset;
+
+            // プレイヤーの方向を見る
+            Quaternion lookRotation = Quaternion.LookRotation(player.position - transform.position);
+            transform.rotation = lookRotation;
         }
     }
 
@@ -33,10 +44,31 @@ public class CameraSample : MonoBehaviour
     {
         if (player == null) return;
 
-        // プレイヤーのZ座標によって追尾方法を変更
         Vector3 currentOffset = player.position.z > forwardTriggerZ ? newOffset : defaultOffset;
 
-        // 追尾処理
+        // スタート演出中
+        if (isStarting)
+        {
+            startTimer += Time.deltaTime;
+            float t = Mathf.Clamp01(startTimer / startDuration);
+
+            // プレイヤーに向かってカメラが近づいていく
+            Vector3 desiredStartPos = Vector3.Lerp(player.position + startOffset, player.position + currentOffset, t);
+            transform.position = desiredStartPos;
+
+            // 回転も補間してスムーズに
+            Quaternion targetRot = Quaternion.LookRotation(player.position - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * smoothSpeed);
+
+            if (t >= 1.0f)
+            {
+                isStarting = false; // 演出終了
+            }
+
+            return; // 通常追尾はまだ行わない
+        }
+
+        // 通常の追尾処理
         Vector3 desiredPosition = player.position + currentOffset;
         transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
 

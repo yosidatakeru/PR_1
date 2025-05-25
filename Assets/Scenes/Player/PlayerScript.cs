@@ -67,6 +67,8 @@ public class PlayerScript : MonoBehaviour
 
     HPScript hpScript;
 
+    bool isControlEnabled = true;
+
     void Start()
     {
       
@@ -81,22 +83,30 @@ public class PlayerScript : MonoBehaviour
 
     void Update()
     {
-        // 入力処理（ロール開始）
+        // プレイヤーの座標によって操作可能フラグを切り替え
+        if (transform.position.z <= 50f|| transform.position.z >= 3300f)
+        {
+            isControlEnabled = false;
+        }
+        else 
+        {
+            isControlEnabled = true;
+        }
+        // 常に前方へ進む
+        transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
+
+        // フラグが無効なら以降の入力や移動処理をスキップ
+        if (isControlEnabled == false) 
+        {
+            return;
+        }
+           
+
         HandleInput();
-        
-        // 回転処理（傾きやロール）
         UpdateRotation();
-
-        // 移動処理（通常）
         UpdateMovement();
-
-        // 壁との接触エフェクト処理
         UpdateParticles();
-
-        // 弾発射処理
         HandleShooting();
-
-        // 反発タイマー更新
         UpdateBounceTimer();
     }
 
@@ -147,9 +157,7 @@ public class PlayerScript : MonoBehaviour
         newPosition.y = Mathf.Clamp(newPosition.y, -5f, 54f);
         transform.position = newPosition;
 
-        // 常に前方へ進む
-        transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
-
+       
         // =====================================
         // 傾き処理：速度に比例してスムーズに回転
         // =====================================

@@ -10,7 +10,7 @@ public class GameManagerObjectScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        enemySpawnScript = GameObject.Find("EnemySpawnObject").GetComponent<EnemySpawnScript>();
+      
     }
 
     //Update is called once per frame

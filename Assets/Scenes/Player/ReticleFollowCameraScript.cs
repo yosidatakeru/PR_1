@@ -12,7 +12,7 @@ public class ReticleFollowCameraScript : MonoBehaviour
     float distanceAhead = 10f; // プレイヤーの前方に配置する距離
    
    
-    private bool playerPosition = false;
+    private bool playerPosition = true;
     private Vector3 offset; // プレイヤーとの相対位置
    
     float previousPlayerZ = 0;

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,6 +8,7 @@ public class GoalScript : MonoBehaviour
 {
     ScoreScript scoreScript;
     PlayerScript playerScript;
+    public CanvasGroup clearUI;
     public CanvasGroup fade;
     float fadeDuration = 3f;
     private bool isFading = false;
@@ -20,7 +22,17 @@ public class GoalScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerScript.transform.position.z >= 3300)
+
+        if (playerScript.transform.position.z >= 3300) 
+        {
+            clearUI.alpha = 1;
+        }
+            
+        
+        
+
+
+        if (playerScript.transform.position.z >= 3300&& Input.GetKeyDown(KeyCode.Space)|| Input.GetButtonDown("Abutton"))
         {
             StartCoroutine(FadeOut("ClearScene"));
            // "NextSceneName" ‚ğØ‚è‘Ö‚¦‚½‚¢ƒV[ƒ“–¼‚É•ÏX
