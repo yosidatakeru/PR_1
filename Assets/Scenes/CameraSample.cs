@@ -4,47 +4,53 @@ using UnityEngine;
 
 public class CameraSample : MonoBehaviour
 {
-    public Transform player; // プレイヤーのTransformをアサイン
-    public Vector3 offset = new Vector3(0, 0, -3); // カメラのオフセット
-    float smoothSpeed = 10.0f; // カメラの追尾速度
-    float maxTiltAngle = 2.0f; // カメラの最大傾き角度
-    float tiltSpeed = 5.0f; // カメラの傾きスムーズ速度
+    public Transform player;
 
-    private Vector3 lastPlayerPosition; // 前フレームのプレイヤー位置
-    private float tiltAmount = 0f; // 現在の傾き
-    private float tiltVelocity = 0f; // SmoothDamp用の速度変数
+    Vector3 defaultOffset = new Vector3(0, 0, -6); // 通常時のオフセット
+    Vector3 newOffset = new Vector3(-4, 3, 10);    // 切り替え後のオフセット
+
+    float smoothSpeed = 5.0f;
+    float maxTiltAngle = 2.0f;
+    float tiltSpeed = 5.0f;
+
+    private Vector3 lastPlayerPosition;
+    private float tiltAmount = 0f;
+    private float tiltVelocity = 0f;
+
+    float forwardTriggerZ = 3000f;
+
+    private bool hasSwitched = false;
 
     void Start()
     {
         if (player != null)
         {
-            lastPlayerPosition = player.position; // 初期位置を記録
+            lastPlayerPosition = player.position;
         }
     }
 
     void Update()
     {
-        if (player == null) return; // プレイヤーが未設定なら処理しない
+        if (player == null) return;
 
-        // カメラの目標位置を計算
-        Vector3 desiredPosition = player.position + offset;
+        // プレイヤーのZ座標によって追尾方法を変更
+        Vector3 currentOffset = player.position.z > forwardTriggerZ ? newOffset : defaultOffset;
 
-        // スムーズに目標位置に移動
+        // 追尾処理
+        Vector3 desiredPosition = player.position + currentOffset;
         transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
 
-        // プレイヤーの移動速度を計算（前フレームとの位置変化）
+        // 傾き計算
         float speedX = (player.position.x - lastPlayerPosition.x) / Time.deltaTime;
-
-        // 傾きを計算（スムーズに変化させる）
         float targetTilt = Mathf.Clamp((speedX / 10f) * maxTiltAngle, -maxTiltAngle, maxTiltAngle);
         tiltAmount = Mathf.SmoothDamp(tiltAmount, targetTilt, ref tiltVelocity, 0.2f);
 
-        // プレイヤーの向きを基準にカメラの回転をスムーズに適用
+        // 回転処理
         Quaternion lookRotation = Quaternion.LookRotation(player.position - transform.position);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation * Quaternion.Euler(0, 0, -tiltAmount), Time.deltaTime * smoothSpeed);
 
-        // 現在のプレイヤー位置を保存
         lastPlayerPosition = player.position;
     }
 }
+
 

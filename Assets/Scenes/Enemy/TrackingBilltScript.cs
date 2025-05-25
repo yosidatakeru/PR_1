@@ -6,10 +6,12 @@ using static UnityEngine.GraphicsBuffer;
 public class TrackingBilltScript : MonoBehaviour
 {
     string targetTag = "Player";
-    float speed = 40f;
+    float speed = -20f;
+    float maxSpeed = 60f;
     float rotateSpeed = 1000f;
     float lifeTime = 10f;
-    float homingDelay = 0.5f; // 追尾開始までの遅延
+    float homingDelay =2f;
+    float acceleration = 20f; // 加速度
 
     private Transform target;
     private bool isHoming = false;
@@ -23,31 +25,42 @@ public class TrackingBilltScript : MonoBehaviour
             target = targetObj.transform;
         }
 
-        // ランダムな方向とスピード（ばらけ発射）
+        // 発射時に -z 方向に向ける
+        transform.rotation = Quaternion.LookRotation(Vector3.back);
+
+        // ランダムなばらけ角を追加（XY軸方向に）
         float angleX = Random.Range(-10f, 10f);
-        float angleY = Random.Range(-10f, 10f);
+        float angleY = Random.Range(0f, 10f);
         transform.rotation = Quaternion.Euler(angleX, angleY, 0f) * transform.rotation;
+
+        // 初期速度（正の値）を与える（ただし進行方向は -z なので逆に進む）
         speed = Random.Range(15f, 30f);
 
         Destroy(gameObject, lifeTime);
     }
 
-
     void Update()
     {
-        // 常に前進（現在の向きに直進）
+        // 常に前進
         transform.position += transform.forward * speed * Time.deltaTime;
 
         if (target == null) return;
 
-        // Z座標が近づいたら追尾をやめてそのまま進む
+        // プレイヤーより後ろに行ったら追尾停止
+        if (isHoming && transform.position.z < target.position.z)
+        {
+            isHoming = false;
+            return;
+        }
+
+        // Z座標が近づいたら追尾停止（必要なら残す）
         if (isHoming && Mathf.Abs(transform.position.z - target.position.z) < 0.1f)
         {
             isHoming = false;
             return;
         }
 
-        // 一定時間経過後に追尾開始
+        // 一定時間後に追尾開始
         if (!isHoming)
         {
             homingTimer += Time.deltaTime;
@@ -55,10 +68,13 @@ public class TrackingBilltScript : MonoBehaviour
             {
                 isHoming = true;
             }
-            return; // 追尾開始前は直進のみ
+            return;
         }
 
-        // なめらかにターゲット方向へ向く
+        // 加速
+        speed = Mathf.Min(speed + acceleration * Time.deltaTime, maxSpeed);
+
+        // ターゲット方向に回転
         Vector3 direction = (target.position - transform.position).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.RotateTowards(
@@ -67,18 +83,17 @@ public class TrackingBilltScript : MonoBehaviour
             rotateSpeed * Time.deltaTime
         );
     }
+
     public void SetNewTarget(Vector3 newTargetPosition)
     {
-        // 一時的な仮ターゲットとして Transform を生成（破棄されないように管理しても良い）
         GameObject dummyTarget = new GameObject("ReflectedTarget");
         dummyTarget.transform.position = newTargetPosition;
         target = dummyTarget.transform;
 
-        // 追尾状態を強制ONにする
         isHoming = true;
-        homingTimer = homingDelay; // すぐ追尾に移る
+        homingTimer = homingDelay;
 
-        // 速度・回転速度を反射用に調整してもよい
+        // 反射後の初期速度と加速の調整（任意）
         speed = Mathf.Max(speed, 20f);
     }
 

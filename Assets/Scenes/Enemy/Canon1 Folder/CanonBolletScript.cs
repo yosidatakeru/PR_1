@@ -13,6 +13,10 @@ public class CanonBolletScript : MonoBehaviour
     int bulletTimerReset = 200;
     //弾のオブジェクトの呼び出し
     public GameObject EnemyBullet;
+
+    public GameObject muzzleEffect; // エフェクトのプレハブ
+    private bool hasPlayedEffect = false; // 一度だけ再生するためのフラグ
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,13 +40,26 @@ public class CanonBolletScript : MonoBehaviour
         if (timeUntilNextShot <= 0)
         {
 
-            //敵の生成
-            Instantiate(EnemyBullet, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
-
-            // EnemySpawn;
+            StartCoroutine(ShootAfterEffect());
             timeUntilNextShot = bulletTimerReset;
-
+            hasPlayedEffect = false;
         }
+    }
+
+    private System.Collections.IEnumerator ShootAfterEffect()
+    {
+        // エフェクト再生
+        if (hasPlayedEffect == false && muzzleEffect != null)
+        {
+            Instantiate(muzzleEffect, transform.position, transform.rotation);
+            hasPlayedEffect = true; // フラグを立てて二度目以降は再生しない
+        }
+
+        // 少し待ってから弾を発射（0.2秒待つ）
+        yield return new WaitForSeconds(0.5f);
+
+        Instantiate(EnemyBullet, transform.position, Quaternion.identity);
+        
     }
 
     // プレイヤーが範囲から出た時の処理

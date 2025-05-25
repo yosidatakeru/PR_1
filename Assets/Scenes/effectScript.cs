@@ -14,7 +14,7 @@ public class effectScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //’e‚ğ5•b‚²Á‹
+        
         Destroy(gameObject, 2);
         
        // transform.position += speed * transform.forward * Time.deltaTime;

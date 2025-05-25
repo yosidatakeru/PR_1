@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class defaultScript : MonoBehaviour
@@ -10,8 +11,14 @@ public class defaultScript : MonoBehaviour
     private MeshRenderer meshRenderer;
     private CapsuleCollider capsuleCollider; // プレイヤーの当たり判定用
 
-    private ComboGaugeScript comboGaugeScript;
+    ComboGaugeScript comboGaugeScript;
     HPScript hpScript;
+
+    private float previousHp; // 前回のHP値
+    public GameObject healEffectPrefab; // 回復エフェクトのプレハブ
+    public Transform effectSpawnPoint; // エフェクトの表示位置（プレイヤーなど）
+    private bool isFirstUpdate = true;
+
 
     // Start is called before the first frame update
     void Start()
@@ -20,20 +27,52 @@ public class defaultScript : MonoBehaviour
         comboGaugeScript = GameObject.Find("ComboGauge").GetComponent<ComboGaugeScript>();
         isInvincible = false;
         invincibleTime = 2.0f;
-
-
-
-
         meshRenderer = GetComponent<MeshRenderer>(); // MeshRenderer の取得
         capsuleCollider = GetComponent<CapsuleCollider>(); // 当たり判定の取得
+        previousHp = hpScript.Gauge; // 初期HPを保存
     }
 
     // Update is called once per frame
     void Update()
     {
         scoreScript = GameObject.Find("ScoreText (TMP)").GetComponent<ScoreScript>();
+
+        if (isFirstUpdate)
+        {
+            // 初回のUpdateでは何もしない（HP比較はスキップ）
+            previousHp = hpScript.Gauge;
+            isFirstUpdate = false;
+            return;
+        }
        
+        // HPが増えた場合のチェック
+        if (hpScript.Gauge > previousHp)
+        {
+            if (healEffectPrefab != null && effectSpawnPoint != null)
+            {
+                Instantiate(healEffectPrefab, effectSpawnPoint.position, Quaternion.identity);
+            }
+        }
+
+        previousHp = hpScript.Gauge;
     }
+
+    void OnParticleCollision(GameObject other)
+    {
+      
+            if (isInvincible) return; // 無敵中はダメージを受けない
+
+            if (other.gameObject.tag == "EnemyBullet")
+            {
+                comboGaugeScript.Gauge = 0;
+                ScoreScript.score -= 100;
+                hpScript.Gauge -= 200;
+                // 無敵状態にする
+                StartCoroutine(BlinkAndInvincible());
+            }
+      
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         if (isInvincible) return; // 無敵中はダメージを受けない
@@ -48,6 +87,7 @@ public class defaultScript : MonoBehaviour
         }
     }
 
+  
     IEnumerator BlinkAndInvincible()
     {
         isInvincible = true;

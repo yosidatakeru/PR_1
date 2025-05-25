@@ -7,7 +7,7 @@ public class ReticleFollowCameraScript : MonoBehaviour
 {
     public Transform player; // プレイヤーのTransform
     public Camera mainCamera; // メインカメラ
-    float speed = 299.0f; // 移動速度
+    float speed = 150.0f; // 移動速度
    // float maxRange = 200f; // 移動範囲
     float distanceAhead = 10f; // プレイヤーの前方に配置する距離
    

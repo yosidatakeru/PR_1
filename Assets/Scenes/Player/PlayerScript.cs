@@ -19,6 +19,8 @@ public class PlayerScript : MonoBehaviour
     // 左壁との接触時のパーティクル
     public ParticleSystem sparkL;
 
+    public GameObject defense;
+
     // プレイヤーの操作による移動速度
     float playerSpeed = 1f;
     // 前方への自動移動速度
@@ -117,44 +119,17 @@ public class PlayerScript : MonoBehaviour
     // プレイヤーの移動処理
     void UpdateMovement()
     {
-        // 反発中は操作不能
-        if (isBounced) 
-        {
-            return;
-        }
 
-        // 入力取得
         float inputX = Input.GetAxis("L_Stick_H");
         float inputY = Input.GetAxis("L_Stick_V");
 
-        if (Input.GetKey(KeyCode.D))
-        { 
-            inputX += 1f;
-        }
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            inputX -= 1f;
-        }
-        
-        if (Input.GetKey(KeyCode.W)) 
-        { 
-            inputY += 1f;
-        }
-
-        if (Input.GetKey(KeyCode.S)) 
-        {
-            inputY -= 1f; 
-        }
-
+        if (Input.GetKey(KeyCode.D)) inputX += 1f;
+        if (Input.GetKey(KeyCode.A)) inputX -= 1f;
+        if (Input.GetKey(KeyCode.W)) inputY += 1f;
+        if (Input.GetKey(KeyCode.S)) inputY -= 1f;
 
         Vector3 input = new Vector3(inputX, inputY, 0f);
-        if (input.magnitude > 1f) 
-        { 
-            input.Normalize(); 
-        }
-
-
+        if (input.magnitude > 1f) input.Normalize();
 
         // 加速度的な移動
         velocity += input * playerSpeed;
@@ -166,48 +141,31 @@ public class PlayerScript : MonoBehaviour
         // 徐々に減速
         velocity = Vector3.Lerp(velocity, Vector3.zero, damping * Time.deltaTime);
 
-
-
+        // 位置更新
         Vector3 newPosition = transform.position + velocity * Time.deltaTime;
         newPosition.x = Mathf.Clamp(newPosition.x, -34.8f, 34.8f);
         newPosition.y = Mathf.Clamp(newPosition.y, -5f, 54f);
         transform.position = newPosition;
 
-
-
-        // 傾き
-        if (velocity.y > 0.1f)
-        {
-            targetRotation.x = Mathf.Max(targetRotation.x - 10, -35);
-        }
-        else if (velocity.y < -0.1f)
-        {
-            targetRotation.x = Mathf.Min(targetRotation.x + 2, 20);
-        }
-        else
-        {
-            targetRotation.x = Mathf.Lerp(targetRotation.x, 0, Time.deltaTime * rotationSpeed);
-        }
-
-
-        if (velocity.x > 0.1f)
-        {
-            targetRotation.z = Mathf.Max(targetRotation.z - 2, -35);
-        }
-        else if (velocity.x < -0.1f)
-        {
-            targetRotation.z = Mathf.Min(targetRotation.z + 2, 35);
-        }
-        else
-        {
-            targetRotation.z = Mathf.Lerp(targetRotation.z, 0, Time.deltaTime * rotationSpeed);
-        }
-
-        // 常に前方に進む
+        // 常に前方へ進む
         transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
 
+        // =====================================
+        // 傾き処理：速度に比例してスムーズに回転
+        // =====================================
 
+        // X軸（上下）傾き：maxPitchAngle を上限にして滑らかに傾く
+        float maxPitchAngle = 35f; // 上下傾きの最大角
+        float targetPitch = -velocity.y / maxSpeed * maxPitchAngle;
+        targetRotation.x = Mathf.Lerp(targetRotation.x, targetPitch, Time.deltaTime * rotationSpeed);
+
+        // Z軸（左右）傾き：maxRollAngle を上限にして滑らかに傾く
+        float maxRollAngle = 35f;
+        float targetRoll = -velocity.x / maxSpeed * maxRollAngle;
+        targetRotation.z = Mathf.Lerp(targetRotation.z, targetRoll, Time.deltaTime * rotationSpeed);
     }
+
+
     // 弾の発射処理
     void HandleShooting()
     {
@@ -341,6 +299,7 @@ public class PlayerScript : MonoBehaviour
 
             if (tracking != null || following != null)
             {
+                Instantiate(defense, transform.position, Quaternion.identity);
                 Destroy(hit.gameObject);
             }
         }

@@ -8,6 +8,7 @@ public class CanonScript : MonoBehaviour
 {
     //エフェクト
     public GameObject particle;
+    public GameObject particle2;
     public GameObject Score;
     private ComboGaugeScript comboGaugeScript;
     ComboSceorwScript comboSceorwScript;
@@ -39,7 +40,8 @@ public class CanonScript : MonoBehaviour
         {
           //  Instantiate(Score, new Vector3(transform.position.x, transform.position.y + particleposition.y, transform.position.z), Quaternion.identity);
             Instantiate(particle, new Vector3(transform.position.x, transform.position.y + particleposition.y , transform.position.z), Quaternion.identity);
-           
+            Instantiate(particle2, new Vector3(transform.position.x, transform.position.y + particleposition.y, transform.position.z), Quaternion.identity);
+
 
             comboGaugeScript.Gauge = 600;
 
