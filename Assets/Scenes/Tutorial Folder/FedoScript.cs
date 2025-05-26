@@ -8,11 +8,11 @@ public class FedoScript : MonoBehaviour
     public CanvasGroup fade;
     float fadeDuration = 0.5f;
     private bool isFading = false;
-    int tutorialManager = 0;
+    //int tutorialManager = 0;
     // Start is called before the first frame update
     void Start()
     {
-        
+       
     }
 
     // Update is called once per frame
@@ -33,6 +33,7 @@ public class FedoScript : MonoBehaviour
 
     IEnumerator FadeIn()
     {
+
         isFading = true;
         fade.blocksRaycasts = true;
         for (float t = fadeDuration; t > 0; t -= Time.deltaTime)

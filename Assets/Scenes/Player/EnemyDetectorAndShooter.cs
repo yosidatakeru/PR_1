@@ -118,7 +118,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
                 if (hit.collider.CompareTag("EnemyWoll"))
                 {
                     isBlocked = true;
-                    Debug.Log($"敵 {enemy.name} は障害物 {hit.collider.name} によって見えなくなりました。ロック解除。");
+                    //Debug.Log($"敵 {enemy.name} は障害物 {hit.collider.name} によって見えなくなりました。ロック解除。");
                     break;
                 }
             }
@@ -272,7 +272,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
                 {
                     
                     isBlocked = true;
-                    Debug.Log($"敵 {enemy.name} は '{hitInfo.collider.name}' (Obstacle) によってブロックされています。");
+                    //Debug.Log($"敵 {enemy.name} は '{hitInfo.collider.name}' (Obstacle) によってブロックされています。");
                 }
             }
 
@@ -287,7 +287,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
             if (!detectedEnemies.Contains(enemy))
             {
                 detectedEnemies.Add(enemy);
-                Debug.Log($"敵 {enemy.name} を検出しました！");
+                //Debug.Log($"敵 {enemy.name} を検出しました！");
 
                 if (activeMarkers.Count < maxTargets)
                 {

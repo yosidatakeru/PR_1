@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FloorScript : MonoBehaviour
 {
-    int speed = 100;
+   // int speed = 100;
     // Start is called before the first frame update
     void Start()
     {

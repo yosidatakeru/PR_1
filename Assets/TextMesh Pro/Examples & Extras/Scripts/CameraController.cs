@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-
+using System;
 
 namespace TMPro.Examples
 {
@@ -287,6 +287,11 @@ namespace TMPro.Examples
             }
 
 
+        }
+
+        internal void TriggerCameraShake(float v1, float v2)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -21,7 +21,7 @@ public class WaypointScript : MonoBehaviour
     {
         if(other.CompareTag("Player"))
         {
-            Debug.Log("マップ生成と破壊");
+            //Debug.Log("マップ生成と破壊");
             mapSpawner.LoadNextChunk(transform.position);        
             Destroy(gameObject);
           

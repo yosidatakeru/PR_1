@@ -7,7 +7,9 @@ using static UnityEngine.ParticleSystem;
 public class ExplosionScript : MonoBehaviour
 {
     public ParticleSystem particle;
+
     // Start is called before the first frame update
+    [System.Obsolete]
     void Start()
     {
 

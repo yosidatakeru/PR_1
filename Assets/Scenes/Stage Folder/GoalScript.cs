@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -32,7 +31,7 @@ public class GoalScript : MonoBehaviour
         
 
 
-        if (playerScript.transform.position.z >= 3300&& Input.GetKeyDown(KeyCode.Space)|| Input.GetButtonDown("Abutton"))
+        if (playerScript.transform.position.z >= 3300&& Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Abutton")&&(playerScript.transform.position.z >= 3300))            
         {
             StartCoroutine(FadeOut("ClearScene"));
            // "NextSceneName" ‚ğØ‚è‘Ö‚¦‚½‚¢ƒV[ƒ“–¼‚É•ÏX

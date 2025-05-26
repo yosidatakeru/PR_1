@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class CanonBolletScript : MonoBehaviour
 {
-  
-
     //敵の攻撃制御
     int timeUntilNextShot = 0;
     //弾の制御乱数
@@ -65,7 +63,7 @@ public class CanonBolletScript : MonoBehaviour
     // プレイヤーが範囲から出た時の処理
     public void OnPlayerExit()
     {
-        Debug.Log("プレイヤーが範囲外に出た！");
+        //Debug.Log("プレイヤーが範囲外に出た！");
         
     }
 }

@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class effectScript : MonoBehaviour
+public class FrameEraseScript : MonoBehaviour
 {
-  //  int speed = -20;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,8 +14,5 @@ public class effectScript : MonoBehaviour
     void Update()
     {
         
-        Destroy(gameObject, 2);
-        
-       // transform.position += speed * transform.forward * Time.deltaTime;
     }
 }

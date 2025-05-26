@@ -34,7 +34,7 @@ public class ReticleFollowCameraScript : MonoBehaviour
 
     void MoveReticle()
     {
-        if (Input.GetButtonDown("R3"))
+        if (Input.GetButtonDown("R3")||Input.GetKeyDown(KeyCode.F))
         {
             playerPosition = !playerPosition; // 切り替え
         }
@@ -48,8 +48,29 @@ public class ReticleFollowCameraScript : MonoBehaviour
             // スティック入力
             float moveX = Input.GetAxis("R_Stick_H");
             float moveY = Input.GetAxis("R_Stick_V");
+           
+            // アローキー入力も加算
+            if (Input.GetKey(KeyCode.RightArrow)) moveX += 1f;
+            if (Input.GetKey(KeyCode.LeftArrow)) moveX -= 1f;
+            if (Input.GetKey(KeyCode.UpArrow)) moveY += 1f;
+            if (Input.GetKey(KeyCode.DownArrow)) moveY -= 1f;
 
-            Vector3 stickMove = new Vector3(moveX, moveY, 0) * speed * Time.deltaTime;
+            // 正規化
+            Vector3 inputVector = new Vector3(moveX, moveY, 0f);
+            if (inputVector.magnitude > 1f)
+                inputVector.Normalize();
+
+            // 必要に応じてアローキー時だけスピードを落とす
+            bool usingArrow = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow) ||
+                              Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow);
+
+            float moveSpeed = usingArrow ? speed * 0.1f : speed;
+
+
+            // 正規化ベクトルで移動
+            Vector3 stickMove = inputVector * moveSpeed * Time.deltaTime;
+
+            // Vector3 stickMove = new Vector3(moveX, moveY, 0) * speed * Time.deltaTime;
 
             // プレイヤーの移動量を計算（Zも含めてるけどあとで無視する）
             Vector3 playerDelta = player.position - previousPlayerPosition;

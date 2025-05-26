@@ -22,7 +22,7 @@ public class PlayerScript : MonoBehaviour
     public GameObject defense;
 
     // プレイヤーの操作による移動速度
-    float playerSpeed = 1f;
+    float playerSpeed = 0.5f;
     // 前方への自動移動速度
     float forwardSpeed = 30f;
 
@@ -45,7 +45,7 @@ public class PlayerScript : MonoBehaviour
     // 壁にぶつかったときの反発距離
     float bounceDistance = 2.0f;
     // 反発後の一時的な操作無効時間
-    float bounceDisableTime = 0.3f;
+    float bounceDisableTime = 1f;
     private bool isBounced = false;
     // 反発中フラグ
     private float bounceTimer = 0.0f;
@@ -56,26 +56,31 @@ public class PlayerScript : MonoBehaviour
     // 減速率
     float damping = 1f;
     // 最大速度
-    float maxSpeed = 30f;
+    float maxSpeed = 25f;
 
     // ロール回転のZ角度
     private float rollZAngle = 0f;
     // バレルロール中かどうか
     bool isRolling = false;
     // ロール持続時間
-    float rollTime = 0.5f;
+    // float rollTime = 0.5f;
 
     HPScript hpScript;
 
+    //デバック用
+    bool invincibl = false;
+
     bool isControlEnabled = true;
+
+    float fallSpeed = 0.1f;
 
     void Start()
     {
-      
+
         playerRotation = Vector3.zero;
-       
+
         sparkR.Stop();
-       
+
         sparkL.Stop();
 
         hpScript = GameObject.Find("HPGauge").GetComponent<HPScript>();
@@ -84,23 +89,49 @@ public class PlayerScript : MonoBehaviour
     void Update()
     {
         // プレイヤーの座標によって操作可能フラグを切り替え
-        if (transform.position.z <= 50f|| transform.position.z >= 3300f)
+        if (transform.position.z <= 50f || transform.position.z >= 3300f || hpScript.Gauge <= 0)
         {
             isControlEnabled = false;
         }
-        else 
+        else
         {
             isControlEnabled = true;
         }
-        // 常に前方へ進む
-        transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
+        if (hpScript.Gauge >= 0)
+        {
+            // 常に前方へ進む
+            transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
+        }
+        GameOver();
 
         // フラグが無効なら以降の入力や移動処理をスキップ
-        if (isControlEnabled == false) 
+        if (isControlEnabled == false)
         {
             return;
         }
-           
+        //デバック用
+
+        if (Input.GetKey(KeyCode.Alpha0))
+        {
+            hpScript.Gauge = 0;
+
+        }
+        if (Input.GetKey(KeyCode.Alpha1))
+        {
+            hpScript.Gauge = 20000;
+
+        }
+
+        if (Input.GetKey(KeyCode.Alpha2))
+        {
+            invincibl = true;
+
+        }
+
+        if (Input.GetKey(KeyCode.Alpha3))
+        {
+            forwardSpeed = 100;
+        }
 
         HandleInput();
         UpdateRotation();
@@ -108,12 +139,16 @@ public class PlayerScript : MonoBehaviour
         UpdateParticles();
         HandleShooting();
         UpdateBounceTimer();
+
+
+
+
     }
 
     void HandleInput()
     {
         // バレルロール開始
-        if (Input.GetKeyDown(KeyCode.Q) && !isRolling)
+        if (Input.GetKeyDown(KeyCode.Q) && !isRolling || Input.GetButtonDown("LB") && !isRolling)
         {
             StartCoroutine(DoBarrelRoll());
         }
@@ -146,6 +181,7 @@ public class PlayerScript : MonoBehaviour
         if (velocity.magnitude > maxSpeed)
         {
             velocity = velocity.normalized * maxSpeed;
+           
         }
 
         // 徐々に減速
@@ -157,7 +193,7 @@ public class PlayerScript : MonoBehaviour
         newPosition.y = Mathf.Clamp(newPosition.y, -5f, 54f);
         transform.position = newPosition;
 
-       
+
         // =====================================
         // 傾き処理：速度に比例してスムーズに回転
         // =====================================
@@ -223,26 +259,44 @@ public class PlayerScript : MonoBehaviour
     // 壁接触時に反発する処理
     void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.CompareTag("EnemyWoll"))
+        if (invincibl == false)
         {
-            ContactPoint contact = collision.contacts[0];
-            Vector3 normal = contact.normal;
-            Vector3 absNormal = new Vector3(Mathf.Abs(normal.x), Mathf.Abs(normal.y), Mathf.Abs(normal.z));
+            if (collision.gameObject.CompareTag("EnemyWoll"))
+            {
+                ContactPoint contact = collision.contacts[0];
+                Vector3 normal = contact.normal;
+                Vector3 absNormal = new Vector3(Mathf.Abs(normal.x), Mathf.Abs(normal.y), Mathf.Abs(normal.z));
 
-            Vector3 bounceDirection = Vector3.zero;
+                Vector3 bounceDirection = Vector3.zero;
 
-            if (absNormal.x > absNormal.y && absNormal.x > absNormal.z)
-                bounceDirection = new Vector3(-Mathf.Sign(normal.x), 0, 0);
-            else if (absNormal.y > absNormal.x && absNormal.y > absNormal.z)
-                bounceDirection = new Vector3(0, -Mathf.Sign(normal.y), 0);
-            else
-                bounceDirection = new Vector3(0, 0, -Mathf.Sign(normal.z));
+                if (absNormal.x > absNormal.y && absNormal.x > absNormal.z)
+                {
+                    bounceDirection = new Vector3(-Mathf.Sign(normal.x), 0, 0);
+                    velocity.x = 0;
+                }
+                else if (absNormal.y > absNormal.x && absNormal.y > absNormal.z)
+                {
+                    bounceDirection = new Vector3(0, -Mathf.Sign(normal.y), 0);
+                    velocity.y = 0;
+                }
+                else
+                {
+                    bounceDirection = new Vector3(0, 0, -Mathf.Sign(normal.z));
+                    hpScript.Gauge = 0;
+                }
+                transform.position -= bounceDirection * bounceDistance;
+                isBounced = true;
+                bounceTimer = bounceDisableTime;
 
-            transform.position -= bounceDirection * bounceDistance;
-            isBounced = true;
-            bounceTimer = bounceDisableTime;
 
-            Debug.Log("Bounce direction: " + bounceDirection);
+                if (hpScript.Gauge <= 0)
+                {
+                    fallSpeed = 0f;
+                }
+
+                //Debug.Log("Bounce direction: " + bounceDirection);]
+
+            }
         }
     }
 
@@ -303,13 +357,43 @@ public class PlayerScript : MonoBehaviour
         {
             TrackingBilltScript tracking = hit.GetComponent<TrackingBilltScript>();
             PlayerFollowingBulletScript following = hit.GetComponent<PlayerFollowingBulletScript>();
-           // hpScript.Gauge += 10;
+            // hpScript.Gauge += 10;
 
             if (tracking != null || following != null)
             {
                 Instantiate(defense, transform.position, Quaternion.identity);
                 Destroy(hit.gameObject);
             }
+        }
+    }
+
+    void GameOver()
+    {
+        if (hpScript.Gauge <= 0)
+        {
+            StartCoroutine(FallAndRotate());
+        }
+    }
+
+    IEnumerator FallAndRotate()
+    {
+       
+        float rotationSpeed = 1f;  // 毎秒90度回転に変更（見やすい速さ）
+
+        Vector3 fallDirection = new Vector3(0, -1, 1).normalized;
+
+        // 最初に斜め下を向かせる（回転を固定）
+       // transform.rotation = Quaternion.LookRotation(fallDirection);
+
+        while (true)
+        {
+            // 斜め下に一定速度で移動
+            transform.position += fallDirection * fallSpeed * Time.deltaTime;
+
+            // ローカルZ軸まわりに一定速度で回転（プレイヤーの正面を軸に回転）
+            transform.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime, Space.World);
+
+            yield return null;
         }
     }
 }
