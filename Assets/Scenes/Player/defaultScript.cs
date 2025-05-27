@@ -18,7 +18,9 @@ public class defaultScript : MonoBehaviour
     public Transform effectSpawnPoint;
     private bool isFirstUpdate = true;
     CameraScript cameraSample;
-  
+   
+    public GameObject PlreyerDestroy;
+
 
     void Start()
     {
@@ -53,7 +55,13 @@ public class defaultScript : MonoBehaviour
             }
         }
 
-      
+
+        if (hpScript.Gauge <= 0&& transform.position.z >= 3300)
+        {
+            GetComponent<Renderer>().enabled = false;
+            Instantiate(PlreyerDestroy, transform.position, Quaternion.identity);
+        }
+
 
         previousHp = hpScript.Gauge;
     }
@@ -73,13 +81,9 @@ public class defaultScript : MonoBehaviour
             StartCoroutine(BlinkAndInvincible());
         }
 
-        if (other.gameObject.CompareTag("EnemyBullet"))
-        {
-            if (hpScript.Gauge == 0)
-            {
-                GetComponent<Renderer>().enabled = false;
-            }
-        }
+        
+           
+        
 
     }
 
@@ -97,7 +101,16 @@ public class defaultScript : MonoBehaviour
             hpScript.Gauge -= 200;
 
             cameraSample.TakeDamage();
-            StartCoroutine(BlinkAndInvincible());
+            if (hpScript.Gauge >= 0)
+            {
+                StartCoroutine(BlinkAndInvincible());
+            }
+
+            if (hpScript.Gauge <= 0)
+            {
+                GetComponent<Renderer>().enabled = false;
+                Instantiate(PlreyerDestroy, transform.position, Quaternion.identity);
+            }
 
         }
     }

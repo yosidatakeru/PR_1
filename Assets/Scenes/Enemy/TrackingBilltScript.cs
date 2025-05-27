@@ -97,6 +97,15 @@ public class TrackingBilltScript : MonoBehaviour
         speed = Mathf.Max(speed, 20f);
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("EnemyWoll"))
+        {
+            GetComponent<Collider>().enabled = false;
+            Destroy(gameObject);
+        }
+    }
+
 }
 
 

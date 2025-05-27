@@ -7,15 +7,22 @@ public class GoalScript : MonoBehaviour
 {
     ScoreScript scoreScript;
     PlayerScript playerScript;
+    HPScript hpScript;
     public CanvasGroup clearUI;
     public CanvasGroup fade;
+
+    public CanvasGroup gameOver;
     float fadeDuration = 3f;
     private bool isFading = false;
+    public Material glitchMaterial; // ★ ゲームオーバーUIに使われてるマテリアル
+   
     // Start is called before the first frame update
     void Start()
     {
         scoreScript = GameObject.Find("ScoreText (TMP)").GetComponent<ScoreScript>();
         playerScript = GameObject.Find("Player").GetComponent<PlayerScript>();
+        hpScript = GameObject.Find("HPGauge").GetComponent<HPScript>();
+        glitchMaterial.SetFloat("_GlitchIntensity", 0f);
     }
 
     // Update is called once per frame
@@ -38,6 +45,11 @@ public class GoalScript : MonoBehaviour
 
         }
 
+        if (hpScript.Gauge <= 0) 
+        {
+            StartCoroutine(GameOverFadeOut("GameOverScene"));
+        }
+
     }
 
     IEnumerator FadeOut(string sceneName)
@@ -52,4 +64,44 @@ public class GoalScript : MonoBehaviour
         fade.alpha = 1;
         SceneManager.LoadScene(sceneName);
     }
+
+
+    IEnumerator GameOverFadeOut(string sceneName)
+    {
+        isFading = true;
+        gameOver.blocksRaycasts = true;
+
+        float glitchMax = 1f;
+        float glitchVal = 0f;
+
+        for (float t = 0; t < fadeDuration; t += Time.deltaTime)
+        {
+            float progress = t / fadeDuration;
+
+            // UI フェードイン
+            gameOver.alpha = progress;
+
+            // グリッチ強度アップ
+            glitchVal = Mathf.Lerp(0f, glitchMax, progress);
+
+            if (glitchMaterial != null)
+            {
+                glitchMaterial.SetFloat("_GlitchIntensity", glitchVal);
+                glitchMaterial.SetFloat("_Alpha", progress); // ← ★ ここで透明度制御
+            }
+
+            yield return null;
+        }
+
+        gameOver.alpha = 1;
+
+        if (glitchMaterial != null)
+        {
+            glitchMaterial.SetFloat("_GlitchIntensity", glitchMax);
+            glitchMaterial.SetFloat("_Alpha", 1f); // ← ★ 最終的に完全表示
+        }
+
+        SceneManager.LoadScene(sceneName);
+    }
 }
+
