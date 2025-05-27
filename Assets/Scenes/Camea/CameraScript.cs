@@ -11,7 +11,6 @@ public class CameraScript : MonoBehaviour
 
     float smoothSpeed = 5.0f;
     float maxTiltAngle = 2.0f;
-   // float tiltSpeed = 5.0f;
 
     private Vector3 lastPlayerPosition;
     private float tiltAmount = 0f;
@@ -19,15 +18,12 @@ public class CameraScript : MonoBehaviour
 
     float forwardTriggerZ = 3300f;
 
-    //private bool hasSwitched = false;
-
     // 演出関連
     private bool isStarting = true;
     private float startDuration = 5.0f;
     private float startTimer = 0f;
     private Vector3 startOffset = new Vector3(-4, -3, 10); // スタート演出時のカメラ位置
 
-    // 自身のカメラコンポーネント（必要なら）
     private Camera cam;
 
     void Start()
@@ -37,8 +33,11 @@ public class CameraScript : MonoBehaviour
             lastPlayerPosition = player.position;
             transform.position = player.position + startOffset;
 
-            Quaternion lookRotation = Quaternion.LookRotation(player.position - transform.position);
-            transform.rotation = lookRotation;
+            Vector3 initialDir = player.position - transform.position;
+            if (initialDir.sqrMagnitude > 0.001f)
+            {
+                transform.rotation = Quaternion.LookRotation(initialDir);
+            }
         }
 
         cam = GetComponent<Camera>();
@@ -46,10 +45,12 @@ public class CameraScript : MonoBehaviour
 
     void Update()
     {
-        if (player == null) return;
+        // プレイヤーが無い or ポーズ中なら何もしない
+        if (player == null || Time.timeScale == 0f) return;
 
         Vector3 currentOffset = player.position.z > forwardTriggerZ ? newOffset : defaultOffset;
 
+        // スタート演出中
         if (isStarting)
         {
             startTimer += Time.deltaTime;
@@ -58,8 +59,12 @@ public class CameraScript : MonoBehaviour
             Vector3 desiredStartPos = Vector3.Lerp(player.position + startOffset, player.position + currentOffset, t);
             transform.position = desiredStartPos;
 
-            Quaternion targetRot = Quaternion.LookRotation(player.position - transform.position);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * smoothSpeed);
+            Vector3 dir = player.position - transform.position;
+            if (dir.sqrMagnitude > 0.001f)
+            {
+                Quaternion targetRot = Quaternion.LookRotation(dir);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * smoothSpeed);
+            }
 
             if (t >= 1.0f)
             {
@@ -69,34 +74,40 @@ public class CameraScript : MonoBehaviour
             return;
         }
 
+        // 通常追従
         Vector3 desiredPosition = player.position + currentOffset;
         transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
 
+        // 横移動による傾き処理
         float speedX = (player.position.x - lastPlayerPosition.x) / Time.deltaTime;
         float targetTilt = Mathf.Clamp((speedX / 10f) * maxTiltAngle, -maxTiltAngle, maxTiltAngle);
         tiltAmount = Mathf.SmoothDamp(tiltAmount, targetTilt, ref tiltVelocity, 0.2f);
 
-        Quaternion lookRotation = Quaternion.LookRotation(player.position - transform.position);
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation * Quaternion.Euler(0, 0, -tiltAmount), Time.deltaTime * smoothSpeed);
+        // 回転（LookRotation）
+        Vector3 lookDir = player.position - transform.position;
+        if (lookDir.sqrMagnitude > 0.001f)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(lookDir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation * Quaternion.Euler(0, 0, -tiltAmount), Time.deltaTime * smoothSpeed);
+        }
 
         lastPlayerPosition = player.position;
     }
 
-    // ここから追加部分
+    // ダメージ時に呼び出し
     public void TakeDamage()
     {
         Debug.Log("ダメージを受けた！");
-
-        // カメラシェイクを呼ぶ（このスクリプト自身に揺れ処理があればそちらを使う想定）
         TriggerCameraShake(0.1f, 0.5f);
     }
 
-    // カメラシェイクの例（簡易実装）
+    // カメラシェイクのトリガー
     public void TriggerCameraShake(float duration, float magnitude)
     {
         StartCoroutine(ShakeCoroutine(duration, magnitude));
     }
 
+    // カメラシェイクのコルーチン
     private System.Collections.IEnumerator ShakeCoroutine(float duration, float magnitude)
     {
         Vector3 originalPos = transform.localPosition;
