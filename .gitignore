@@ -97,3 +97,4 @@ crashlytics-build.properties
 *.mat
 /Assets/Scenes/GollObject.prefab
 /Assets/Scenes/Game Folder/Font Folder
+*.png
