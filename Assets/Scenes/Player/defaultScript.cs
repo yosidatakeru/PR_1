@@ -68,15 +68,21 @@ public class defaultScript : MonoBehaviour
 
     void OnParticleCollision(GameObject other)
     {
-        if (isInvincible) return;
+       
 
-        if (other.CompareTag("EnemyBullet"))
+        if (other.CompareTag("EnemyBullet") || other.gameObject.CompareTag("EnemyWoll"))
         {
+            if (hpScript.Gauge <= 0)
+            {
+                GetComponent<Renderer>().enabled = false;
+                Instantiate(PlreyerDestroy, transform.position, Quaternion.identity);
+            }
+            if (isInvincible) return;
             comboGaugeScript.Gauge = 0;
             ScoreScript.score -= 100;
             hpScript.Gauge -= 200;
 
-           
+            
 
             StartCoroutine(BlinkAndInvincible());
         }
@@ -87,15 +93,32 @@ public class defaultScript : MonoBehaviour
 
     }
 
+    void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("EnemyBullet") || collision.gameObject.CompareTag("EnemyWoll"))
+        {
+            if (hpScript.Gauge <= 0)
+            {
+                GetComponent<Renderer>().enabled = false;
+                Instantiate(PlreyerDestroy, transform.position, Quaternion.identity);
+            }
+        }
+    }
+
     void OnCollisionEnter(Collision collision)
     {
-        if (isInvincible) return;
+        
+        
+
+      
 
         if (collision.gameObject.CompareTag("EnemyBullet") || collision.gameObject.CompareTag("EnemyWoll"))
         {
-
+            
 
             
+            if (isInvincible) return;
+           
             comboGaugeScript.Gauge = 0;
             ScoreScript.score -= 100;
             hpScript.Gauge -= 200;
@@ -106,11 +129,7 @@ public class defaultScript : MonoBehaviour
                 StartCoroutine(BlinkAndInvincible());
             }
 
-            if (hpScript.Gauge <= 0)
-            {
-                GetComponent<Renderer>().enabled = false;
-                Instantiate(PlreyerDestroy, transform.position, Quaternion.identity);
-            }
+            
 
         }
     }

@@ -24,7 +24,7 @@ public class PlayerScript : MonoBehaviour
     // プレイヤーの操作による移動速度
     float playerSpeed = 0.5f;
     // 前方への自動移動速度
-    float forwardSpeed = 30f;
+    float forwardSpeed = 40f;
 
     // 次の弾が撃てるまでのクールタイム
     int timeUntilNextShot = 0;
@@ -282,6 +282,7 @@ public class PlayerScript : MonoBehaviour
                 else
                 {
                     bounceDirection = new Vector3(0, 0, -Mathf.Sign(normal.z));
+                    forwardSpeed = 0;
                     hpScript.Gauge = 0;
                 }
                 transform.position -= bounceDirection * bounceDistance;
@@ -289,11 +290,7 @@ public class PlayerScript : MonoBehaviour
                 bounceTimer = bounceDisableTime;
 
 
-                if (hpScript.Gauge <= 0)
-                {
-                    fallSpeed = 0f;
-                }
-
+               
                 //Debug.Log("Bounce direction: " + bounceDirection);]
 
             }
@@ -369,7 +366,7 @@ public class PlayerScript : MonoBehaviour
 
     void GameOver()
     {
-        if (hpScript.Gauge <= 0)
+        if (hpScript.Gauge == 0)
         {
             StartCoroutine(FallAndRotate());
         }

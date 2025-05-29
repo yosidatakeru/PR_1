@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,15 +9,19 @@ using UnityEngine.SceneManagement;
 public class PauseScreenScript : MonoBehaviour
 {
     public CanvasGroup fade;
-    public TMP_Text startText;  // TextMeshProUGUI用
-    public TMP_Text titleText;
+   
+    public CanvasGroup startBotton;
+    public CanvasGroup explanationBotton;
+    public CanvasGroup titleBotton;
+    public CanvasGroup OperationInstructions;
+    int choice = 2;
+
 
     bool resumeGame = false;
     bool ReturnToTitle = false;
+    bool operationExplanation = false;
     private bool isPaused = false;
-
-    private float blinkTimer = 1f;
-    private float blinkInterval = 0.5f;
+    float operationDisplayTimer = 0f;
 
     public CanvasGroup gameFadeOut;
     float fadeDuration = 3f;
@@ -27,66 +32,106 @@ public class PauseScreenScript : MonoBehaviour
         isPaused = false;
         Time.timeScale = 1f;
         fade.alpha = 0;
-        startText.gameObject.SetActive(true);
-        titleText.gameObject.SetActive(true);
+        choice = 2;
+
     }
 
     void Update()
     {
+        
+        float dpv = Input.GetAxis("D_Pad_V");
+
+        if (OperationInstructions.alpha == 1)
+        {
+            operationDisplayTimer += Time.unscaledDeltaTime;
+        }
+        else
+        {
+            operationDisplayTimer = 0f;
+        }
+
         // エスケープキーでポーズ切り替え
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("Menu"))
         {
             TogglePause();
         }
 
         // ポーズ中に上キー押下時は点滅処理
-        if (isPaused)
-        {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (isPaused == true && OperationInstructions.alpha == 0)
+        { 
+            if (Input.GetKeyDown(KeyCode.UpArrow)|| (dpv == 1.0))
             {
-                resumeGame = true;
-                ReturnToTitle = false;
+                if(choice != 2) 
+                {
+                    choice +=  1;
+                }
                 Debug.Log("押した");
             }
 
-            if (Input.GetKeyDown(KeyCode.DownArrow))
+            if (Input.GetKeyDown(KeyCode.DownArrow) || (dpv == -1.0))
             {
-                resumeGame = false;
-                ReturnToTitle = true;
+                if (choice != 0)
+                {
+                    choice -= 1;
+                }
                 Debug.Log("押した");
             }
 
         }
-        else
-        {
-            // ポーズ解除時はテキスト非表示・タイマーリセット
-            startText.gameObject.SetActive(true);
-            titleText.gameObject.SetActive(true);
-            blinkTimer = 0f;
-        }
+       
+        
 
         //アローキ上を押した後
         if (resumeGame == true) 
         {
             StartTex();
-            titleText.gameObject.SetActive(true);
+           
             if (Input.GetKeyDown(KeyCode.Space)|| Input.GetButtonDown("Abutton")) 
             {
+                isPaused = true;
                 TogglePause();
             }
+        }
+
+        if (operationExplanation == true)
+        {
+            OperationExplanation();
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Abutton") && OperationInstructions.alpha == 0)
+            {
+                if ((Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Abutton")) && OperationInstructions.alpha == 0)
+                {
+                    OperationInstructions.alpha = 1;
+                    operationDisplayTimer = 0f;
+                    Debug.Log("操作説明");
+                }
+
+            }
+            
+
         }
 
         if (ReturnToTitle == true)
         {
             TitleTex();
-            startText.gameObject.SetActive(true);
+           
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Abutton"))
             {
                 StartCoroutine(FadeOut("TitleScene"));
-                // "NextSceneName" を切り替えたいシーン名に変更
+               
             }
         }
 
+        if (operationExplanation && operationDisplayTimer > 0.5f &&
+        (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Abutton")) &&
+        OperationInstructions.alpha == 1)
+        {
+            OperationInstructions.alpha = 0;
+            Debug.Log("閉じる");
+        }
+
+
+        Choice(choice);
+      
 
     }
 
@@ -102,31 +147,63 @@ public class PauseScreenScript : MonoBehaviour
         else
         {
             Time.timeScale = 1f;  // ゲーム再開
-            resumeGame = false;
+            isPaused = false;
             fade.alpha = 0;
         }
     }
 
     private void StartTex()
     {
-        blinkTimer += Time.unscaledDeltaTime;
-
-        if (blinkTimer >= blinkInterval)
-        {
-            startText.gameObject.SetActive(!startText.gameObject.activeSelf);
-            blinkTimer = 0f;
-        }
+        startBotton.alpha = 1;
+        titleBotton.alpha = 0;
+        explanationBotton.alpha = 0;
+       
     }
 
     private void TitleTex()
     {
-        blinkTimer += Time.unscaledDeltaTime;
+        startBotton.alpha = 0;
+        titleBotton.alpha = 1;
+        explanationBotton.alpha = 0;
+    }
 
-        if (blinkTimer >= blinkInterval)
+    private void OperationExplanation()
+    {
+        startBotton.alpha = 0;
+        titleBotton.alpha = 0;
+        explanationBotton.alpha = 1;
+    }
+    
+
+    void Choice(int choice ) 
+    {
+        if (choice == 2) 
         {
-            titleText.gameObject.SetActive(!titleText.gameObject.activeSelf);
-            blinkTimer = 0f;
+            resumeGame = true;
+            operationExplanation = false;
+            ReturnToTitle = false;
+
+
+           
         }
+        else if(choice == 1)
+        {
+            resumeGame = false;
+            operationExplanation = true;
+            ReturnToTitle = false;
+
+           
+
+        }
+        else if (choice == 0)
+        {
+            resumeGame = false;
+            operationExplanation = false;
+            ReturnToTitle = true;
+
+        }
+
+
     }
 
 

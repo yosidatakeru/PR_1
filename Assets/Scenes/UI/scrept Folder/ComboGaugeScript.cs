@@ -41,9 +41,11 @@ public class ComboGaugeScript : MonoBehaviour
         {
             canvasGroup.alpha = 1;
         }
-
+        if (Time.timeScale != 0)
+        { 
         // 毎フレームゲージを減少させる
         Gauge--;
+        }
        
     }
 }
