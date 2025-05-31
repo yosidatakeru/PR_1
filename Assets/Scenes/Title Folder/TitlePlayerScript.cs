@@ -12,14 +12,14 @@ public class TitlePlayerScript : MonoBehaviour
 
     //ˆÚ“®
     Vector3 playerPosition = new Vector3(5f, 0f, 0f);
-    float PositionSpeed = 0.005f;
+    float PositionSpeed = 0f;
     bool position = false;
     void Start()
     {
         playerRotation = new Vector3(5f, 180f, 0f);
         Rotation = false;
 
-        playerPosition = new Vector3(0f, 0f, 0f);
+        playerPosition = new Vector3(0f, -2f, 0f);
         position = false;
     }
 

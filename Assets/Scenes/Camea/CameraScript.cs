@@ -26,8 +26,16 @@ public class CameraScript : MonoBehaviour
 
     private Camera cam;
 
+    PlayerScript playerScript;
+
+    public float normalFOV = 60f;
+    public float boostFOV = 80f;
+    public float fovLerpSpeed = 5f;
+
+
     void Start()
     {
+        playerScript = GameObject.Find("Player").GetComponent<PlayerScript>();
         if (player != null)
         {
             lastPlayerPosition = player.position;
@@ -45,6 +53,12 @@ public class CameraScript : MonoBehaviour
 
     void Update()
     {
+        if (cam != null)
+        {
+            float targetFOV = playerScript.acceleration ? boostFOV : normalFOV;
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, targetFOV, Time.deltaTime * fovLerpSpeed);
+        }
+
         // プレイヤーが無い or ポーズ中なら何もしない
         if (player == null || Time.timeScale == 0f) return;
 

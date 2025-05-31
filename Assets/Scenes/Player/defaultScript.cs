@@ -12,6 +12,7 @@ public class defaultScript : MonoBehaviour
 
     ComboGaugeScript comboGaugeScript;
     HPScript hpScript;
+    PlayerScript playerScript;
 
     private float previousHp;
     public GameObject healEffectPrefab;
@@ -29,6 +30,7 @@ public class defaultScript : MonoBehaviour
         scoreScript = GameObject.Find("ScoreText (TMP)").GetComponent<ScoreScript>();
 
         cameraSample = GameObject.Find("Main Camera").GetComponent<CameraScript>();
+        playerScript = GameObject.Find("Player").GetComponent<PlayerScript>();
 
         isInvincible = false;
         invincibleTime = 2.0f;
@@ -81,8 +83,8 @@ public class defaultScript : MonoBehaviour
             comboGaugeScript.Gauge = 0;
             ScoreScript.score -= 100;
             hpScript.Gauge -= 200;
+            playerScript.acceleration = false;
 
-            
 
             StartCoroutine(BlinkAndInvincible());
         }
@@ -102,6 +104,7 @@ public class defaultScript : MonoBehaviour
                 GetComponent<Renderer>().enabled = false;
                 Instantiate(PlreyerDestroy, transform.position, Quaternion.identity);
             }
+            playerScript.acceleration = false;
         }
     }
 
@@ -122,7 +125,7 @@ public class defaultScript : MonoBehaviour
             comboGaugeScript.Gauge = 0;
             ScoreScript.score -= 100;
             hpScript.Gauge -= 200;
-
+            playerScript.acceleration = false;
             cameraSample.TakeDamage();
             if (hpScript.Gauge >= 0)
             {

@@ -148,6 +148,8 @@ public class PauseScreenScript : MonoBehaviour
         {
             Time.timeScale = 1f;  // ƒQ[ƒ€ÄŠJ
             isPaused = false;
+            OperationInstructions.alpha = 0;
+            operationDisplayTimer = 0f;
             fade.alpha = 0;
         }
     }

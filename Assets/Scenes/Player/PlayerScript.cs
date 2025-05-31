@@ -19,12 +19,14 @@ public class PlayerScript : MonoBehaviour
     // 左壁との接触時のパーティクル
     public ParticleSystem sparkL;
 
+    public ParticleSystem accelerationeffect;
+
     public GameObject defense;
 
     // プレイヤーの操作による移動速度
     float playerSpeed = 0.5f;
     // 前方への自動移動速度
-    float forwardSpeed = 40f;
+    float forwardSpeed = 30f;
 
     // 次の弾が撃てるまでのクールタイム
     int timeUntilNextShot = 0;
@@ -74,6 +76,8 @@ public class PlayerScript : MonoBehaviour
 
     float fallSpeed = 0.1f;
 
+   public bool acceleration = false;
+
     void Start()
     {
 
@@ -82,6 +86,8 @@ public class PlayerScript : MonoBehaviour
         sparkR.Stop();
 
         sparkL.Stop();
+
+        accelerationeffect.Stop();
 
         hpScript = GameObject.Find("HPGauge").GetComponent<HPScript>();
     }
@@ -136,6 +142,7 @@ public class PlayerScript : MonoBehaviour
         HandleInput();
         UpdateRotation();
         UpdateMovement();
+        Acceleration();
         UpdateParticles();
         HandleShooting();
         UpdateBounceTimer();
@@ -172,6 +179,7 @@ public class PlayerScript : MonoBehaviour
         if (Input.GetKey(KeyCode.A)) inputX -= 1f;
         if (Input.GetKey(KeyCode.W)) inputY += 1f;
         if (Input.GetKey(KeyCode.S)) inputY -= 1f;
+       
 
         Vector3 input = new Vector3(inputX, inputY, 0f);
         if (input.magnitude > 1f) input.Normalize();
@@ -370,6 +378,29 @@ public class PlayerScript : MonoBehaviour
         {
             StartCoroutine(FallAndRotate());
         }
+    }
+
+    void Acceleration() 
+    {
+        if (Input.GetButtonDown("R3") || Input.GetKeyDown(KeyCode.LeftShift)|| Input.GetKeyDown(KeyCode.RightShift))
+        {
+            acceleration = !acceleration;
+        }
+
+        if (acceleration == true)
+        {
+            accelerationeffect.Play();
+            forwardSpeed = 50;
+        }
+        else 
+        {
+            accelerationeffect.Stop();
+            forwardSpeed = 30;
+          
+        }
+
+        
+
     }
 
     IEnumerator FallAndRotate()
