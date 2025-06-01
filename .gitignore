@@ -98,3 +98,16 @@ crashlytics-build.properties
 /Assets/Scenes/GollObject.prefab
 /Assets/Scenes/Game Folder/Font Folder
 *.png
+/Assets/Scenes/movie/Tracking.mp4
+/Assets/Scenes/movie/tesuto.mp4
+/Assets/Scenes/movie/reticle.mp4
+/Assets/Scenes/movie/reticle Render Texture.renderTexture
+/Assets/Scenes/movie/move.mp4
+/Assets/Scenes/movie/Move Render Texture.renderTexture
+/Assets/Scenes/movie/defense.mp4
+/Assets/Scenes/movie/defense Render Texture 1.renderTexture
+/Assets/Scenes/movie/attack.mp4
+/Assets/Scenes/movie/attack Render Texture.renderTexture
+/Assets/Scenes/movie/attack 1.mp4
+/Assets/Scenes/movie/acceleration.mp4
+/Assets/Scenes/movie/acceleration Render Texture.renderTexture
