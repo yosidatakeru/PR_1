@@ -7,25 +7,26 @@ using UnityEngine.SceneManagement;
 public class TitleSceneScript : MonoBehaviour
 {
     public CanvasGroup fadeCanvas;
-    public float fadeDuration = 10f;
+    float fadeDuration = 1f;
     private bool isFading = false;
-
+    CameraTitleScript cameraScript;
     // Start is called before the first frame update
     void Start()
     {
         Time.timeScale = 1f;
+        cameraScript = GameObject.Find("Main Camera").GetComponent<CameraTitleScript>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)||Input.GetButtonDown("Abutton"))
+        if (cameraScript.IsCameraMoveFinished == true)
         {
-            StartCoroutine(FadeOut("GameScene")); 
-                                                             
-
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Abutton"))
+            {
+                StartCoroutine(FadeOut("GameScene"));
+            }
         }
-
         IEnumerator FadeOut(string sceneName)
         {
             isFading = true;

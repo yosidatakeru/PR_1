@@ -6,13 +6,13 @@ using UnityEngine.EventSystems;
 
 public class BulletShootScript : MonoBehaviour
 {
-    float speed = 200f;//弾の速さ
+    float speed = 170f;//弾の速さ
     float lifetime = 1f;//消すまでの時間
     float homingStrength = 10f;    // 誘導の強さ
     float detectionRadius = 8f;  // 検出範囲
     private Rigidbody rb;                // 物理エンジン
     private GameObject target;           // 追尾するターゲット
-  
+    PlayerScript playerScript;
 
     private Vector3 moveDirection; // 発射方向
 
@@ -40,12 +40,14 @@ public class BulletShootScript : MonoBehaviour
 
         // 一定時間後に自動で削除
         Destroy(gameObject, lifetime);
+        playerScript = GameObject.Find("Player").GetComponent<PlayerScript>();
 
     }
 
     // Update is called once per frame
     void Update()
     {
+        speed += playerScript.forwardSpeed;
 
         // ターゲット位置に向かって移動
         transform.position += moveDirection * speed * Time.deltaTime;

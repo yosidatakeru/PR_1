@@ -15,7 +15,7 @@ public class ReticleFollowCameraScript : MonoBehaviour
     private bool playerPosition = true;
     private Vector3 offset; // プレイヤーとの相対位置
    
-    float previousPlayerZ = 0;
+    float previousPlayerZ = 10;
     float previousPlayerX = 0;
     float previousPlayerY = 0;
     private Vector3 previousPlayerPosition;
@@ -105,7 +105,7 @@ public class ReticleFollowCameraScript : MonoBehaviour
 
         previousPlayerX = player.position.x;
         previousPlayerY = player.position.y;
-        previousPlayerZ = player.position.z;
+        previousPlayerZ = player.position.z-10;
     }
 
     Vector3 ClampToCameraBounds(Vector3 position)

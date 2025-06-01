@@ -6,67 +6,98 @@ public class TitlePlayerScript : MonoBehaviour
 {
     // Start is called before the first frame update
     //回転
-    Vector3  playerRotation = new Vector3(0f, 180f, 0f);
+    Vector3 playerRotation = new Vector3(0f, 180f, 0f);
     float RotationSpeed = 0.02f;
     bool Rotation = false;
 
     //移動
-    Vector3 playerPosition = new Vector3(5f, 0f, 0f);
+    Vector3 playerPosition = new Vector3(0f, 0f, 0f);
     float PositionSpeed = 0f;
     bool position = false;
+    bool move = true;
+
+    CameraTitleScript cameraScript;
+
+
     void Start()
     {
         playerRotation = new Vector3(5f, 180f, 0f);
         Rotation = false;
 
-        playerPosition = new Vector3(0f, -2f, 0f);
+        playerPosition = new Vector3(0f, 0f, 0f);
         position = false;
+
+        cameraScript = GameObject.Find("Main Camera").GetComponent<CameraTitleScript>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // 回転を適用
-        transform.rotation = Quaternion.Euler(playerRotation.x, playerRotation.y, playerRotation.z);
-        transform.position = new Vector3(playerPosition.x, playerPosition.y, playerPosition.z);
-
-        if (Rotation == false)
+        if (move == false && Input.GetKeyDown(KeyCode.Space) && cameraScript.IsCameraMoveFinished==true)
         {
-            playerRotation.z += RotationSpeed;
-            if (playerRotation.z >= 6f) 
+            Debug.Log("スペースキーが押されました（1フレームだけ）");
+        }
+
+        // スペースキーを押したら isPaused をトグル（切り替え）
+        if (move == true && Input.GetKeyDown(KeyCode.Space))
+        {
+            move = false;
+            Debug.Log("スペースキーが押されました（1フレームだけ）");
+        }
+
+        // 一時停止中は以降の処理をスキップ
+        if (move == true)
+        {
+
+            // 回転と位置を適用
+            transform.rotation = Quaternion.Euler(playerRotation.x, playerRotation.y, playerRotation.z);
+            transform.position = new Vector3(playerPosition.x, playerPosition.y, playerPosition.z);
+
+            if (Rotation == false)
             {
-                Rotation = true;
+                playerRotation.z += RotationSpeed;
+                if (playerRotation.z >= 6f)
+                {
+                    Rotation = true;
+                }
+            }
+
+            if (Rotation == true)
+            {
+                playerRotation.z -= RotationSpeed;
+
+                if (playerRotation.z <= -6f)
+                {
+                    Rotation = false;
+                }
+            }
+
+            if (position == false)
+            {
+                playerPosition.y += PositionSpeed;
+                if (playerPosition.y >= 0.5f)
+                {
+                    position = true;
+                }
+            }
+
+            if (position == true)
+            {
+                playerPosition.y -= PositionSpeed;
+
+                if (playerPosition.y <= -0.5f)
+                {
+                    position = false;
+                }
             }
         }
 
-        if (Rotation == true)
+        if (move == false) 
         {
-            playerRotation.z -= RotationSpeed;
-
-            if (playerRotation.z <= -6f)
-            {
-                Rotation = false;
-            }
+            playerPosition = new Vector3(0f, 0f, 0f);
+            playerRotation = new Vector3(0f, 180f, 0f);
         }
 
-        if (position == false)
-        {
-            playerPosition.y += PositionSpeed;
-            if (playerPosition.y >= 0.5f)
-            {
-                position = true;
-            }
-        }
-
-        if (position == true)
-        {
-            playerPosition.y -= PositionSpeed;
-
-            if (playerPosition.y <= -0.5f)
-            {
-                position = false;
-            }
-        }
-
+       
     }
 }

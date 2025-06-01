@@ -27,6 +27,8 @@ public class PauseScreenScript : MonoBehaviour
     float fadeDuration = 3f;
     private bool isFading = false;
 
+    float prevDpv = 0.0f; // クラスのフィールドに定義しておく
+
     void Start()
     {
         isPaused = false;
@@ -59,7 +61,7 @@ public class PauseScreenScript : MonoBehaviour
         // ポーズ中に上キー押下時は点滅処理
         if (isPaused == true && OperationInstructions.alpha == 0)
         { 
-            if (Input.GetKeyDown(KeyCode.UpArrow)|| (dpv == 1.0))
+            if (Input.GetKeyDown(KeyCode.UpArrow)|| (dpv == 1.0) && (prevDpv != 1.0f))
             {
                 if(choice != 2) 
                 {
@@ -68,7 +70,7 @@ public class PauseScreenScript : MonoBehaviour
                 Debug.Log("押した");
             }
 
-            if (Input.GetKeyDown(KeyCode.DownArrow) || (dpv == -1.0))
+            if (Input.GetKeyDown(KeyCode.DownArrow) || (dpv == -1.0) && (prevDpv != -1.0f))
             {
                 if (choice != 0)
                 {
@@ -77,6 +79,7 @@ public class PauseScreenScript : MonoBehaviour
                 Debug.Log("押した");
             }
 
+            prevDpv = dpv; // 最後に更新
         }
        
         

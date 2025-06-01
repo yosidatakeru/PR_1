@@ -26,7 +26,7 @@ public class PlayerScript : MonoBehaviour
     // プレイヤーの操作による移動速度
     float playerSpeed = 0.5f;
     // 前方への自動移動速度
-    float forwardSpeed = 30f;
+    public float forwardSpeed = 30f;
 
     // 次の弾が撃てるまでのクールタイム
     int timeUntilNextShot = 0;
@@ -76,7 +76,9 @@ public class PlayerScript : MonoBehaviour
 
     float fallSpeed = 0.1f;
 
-   public bool acceleration = false;
+    public bool acceleration = false;
+
+    float goalLine = 3300f;
 
     void Start()
     {
@@ -95,7 +97,7 @@ public class PlayerScript : MonoBehaviour
     void Update()
     {
         // プレイヤーの座標によって操作可能フラグを切り替え
-        if (transform.position.z <= 50f || transform.position.z >= 3300f || hpScript.Gauge <= 0)
+        if (transform.position.z <= 50f || transform.position.z >= goalLine || hpScript.Gauge <= 0)
         {
             isControlEnabled = false;
         }
@@ -107,6 +109,12 @@ public class PlayerScript : MonoBehaviour
         {
             // 常に前方へ進む
             transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
+        }
+
+        if (goalLine <= transform.position.z)
+        {
+            acceleration = false;
+            playerRotation = Vector3.zero;
         }
         GameOver();
 
@@ -226,8 +234,8 @@ public class PlayerScript : MonoBehaviour
 
         if ((Input.GetKey(KeyCode.Space) || triggerValue > 0.1f) && timeUntilNextShot <= 0)
         {
-            Vector3 muzzleOffset = transform.forward * 2f;
-            Instantiate(Bullet, transform.position + muzzleOffset, transform.rotation);
+           /// Vector3 muzzleOffset = transform.forward * 2f;
+            Instantiate(Bullet, transform.position, transform.rotation);
             timeUntilNextShot = bulletNext;
         }
     }
@@ -382,7 +390,7 @@ public class PlayerScript : MonoBehaviour
 
     void Acceleration() 
     {
-        if (Input.GetButtonDown("R3") || Input.GetKeyDown(KeyCode.LeftShift)|| Input.GetKeyDown(KeyCode.RightShift))
+        if (Input.GetButtonDown("L3") || Input.GetKeyDown(KeyCode.LeftShift)|| Input.GetKeyDown(KeyCode.RightShift))
         {
             acceleration = !acceleration;
         }
@@ -398,6 +406,8 @@ public class PlayerScript : MonoBehaviour
             forwardSpeed = 30;
           
         }
+
+        
 
         
 

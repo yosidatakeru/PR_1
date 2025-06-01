@@ -60,10 +60,7 @@ public class HPScript : MonoBehaviour
         {
             canvasGroup.alpha = 0;
         }
-        else
-        {
-            canvasGroup.alpha = 1;
-        }
+       
 
         // åªç›ÇÃÉQÅ[ÉWÇï€ë∂
         previousGauge = Gauge;
