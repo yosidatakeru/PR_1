@@ -7,7 +7,7 @@ public class TitlePlayerScript : MonoBehaviour
     // Start is called before the first frame update
     //‰ñ“]
     Vector3 playerRotation = new Vector3(0f, 180f, 0f);
-    float RotationSpeed = 0.02f;
+    float RotationSpeed = 0.08f;
     bool Rotation = false;
 
     //ˆÚ“®
@@ -56,7 +56,7 @@ public class TitlePlayerScript : MonoBehaviour
             if (Rotation == false)
             {
                 playerRotation.z += RotationSpeed;
-                if (playerRotation.z >= 6f)
+                if (playerRotation.z >= 12f)
                 {
                     Rotation = true;
                 }
@@ -66,7 +66,7 @@ public class TitlePlayerScript : MonoBehaviour
             {
                 playerRotation.z -= RotationSpeed;
 
-                if (playerRotation.z <= -6f)
+                if (playerRotation.z <= -12f)
                 {
                     Rotation = false;
                 }
@@ -96,6 +96,7 @@ public class TitlePlayerScript : MonoBehaviour
         {
             playerPosition = new Vector3(0f, 0f, 0f);
             playerRotation = new Vector3(0f, 180f, 0f);
+            RotationSpeed = 0;
         }
 
        

@@ -30,7 +30,7 @@ public class GameUiScript : MonoBehaviour
         if (player != null)
         {
             Vector3 pos = player.transform.position;
-            Debug.Log("プレイヤーの座標: " + pos);
+          
         }
 
         if (player.transform.position.z >= 0 && player.transform.position.z <= 3300)

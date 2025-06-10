@@ -22,16 +22,16 @@ public class HPScript : MonoBehaviour
         originalPos = gaugeTransform.anchoredPosition;
 
         // HPゲージを初期化
-        Gauge = 1000;
+        Gauge = 2000;
         previousGauge = Gauge;
     }
 
     void Update()
     {
         // HPの上限を制限
-        if (Gauge >= 1000)
+        if (Gauge >= 2000)
         {
-            Gauge = 1000;
+            Gauge = 2000;
         }
 
         // スライダーにゲージの値を反映

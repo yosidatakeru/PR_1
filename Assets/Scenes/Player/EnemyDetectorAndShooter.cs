@@ -7,15 +7,12 @@ using UnityEngine;
 
 public class EnemyDetectorAndShooter : MonoBehaviour
 {
-
-    public GameObject missilePrefab; // 発射する弾のプレハブ
-    public Transform launchPoint; // 弾を発射する位置
-    public float detectionRadius = 20f; // 検出範囲
-    
+    // 発射する弾のプレハブ
+    public GameObject missilePrefab;
     //範囲設定
-    public Vector3 detectionSize = new Vector3(20f, 15f, 150f);
-
-    public LayerMask enemyLayer; // 敵のレイヤーマスク
+    Vector3 detectionSize = new Vector3(200f, 200f, 200f);
+    // 敵のレイヤーマスク
+    public LayerMask enemyLayer; 
     int maxTargets = 10; // 最大検出する敵の数
     public GameObject markerPrefab; // 敵の位置を示す3Dモデル
 
@@ -25,7 +22,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
     private bool isDetecting = false; // 検出中フラグ
     private Coroutine detectionCoroutine; // 索敵用コルーチン
     bool isBlocked = false;
-    public bool isBlockedForward = false; // 前進禁止フラグ
+  
     // Start is called before the first frame update
     void Start()
     {
@@ -45,7 +42,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
             }
 
 
-      //  }
+ 
 
         // スペースキーを離した瞬間に弾を発射
         if (Input.GetKeyUp(KeyCode.E) || Input.GetButtonDown("RB"))

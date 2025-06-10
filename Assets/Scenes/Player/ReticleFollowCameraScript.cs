@@ -15,7 +15,7 @@ public class ReticleFollowCameraScript : MonoBehaviour
     private bool playerPosition = true;
     private Vector3 offset; // プレイヤーとの相対位置
    
-    float previousPlayerZ = 10;
+    float previousPlayerZ = 0;
     float previousPlayerX = 0;
     float previousPlayerY = 0;
     private Vector3 previousPlayerPosition;
@@ -37,6 +37,11 @@ public class ReticleFollowCameraScript : MonoBehaviour
         if (Input.GetButtonDown("R3")||Input.GetKeyDown(KeyCode.F))
         {
             playerPosition = !playerPosition; // 切り替え
+                                              // プレイヤーのX・Y座標に合わせて、Zはそのまま
+                                              // 切り替えた瞬間に前回のプレイヤー位置をリセット
+            previousPlayerPosition = player.position;
+
+
         }
 
        //  Vector3 playerDelta = player.position - new Vector3(previousPlayerX, previousPlayerY, previousPlayerZ);
@@ -69,8 +74,6 @@ public class ReticleFollowCameraScript : MonoBehaviour
 
             // 正規化ベクトルで移動
             Vector3 stickMove = inputVector * moveSpeed * Time.deltaTime;
-
-            // Vector3 stickMove = new Vector3(moveX, moveY, 0) * speed * Time.deltaTime;
 
             // プレイヤーの移動量を計算（Zも含めてるけどあとで無視する）
             Vector3 playerDelta = player.position - previousPlayerPosition;
@@ -105,7 +108,7 @@ public class ReticleFollowCameraScript : MonoBehaviour
 
         previousPlayerX = player.position.x;
         previousPlayerY = player.position.y;
-        previousPlayerZ = player.position.z-10;
+        previousPlayerZ = player.position.z;
     }
 
     Vector3 ClampToCameraBounds(Vector3 position)

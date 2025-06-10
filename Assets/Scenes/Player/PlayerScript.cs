@@ -23,8 +23,9 @@ public class PlayerScript : MonoBehaviour
 
     public GameObject defense;
 
+  
     // プレイヤーの操作による移動速度
-    float playerSpeed = 0.5f;
+    float playerSpeed = 1f;
     // 前方への自動移動速度
     public float forwardSpeed = 30f;
 
@@ -64,6 +65,8 @@ public class PlayerScript : MonoBehaviour
     private float rollZAngle = 0f;
     // バレルロール中かどうか
     bool isRolling = false;
+    private bool isInvincible;
+
     // ロール持続時間
     // float rollTime = 0.5f;
 
@@ -196,7 +199,7 @@ public class PlayerScript : MonoBehaviour
         velocity += input * playerSpeed;
         if (velocity.magnitude > maxSpeed)
         {
-            velocity = velocity.normalized * maxSpeed;
+            velocity = velocity.normalized * maxSpeed ;
            
         }
 
@@ -327,36 +330,35 @@ public class PlayerScript : MonoBehaviour
     // バレルロールの実行
     IEnumerator DoBarrelRoll()
     {
-        isRolling = true;
-        float elapsed = 0f;
+        isRolling = true; // プレイヤーが回転中かどうかのフラグ
+        isInvincible = true; // 回転中は無敵にする
 
+        float elapsed = 0f;
         float startZ = rollZAngle;
         int rollCount = 2;
         float duration = 1.5f;
 
         float endZ = startZ + (360f * rollCount);
-        float repelInterval = 0.05f;
-        float repelTimer = 0f;
+       
 
         while (elapsed < duration)
         {
             float t = elapsed / duration;
             rollZAngle = Mathf.Lerp(startZ, endZ, t);
             elapsed += Time.deltaTime;
-            repelTimer += Time.deltaTime;
+            
 
-            if (repelTimer >= repelInterval)
-            {
-                // 弾をはじく
-                RepelNearbyBullets();
-                repelTimer = 0f;
-            }
+            
+                RepelNearbyBullets(); // 弾をはじく処理
+               
+            
 
             yield return null;
         }
 
         rollZAngle = endZ % 720f;
         isRolling = false;
+        isInvincible = false; // 回転終了で無敵解除
     }
 
     // 近くの敵弾を削除（はじく処理）
@@ -433,6 +435,11 @@ public class PlayerScript : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    internal bool IsInvincible()
+    {
+        return isInvincible; // バレルロール中などに true にする
     }
 }
 

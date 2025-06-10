@@ -99,8 +99,22 @@ public class TrackingBilltScript : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("EnemyWoll"))
+        if (collision.gameObject.CompareTag("Player"))
         {
+            PlayerScript player = collision.gameObject.GetComponent<PlayerScript>();
+            if (player != null && player.IsInvincible())
+            {
+                // プレイヤーが無敵中なら何もしない（貫通を防ぐ）
+                return;
+            }
+
+            // プレイヤーに当たった場合
+            GetComponent<Collider>().enabled = false;
+            Destroy(gameObject);
+        }
+        else if (collision.gameObject.CompareTag("EnemyWoll"))
+        {
+            // 壁などに当たった場合も破壊
             GetComponent<Collider>().enabled = false;
             Destroy(gameObject);
         }

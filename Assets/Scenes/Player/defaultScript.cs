@@ -21,7 +21,7 @@ public class defaultScript : MonoBehaviour
     CameraScript cameraSample;
    
     public GameObject PlreyerDestroy;
-
+    public GameObject damage;
 
     void Start()
     {
@@ -74,6 +74,7 @@ public class defaultScript : MonoBehaviour
 
         if (other.CompareTag("EnemyBullet") || other.gameObject.CompareTag("EnemyWoll"))
         {
+          
             if (hpScript.Gauge <= 0)
             {
                 GetComponent<Renderer>().enabled = false;
@@ -99,6 +100,8 @@ public class defaultScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("EnemyBullet") || collision.gameObject.CompareTag("EnemyWoll"))
         {
+            Instantiate(damage, transform.position, Quaternion.identity);
+            Debug.Log("ダメージを受けたエフェクト軌道");
             if (hpScript.Gauge <= 0)
             {
                 GetComponent<Renderer>().enabled = false;
@@ -127,6 +130,7 @@ public class defaultScript : MonoBehaviour
             hpScript.Gauge -= 200;
             playerScript.acceleration = false;
             cameraSample.TakeDamage();
+          
             if (hpScript.Gauge >= 0)
             {
                 StartCoroutine(BlinkAndInvincible());

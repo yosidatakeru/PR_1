@@ -22,7 +22,12 @@ public class ReticleFollowCameraScript2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-      
+
+        if (Input.GetButtonDown("R3") || Input.GetKeyDown(KeyCode.F))
+        {
+          
+
+        }
 
         transform.LookAt(player);
         

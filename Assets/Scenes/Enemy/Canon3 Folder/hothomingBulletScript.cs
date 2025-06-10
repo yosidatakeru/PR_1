@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerFollowingBulletScript : MonoBehaviour
+public class hothomingBulletScript : MonoBehaviour
 {
-    public float speed = 80f;
-    public float lifetime = 100f;
-    public Vector3 targetPosition;
+    float speed = 150f;
+    float lifetime = 100f;
+    Vector3 targetPosition;
     private Vector3 direction;
 
     void Start()
@@ -40,7 +40,7 @@ public class PlayerFollowingBulletScript : MonoBehaviour
 
     public void SetNewTarget(Vector3 newTarget)
     {
-        targetPosition = newTarget ;
+        targetPosition = newTarget;
 
         // タグを「Bullet」に変更（反射後の状態）
         gameObject.tag = "Bullet";
@@ -54,4 +54,5 @@ public class PlayerFollowingBulletScript : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
 }

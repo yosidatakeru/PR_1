@@ -26,7 +26,7 @@ public class HpboxScript : MonoBehaviour
         {
             Instantiate(particle, new Vector3(transform.position.x+8, transform.position.y + particleposition.y, transform.position.z), Quaternion.identity);
             //âº
-            hpScript.Gauge += 200;
+            hpScript.Gauge += 400;
 
             //ìGÇè¡Ç∑/
             Destroy(gameObject);

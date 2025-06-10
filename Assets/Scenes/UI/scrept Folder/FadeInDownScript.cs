@@ -31,7 +31,7 @@ public class FadeInDownScript : MonoBehaviour
             if (Mathf.Approximately(newY, targetY))
             {
                 hasReachedTarget = true;
-                Debug.Log("Imageが目標のY座標に到達しました！");
+               
             }
         }
     }

@@ -67,7 +67,7 @@ public class Missile : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit, speed * Time.fixedDeltaTime))
         {
-            Debug.Log("Hit detected via Raycast: " + hit.collider.gameObject.name);
+            
            // Explode();
         }
 
@@ -82,12 +82,12 @@ public class Missile : MonoBehaviour
         RaycastHit hit;
         if (Physics.SphereCast(transform.position, detectionRadius, transform.forward, out hit, detectionDistance, enemyLayer))
         {
-            Debug.Log("Missile hit detected (SphereCast): " + hit.collider.gameObject.name);
+           
             //Explode();
         }
         else
         {
-            Debug.Log("SphereCast did not hit anything.");
+           
         }
 
         // OverlapSphere Ç‡ééÇ∑Åiç≈å„ÇÃï€åØÅj
@@ -96,8 +96,7 @@ public class Missile : MonoBehaviour
         {
             if (col.CompareTag("Enemy"))
             {
-                Debug.Log("Missile hit detected (OverlapSphere): " + col.gameObject.name);
-              
+               
                 return;
             }
         }
@@ -105,7 +104,7 @@ public class Missile : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collision detected with: " + collision.gameObject.name);
+       
 
         if (collision.gameObject.CompareTag("Enemy"))
         {

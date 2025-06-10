@@ -10,7 +10,7 @@ public class GoalScript : MonoBehaviour
     HPScript hpScript;
     public CanvasGroup clearUI;
     public CanvasGroup fade;
-
+    public CanvasGroup GameUI;
     public CanvasGroup gameOver;
     float fadeDuration = 3f;
     private bool isFading = false;
@@ -23,14 +23,22 @@ public class GoalScript : MonoBehaviour
         playerScript = GameObject.Find("Player").GetComponent<PlayerScript>();
         hpScript = GameObject.Find("HPGauge").GetComponent<HPScript>();
         glitchMaterial.SetFloat("_GlitchIntensity", 0f);
+        clearUI.alpha = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        if (playerScript.transform.position.z >= 3300) 
+        if (playerScript.transform.position.z >= 3300 && hpScript.Gauge >= 0)
         {
+
+            GameUI.alpha = 0;
+        }
+
+
+        if (playerScript.transform.position.z >= 3350&&hpScript.Gauge>=0) 
+        {
+            Debug.Log("クリアシーン");
             clearUI.alpha = 1;
         }
             
@@ -38,7 +46,7 @@ public class GoalScript : MonoBehaviour
         
 
 
-        if (playerScript.transform.position.z >= 3300&& Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Abutton")&&(playerScript.transform.position.z >= 3300))            
+        if (playerScript.transform.position.z >= 3350&& Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Abutton")&&(playerScript.transform.position.z >= 3350))            
         {
             StartCoroutine(FadeOut("TitleScene"));
            // "NextSceneName" を切り替えたいシーン名に変更
