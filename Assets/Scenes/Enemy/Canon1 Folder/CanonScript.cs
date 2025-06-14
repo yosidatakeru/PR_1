@@ -19,6 +19,8 @@ public class CanonScript : MonoBehaviour
     public GameObject[] brokenParts; // 敵が崩れるパーツ
     public ParticleSystem destructionParticles; // 破壊のパーティクルシステム
     private int comboup = 1;
+    //いくつ加算されたか
+    int addAmount;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,10 +48,16 @@ public class CanonScript : MonoBehaviour
             comboGaugeScript.Gauge = 600;
 
             //スコアの処理
-            scoreResult = comboSceorwScript.conboScore * destroyScore / 9;
+            scoreResult = comboSceorwScript.conboScore * destroyScore /9;
 
             //スコアの受け渡い
             ScoreScript.score += destroyScore + scoreResult;
+
+          
+             addAmount = destroyScore + scoreResult;
+
+
+            ScoreScript.AddScore(addAmount);
 
             comboSceorwScript.conboScore += comboup;
 

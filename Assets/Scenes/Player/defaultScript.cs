@@ -126,7 +126,7 @@ public class defaultScript : MonoBehaviour
             if (isInvincible) return;
            
             comboGaugeScript.Gauge = 0;
-            ScoreScript.score -= 100;
+           
             hpScript.Gauge -= 200;
             playerScript.acceleration = false;
             cameraSample.TakeDamage();

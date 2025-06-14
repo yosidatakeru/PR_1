@@ -12,15 +12,20 @@ public class EnemyDetectorAndShooter : MonoBehaviour
     //範囲設定
     Vector3 detectionSize = new Vector3(200f, 200f, 200f);
     // 敵のレイヤーマスク
-    public LayerMask enemyLayer; 
-    int maxTargets = 10; // 最大検出する敵の数
-    public GameObject markerPrefab; // 敵の位置を示す3Dモデル
-
-
-    private List<Transform> detectedEnemies = new List<Transform>(); // 検出した敵リスト
-    private List<GameObject> activeMarkers = new List<GameObject>(); // 配置されたマーカーのリスト
-    private bool isDetecting = false; // 検出中フラグ
-    private Coroutine detectionCoroutine; // 索敵用コルーチン
+    public LayerMask enemyLayer;
+    // 最大検出する敵の数
+    int maxTargets = 10;
+    // 敵の位置を示す3Dモデル
+    public GameObject markerPrefab;
+    // 検出した敵リスト
+    private List<Transform> detectedEnemies = new List<Transform>();
+    // 配置されたマーカーのリスト
+    private List<GameObject> activeMarkers = new List<GameObject>();
+    //検出中フラグ
+    private bool isDetecting = false;
+    // 索敵用コルーチン
+    private Coroutine detectionCoroutine; 
+    //障害物があるかのフラグ
     bool isBlocked = false;
   
     // Start is called before the first frame update
@@ -53,10 +58,10 @@ public class EnemyDetectorAndShooter : MonoBehaviour
                 {
                     StopCoroutine(detectionCoroutine);
                     detectionCoroutine = null; // コルーチンを停止後、nullに設定
-                    Debug.Log("検出を停止しました...");
+                   // Debug.Log("検出を停止しました...");
                 }
                 FireMissiles();
-                Debug.Log("弾を発射しました！");
+                //Debug.Log("弾を発射しました！");
             }
 
             // 状態をリセット
@@ -68,7 +73,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
             ClearMarkers();
         }
 
-        //OnDrawGizmosSelected();
+      
 
         if (detectedEnemies.Count > 0)
         {
@@ -79,15 +84,16 @@ public class EnemyDetectorAndShooter : MonoBehaviour
         {
             isDetecting = false;
         }
+
+        /// マーカーの表示位置を敵に追従させる
         FollowMarkers();
 
        
     }
 
 
-    /// <summary>
+    
     /// ロックオンしている敵が障害物の後ろに入ったらロック解除
-    /// </summary>
     void CheckForObstacles()
     {
         for (int i = detectedEnemies.Count - 1; i >= 0; i--)
@@ -128,9 +134,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
         }
     }
 
-    /// <summary>
     /// 指定したインデックスの敵をリストから削除し、マーカーも消去
-    /// </summary>
     void RemoveTarget(int index)
     {
         if (index < detectedEnemies.Count)
@@ -147,16 +151,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
 
 
 
-    private void OnDrawGizmos() // OnDrawGizmosSelected() → OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-
-        // **検出範囲のボックスサイズ**
-        Vector3 boxSize = new Vector3(detectionSize.x, detectionSize.y, detectionSize.z); // X, Y, Z の大きさ
-
-        // **ボックスのワイヤーフレームを描画**
-        Gizmos.DrawWireCube(transform.position, boxSize);
-    }
+   
 
     //マーカの処理
     private void FollowMarkers()
@@ -301,8 +296,8 @@ public class EnemyDetectorAndShooter : MonoBehaviour
 
     }
 
-  
 
+    /// ロックオンした敵に向かってミサイルを発射
 
     void FireMissiles()
     {
@@ -329,5 +324,16 @@ public class EnemyDetectorAndShooter : MonoBehaviour
         // 検出リストをクリア
         detectedEnemies.Clear();
         
+    }
+
+    private void OnDrawGizmos() // OnDrawGizmosSelected() → OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+
+        // **検出範囲のボックスサイズ**
+        Vector3 boxSize = new Vector3(detectionSize.x, detectionSize.y, detectionSize.z); // X, Y, Z の大きさ
+
+        // **ボックスのワイヤーフレームを描画**
+        Gizmos.DrawWireCube(transform.position, boxSize);
     }
 }

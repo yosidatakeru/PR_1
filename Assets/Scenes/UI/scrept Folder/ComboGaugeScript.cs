@@ -5,47 +5,102 @@ using UnityEngine.UI;
 
 public class ComboGaugeScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    // コンボゲージの値
     public float Gauge = 0;
-
-    // UIスライダーコンポーネント（インスペクターで設定）
     public Slider comboGauge;
 
-    // CanvasGroup（透明度などを制御するため）
-    CanvasGroup canvasGroup;
-   
+    private CanvasGroup canvasGroup;
+    private bool isBlinking = false;
+    public float blinkThreshold = 30f; // この値以下で点滅開始
+
+    private Image fillImage; // Fillイメージの参照
+    public Color normalColor = Color.white;
+    public Color yellowColor = Color.yellow;
+    public Color redColor = Color.red;
 
     void Start()
     {
-        // CanvasGroupを現在のGameObjectから取得
         canvasGroup = GetComponent<CanvasGroup>();
-
-        // コンボゲージを初期化
+        fillImage = comboGauge.fillRect.GetComponent<Image>();
         Gauge = 0;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // スライダーにゲージの値を反映
         comboGauge.value = Gauge;
 
-        // ゲージが0以下なら非表示
+        // カラー変更処理
+        if (Gauge <= 100)
+        {
+            fillImage.color = redColor;
+        }
+        else if (Gauge <= 300)
+        {
+            fillImage.color = yellowColor;
+        }
+        else
+        {
+            fillImage.color = normalColor;
+        }
+
         if (Gauge <= 0)
         {
             canvasGroup.alpha = 0;
-           
+            StopBlinking(); // ゲージゼロでは点滅終了
         }
-        else 
+        else
         {
+            if (Gauge <= blinkThreshold)
+            {
+                StartBlinking();
+            }
+            else
+            {
+                canvasGroup.alpha = 1;
+                StopBlinking(); // 通常表示に戻す
+            }
+        }
+
+        if (Time.timeScale != 0)
+        {
+            Gauge -= Time.deltaTime * 100; // ゲージの減少速度
+            if (Gauge < 0) Gauge = 0;
+        }
+    }
+
+    void StartBlinking()
+    {
+        if (!isBlinking)
+        {
+            isBlinking = true;
+            StartCoroutine(Blink());
+        }
+    }
+
+    void StopBlinking()
+    {
+        if (isBlinking)
+        {
+            isBlinking = false;
+            StopCoroutine(Blink());
             canvasGroup.alpha = 1;
         }
-        if (Time.timeScale != 0)
-        { 
-        // 毎フレームゲージを減少させる
-        Gauge--;
+    }
+
+    System.Collections.IEnumerator Blink()
+    {
+        while (isBlinking)
+        {
+            for (float t = 0; t < 1f; t += Time.deltaTime * 5)
+            {
+                canvasGroup.alpha = Mathf.Lerp(1f, 0.3f, t);
+                yield return null;
+            }
+            for (float t = 0; t < 1f; t += Time.deltaTime * 5)
+            {
+                canvasGroup.alpha = Mathf.Lerp(0.3f, 1f, t);
+                yield return null;
+            }
         }
-       
     }
 }
+

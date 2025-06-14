@@ -12,12 +12,14 @@ public class SFFreeFighterScript : MonoBehaviour
     ComboSceorwScript comboSceorwScript;
     //ScoreScript scoreScript;
     int scoreResult = 0;
-    int destroyScore = 100;
+    int destroyScore = 300;
     Vector3 particleposition = Vector3.zero;
     public GameObject[] brokenParts; // 敵が崩れるパーツ
     public ParticleSystem destructionParticles; // 破壊のパーティクルシステム
     private int comboup = 1;
     // Start is called before the first frame update
+    //いくつ加算されたか
+    int addAmount;
     void Start()
     {
         comboGaugeScript = GameObject.Find("ComboGauge").GetComponent<ComboGaugeScript>();
@@ -48,6 +50,11 @@ public class SFFreeFighterScript : MonoBehaviour
 
             //スコアの受け渡い
             ScoreScript.score += destroyScore + scoreResult;
+
+            addAmount = destroyScore + scoreResult;
+
+
+            ScoreScript.AddScore(addAmount);
 
             comboSceorwScript.conboScore += comboup;
 

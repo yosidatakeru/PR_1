@@ -14,6 +14,8 @@ public class FixedCanonScript : MonoBehaviour
   
     public ParticleSystem destructionParticles; // 破壊のパーティクルシステム
     private int comboup = 1;
+    //いくつ加算されたか
+    int addAmount;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +45,11 @@ public class FixedCanonScript : MonoBehaviour
 
             //スコアの受け渡い
             ScoreScript.score += destroyScore + scoreResult;
+
+            addAmount = destroyScore + scoreResult;
+
+
+            ScoreScript.AddScore(addAmount);
 
             comboSceorwScript.conboScore += comboup;
 
