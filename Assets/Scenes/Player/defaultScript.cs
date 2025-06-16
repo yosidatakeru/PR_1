@@ -19,7 +19,7 @@ public class defaultScript : MonoBehaviour
     public Transform effectSpawnPoint;
     private bool isFirstUpdate = true;
     CameraScript cameraSample;
-   
+    ShakeScript shakeScript;
     public GameObject PlreyerDestroy;
     public GameObject damage;
 
@@ -30,6 +30,7 @@ public class defaultScript : MonoBehaviour
         scoreScript = GameObject.Find("ScoreText (TMP)").GetComponent<ScoreScript>();
 
         cameraSample = GameObject.Find("Main Camera").GetComponent<CameraScript>();
+        shakeScript = GameObject.Find("Main Camera").GetComponent<ShakeScript>();
         playerScript = GameObject.Find("Player").GetComponent<PlayerScript>();
 
         isInvincible = false;
@@ -129,8 +130,9 @@ public class defaultScript : MonoBehaviour
            
             hpScript.Gauge -= 200;
             playerScript.acceleration = false;
-            cameraSample.TakeDamage();
-          
+
+            shakeScript.Shake(0.1f, 0.5f);
+
             if (hpScript.Gauge >= 0)
             {
                 StartCoroutine(BlinkAndInvincible());
