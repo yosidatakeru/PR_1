@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DestroyStageScript : MonoBehaviour
 {
-    public PlayerScript playerScript;
+   
     //float i = 0.0f;
     // Start is called before the first frame update
     void Start()

@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class GoalScript : MonoBehaviour
 {
     ScoreScript scoreScript;
-    PlayerScript playerScript;
+    PlayerController playerController;
     HPScript hpScript;
     public CanvasGroup clearUI;
     public CanvasGroup fade;
@@ -20,7 +20,7 @@ public class GoalScript : MonoBehaviour
     void Start()
     {
         scoreScript = GameObject.Find("ScoreText (TMP)").GetComponent<ScoreScript>();
-        playerScript = GameObject.Find("Player").GetComponent<PlayerScript>();
+      playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         hpScript = GameObject.Find("HPGauge").GetComponent<HPScript>();
         glitchMaterial.SetFloat("_GlitchIntensity", 0f);
         clearUI.alpha = 0;
@@ -29,14 +29,14 @@ public class GoalScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerScript.transform.position.z >= 3300 && hpScript.Gauge >= 0)
+        if (playerController.transform.position.z >= 3300 && hpScript.Gauge >= 0)
         {
 
             GameUI.alpha = 0;
         }
 
 
-        if (playerScript.transform.position.z >= 3350&&hpScript.Gauge>=0) 
+        if (playerController.transform.position.z >= 3350&&hpScript.Gauge>=0) 
         {
             Debug.Log("クリアシーン");
             clearUI.alpha = 1;
@@ -46,7 +46,7 @@ public class GoalScript : MonoBehaviour
         
 
 
-        if (playerScript.transform.position.z >= 3350&& Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Abutton")&&(playerScript.transform.position.z >= 3350))            
+        if (playerController.transform.position.z >= 3350&& Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Abutton")&&(playerController.transform.position.z >= 3350))            
         {
             StartCoroutine(FadeOut("TitleScene"));
            // "NextSceneName" を切り替えたいシーン名に変更

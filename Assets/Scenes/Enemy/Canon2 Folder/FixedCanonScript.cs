@@ -37,7 +37,7 @@ public class FixedCanonScript : MonoBehaviour
             //  Instantiate(Score, new Vector3(transform.position.x, transform.position.y + particleposition.y, transform.position.z), Quaternion.identity);
             Instantiate(particle, new Vector3(transform.position.x, transform.position.y + particleposition.y, transform.position.z), Quaternion.identity);
 
-
+            
             comboGaugeScript.Gauge = 600;
 
             //ÉXÉRÉAÇÃèàóù

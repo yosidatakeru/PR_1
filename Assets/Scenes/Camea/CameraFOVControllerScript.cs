@@ -5,16 +5,16 @@ using UnityEngine;
 public class CameraFOVControllerScript : MonoBehaviour
 {
     public Camera camera;
-    public PlayerScript playerScript;
+    public PlayerAcceleration playerAcceleration;
     float normalFOV = 60f;
     float boostFOV = 80f;
     float lerpSpeed = 5f;
 
     void Update()
     {
-        if (camera == null || playerScript == null) return;
+        if (camera == null || playerAcceleration == null) return;
 
-        float targetFOV = playerScript.acceleration ? boostFOV : normalFOV;
+        float targetFOV = playerAcceleration.isAccelerating ? boostFOV : normalFOV;
         camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, targetFOV, Time.deltaTime * lerpSpeed);
     }
 }

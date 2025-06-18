@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class defaultScript : MonoBehaviour
 {
-    ScoreScript scoreScript;
+   
     private bool isInvincible = false;
     public float invincibleTime = 2.0f;
     private MeshRenderer meshRenderer;
 
     ComboGaugeScript comboGaugeScript;
     HPScript hpScript;
-    PlayerScript playerScript;
+    PlayerAcceleration playerAcceleration ;
 
     private float previousHp;
     public GameObject healEffectPrefab;
@@ -27,11 +27,9 @@ public class defaultScript : MonoBehaviour
     {
         hpScript = GameObject.Find("HPGauge").GetComponent<HPScript>();
         comboGaugeScript = GameObject.Find("ComboGauge").GetComponent<ComboGaugeScript>();
-        scoreScript = GameObject.Find("ScoreText (TMP)").GetComponent<ScoreScript>();
-
         cameraSample = GameObject.Find("Main Camera").GetComponent<CameraScript>();
         shakeScript = GameObject.Find("Main Camera").GetComponent<ShakeScript>();
-        playerScript = GameObject.Find("Player").GetComponent<PlayerScript>();
+        playerAcceleration = GameObject.Find("Player").GetComponent<PlayerAcceleration>();
 
         isInvincible = false;
         invincibleTime = 2.0f;
@@ -75,7 +73,7 @@ public class defaultScript : MonoBehaviour
 
         if (other.CompareTag("EnemyBullet") || other.gameObject.CompareTag("EnemyWoll"))
         {
-          
+            playerAcceleration.isAccelerating = false;
             if (hpScript.Gauge <= 0)
             {
                 GetComponent<Renderer>().enabled = false;
@@ -85,7 +83,7 @@ public class defaultScript : MonoBehaviour
             comboGaugeScript.Gauge = 0;
             ScoreScript.score -= 100;
             hpScript.Gauge -= 200;
-            playerScript.acceleration = false;
+           
 
 
             StartCoroutine(BlinkAndInvincible());
@@ -101,6 +99,7 @@ public class defaultScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("EnemyBullet") || collision.gameObject.CompareTag("EnemyWoll"))
         {
+            playerAcceleration.isAccelerating = false;
             Instantiate(damage, transform.position, Quaternion.identity);
             Debug.Log("ダメージを受けたエフェクト軌道");
             if (hpScript.Gauge <= 0)
@@ -108,7 +107,7 @@ public class defaultScript : MonoBehaviour
                 GetComponent<Renderer>().enabled = false;
                 Instantiate(PlreyerDestroy, transform.position, Quaternion.identity);
             }
-            playerScript.acceleration = false;
+          
         }
     }
 
@@ -129,7 +128,7 @@ public class defaultScript : MonoBehaviour
             comboGaugeScript.Gauge = 0;
            
             hpScript.Gauge -= 200;
-            playerScript.acceleration = false;
+            playerAcceleration.isAccelerating = false;
 
             shakeScript.Shake(0.1f, 0.5f);
 

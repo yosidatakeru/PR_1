@@ -101,12 +101,7 @@ public class TrackingBilltScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            PlayerScript player = collision.gameObject.GetComponent<PlayerScript>();
-            if (player != null && player.IsInvincible())
-            {
-                // プレイヤーが無敵中なら何もしない（貫通を防ぐ）
-                return;
-            }
+          
 
             // プレイヤーに当たった場合
             GetComponent<Collider>().enabled = false;
