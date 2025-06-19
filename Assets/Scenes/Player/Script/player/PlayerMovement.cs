@@ -12,19 +12,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 playerRotation;
     private Vector3 targetRotation;
     private float rotationSpeed = 5f;
-    PlayerController playerController;
-    void Start()
-    {
-        playerController = GetComponent<PlayerController>();
-    }
-    void Update()
-    {
-        if (transform.position.z >= playerController.goalLine) 
-        {
-            playerRotation = Vector3.zero;
-            targetRotation = Vector3.zero;
-        }
-    }
+   
+   
     public void HandleMoveAndRotation()
     {
         HandleInput();
@@ -78,4 +67,11 @@ public class PlayerMovement : MonoBehaviour
     {
         velocity = Vector3.zero;
     }
+
+    public void RotationReset() 
+    {
+        playerRotation = Vector3.zero;
+        targetRotation = Vector3.zero;
+    }
+
 }
