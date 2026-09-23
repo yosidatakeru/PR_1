@@ -10,7 +10,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
     // 発射する弾のプレハブ
     public GameObject missilePrefab;
     //範囲設定
-    Vector3 detectionSize = new Vector3(200f, 200f, 200f);
+    Vector3 detectionSize = new Vector3(200f, 200f, 120f);
     // 敵のレイヤーマスク
     public LayerMask enemyLayer;
     // 最大検出する敵の数
@@ -27,7 +27,9 @@ public class EnemyDetectorAndShooter : MonoBehaviour
     private Coroutine detectionCoroutine; 
     //障害物があるかのフラグ
     bool isBlocked = false;
-  
+    // クールタイム中かどうか
+    private bool isCooldown = false; 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,43 +39,37 @@ public class EnemyDetectorAndShooter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
-            //敵の検出
-            if (!isDetecting)
-            {
-                isDetecting = true;
-                detectionCoroutine = StartCoroutine(DetectEnemiesPeriodically());
-              //  Debug.Log("検出を開始...");
-            }
+
+        // ロックオン開始（クールタイム中は開始しない）
+        if (!isDetecting && !isCooldown)
+        {
+            isDetecting = true;
+            detectionCoroutine = StartCoroutine(DetectEnemiesPeriodically());
+        }
 
 
- 
 
-        // スペースキーを離した瞬間に弾を発射
-        if (Input.GetKeyUp(KeyCode.E) || Input.GetButtonDown("RB"))
+
+
+        if ((Input.GetKeyUp(KeyCode.E) || Input.GetButtonDown("RB")) && !isCooldown)
         {
             if (isDetecting)
             {
                 if (detectionCoroutine != null)
                 {
                     StopCoroutine(detectionCoroutine);
-                    detectionCoroutine = null; // コルーチンを停止後、nullに設定
-                   // Debug.Log("検出を停止しました...");
+                    detectionCoroutine = null;
                 }
                 FireMissiles();
-                //Debug.Log("弾を発射しました！");
             }
 
-            // 状態をリセット
             isDetecting = false;
-
-
-
-            // マーカーを削除
             ClearMarkers();
+
+            // クールタイム開始
+            StartCoroutine(MissileCooldown());
         }
 
-      
 
         if (detectedEnemies.Count > 0)
         {
@@ -91,8 +87,15 @@ public class EnemyDetectorAndShooter : MonoBehaviour
        
     }
 
+    //クールタイムの処理
+    IEnumerator MissileCooldown()
+    {
+        isCooldown = true;
+        yield return new WaitForSeconds(0.4f); // 0.2秒待つ
+        isCooldown = false;
+    }
 
-    
+
     /// ロックオンしている敵が障害物の後ろに入ったらロック解除
     void CheckForObstacles()
     {
@@ -106,21 +109,25 @@ public class EnemyDetectorAndShooter : MonoBehaviour
                 RemoveTarget(i);
                 continue;
             }
-
-            Vector3 rayStart = transform.position + Vector3.up * 1.5f; // 少し上からRayを撃つ
-            Vector3 enemyCenter = enemy.GetComponent<Collider>().bounds.center; // 敵の中心
-
+            // プレイヤーの位置から少し上（1.5m）にずらした位置をレイの開始点とする
+            Vector3 rayStart = transform.position + Vector3.up * 1.5f;
+            // 敵のコライダーの中心位置を取得
+            Vector3 enemyCenter = enemy.GetComponent<Collider>().bounds.center;
+            // プレイヤー頭上から敵の中心への方向ベクトルを正規化
             Vector3 direction = (enemyCenter - rayStart).normalized;
+            // レイの長さはプレイヤー頭上から敵中心までの距離
             float distance = Vector3.Distance(rayStart, enemyCenter);
-
+            // 指定方向・距離でRaycastAllを実行し、ヒットした全てのコライダーを取得
             RaycastHit[] hits = Physics.RaycastAll(rayStart, direction, distance);
 
             bool isBlocked = false;
+            // ヒットしたコライダーの中に「EnemyWoll」タグの障害物があるかチェック
             foreach (RaycastHit hit in hits)
             {
                 if (hit.collider.CompareTag("EnemyWoll"))
                 {
-                    isBlocked = true;
+                   //障害物を発見したのでブロック判定を立ててループを抜ける
+                   isBlocked = true;
                     //Debug.Log($"敵 {enemy.name} は障害物 {hit.collider.name} によって見えなくなりました。ロック解除。");
                     break;
                 }
