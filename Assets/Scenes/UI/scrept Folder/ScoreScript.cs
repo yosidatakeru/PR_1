@@ -49,12 +49,14 @@ public class ScoreScript : MonoBehaviour
             if (displayedScore < score)
             {
                 displayedScore += delta;
-                if (displayedScore > score) displayedScore = score;
+                if (displayedScore > score) 
+                { displayedScore = score; }
             }
             else
             {
                 displayedScore -= delta;
-                if (displayedScore < score) displayedScore = score;
+                if (displayedScore < score) 
+                { displayedScore = score; }
             }
 
             if (scoreText != null)
