@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Enemy
+  - Bullet
+  - EnemyBullet
+  - EnemySpawnObject
+  - Frame
+  - EnemyWoll
+  - PerspectiveOn
+  - PerspectiveOff
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - enemyLayer
+  - Water
+  - UI
+  - EnemyBullet
+  - PostProcessing
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: gameOver
+    uniqueID: 2664218759
+    locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
