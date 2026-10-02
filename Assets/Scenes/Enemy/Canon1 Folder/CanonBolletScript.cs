@@ -18,7 +18,7 @@ public class CanonBolletScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        timeUntilNextShot =200;
+        timeUntilNextShot = 150;
     }
 
     // Update is called once per frame
