@@ -25,10 +25,7 @@ public class PlayerBounce : MonoBehaviour
 
     void Update()
     {
-        if (isBounced)
-        {
-           //isBounced = false;
-        }
+        
     }
 
     void OnCollisionStay(Collision collision)
