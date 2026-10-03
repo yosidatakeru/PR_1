@@ -33,7 +33,7 @@ public class ScoreboxScript : MonoBehaviour
             addAmount = destroyScore;
 
 
-            ScoreScript.AddScore(addAmount);
+          
             ScoreScript.score += scoreResult;
             //ìGÇè¡Ç∑/
             Destroy(gameObject);

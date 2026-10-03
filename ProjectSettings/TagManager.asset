@@ -12,6 +12,7 @@ TagManager:
   - EnemyWoll
   - PerspectiveOn
   - PerspectiveOff
+  - scoreManager
   layers:
   - Default
   - TransparentFX

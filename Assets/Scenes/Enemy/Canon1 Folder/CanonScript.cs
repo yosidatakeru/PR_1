@@ -57,8 +57,6 @@ public class CanonScript : MonoBehaviour
              addAmount = destroyScore + scoreResult;
 
 
-            ScoreScript.AddScore(addAmount);
-
             comboSceorwScript.conboScore += comboup;
 
 

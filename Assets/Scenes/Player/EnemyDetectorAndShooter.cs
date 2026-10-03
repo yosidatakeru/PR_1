@@ -337,7 +337,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
     {
         Gizmos.color = Color.red;
 
-        // **検出範囲のボックスサイズ**
+        //検出範囲のボックスサイズ
         Vector3 boxSize = new Vector3(detectionSize.x, detectionSize.y, detectionSize.z); // X, Y, Z の大きさ
 
         // **ボックスのワイヤーフレームを描画**

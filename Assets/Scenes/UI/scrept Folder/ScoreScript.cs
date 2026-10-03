@@ -10,7 +10,7 @@ public class ScoreScript : MonoBehaviour
     private static ScoreScript instance;
 
     [SerializeField] private TMP_Text scoreText;
-    [SerializeField] private ScoreResultScript resultScript;
+
 
     private int displayedScore = 0;
     private Vector3 originalScale;
@@ -37,7 +37,7 @@ public class ScoreScript : MonoBehaviour
 
     void Update()
     {
-        if (score < 0) score = 0;
+      
 
        
         if (displayedScore != score)
@@ -69,18 +69,7 @@ public class ScoreScript : MonoBehaviour
         
     }
 
-    public static void AddScore(int amount)
-    {
-        if (amount <= 0) return;
-
-       
-
-        if (instance != null && instance.resultScript != null)
-        {
-            instance.resultScript.ShowAddedValue(amount);
-        }
-    }
-
+   
     private System.Collections.IEnumerator AnimateScale()
     {
         isAnimating = true;

@@ -54,8 +54,6 @@ public class SFFreeFighterScript : MonoBehaviour
             addAmount = destroyScore + scoreResult;
 
 
-            ScoreScript.AddScore(addAmount);
-
             comboSceorwScript.conboScore += comboup;
 
 

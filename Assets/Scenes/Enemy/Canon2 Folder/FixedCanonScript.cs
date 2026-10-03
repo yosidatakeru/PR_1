@@ -49,8 +49,7 @@ public class FixedCanonScript : MonoBehaviour
             addAmount = destroyScore + scoreResult;
 
 
-            ScoreScript.AddScore(addAmount);
-
+          
             comboSceorwScript.conboScore += comboup;
 
 

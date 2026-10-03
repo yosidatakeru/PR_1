@@ -14,7 +14,7 @@ public class GoalScript : MonoBehaviour
     public CanvasGroup gameOver;
     float fadeDuration = 3f;
     private bool isFading = false;
-    public Material glitchMaterial; // ★ ゲームオーバーUIに使われてるマテリアル
+    public Material glitchMaterial; //ゲームオーバーUIに使われてるマテリアル
    
     // Start is called before the first frame update
     void Start()
@@ -46,9 +46,9 @@ public class GoalScript : MonoBehaviour
         
 
 
-        if (playerController.transform.position.z >= 3350&& Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Abutton")&&(playerController.transform.position.z >= 3350))            
+        if (playerController.transform.position.z >= 3350&&(playerController.transform.position.z >= 3350))            
         {
-            StartCoroutine(FadeOut("TitleScene"));
+            StartCoroutine(FadeOut("ResultScene"));
            // "NextSceneName" を切り替えたいシーン名に変更
 
         }
@@ -95,7 +95,7 @@ public class GoalScript : MonoBehaviour
             if (glitchMaterial != null)
             {
                 glitchMaterial.SetFloat("_GlitchIntensity", glitchVal);
-                glitchMaterial.SetFloat("_Alpha", progress); // ← ★ ここで透明度制御
+                glitchMaterial.SetFloat("_Alpha", progress); //透明度制御
             }
 
             yield return null;
@@ -106,7 +106,7 @@ public class GoalScript : MonoBehaviour
         if (glitchMaterial != null)
         {
             glitchMaterial.SetFloat("_GlitchIntensity", glitchMax);
-            glitchMaterial.SetFloat("_Alpha", 1f); // ← ★ 最終的に完全表示
+            glitchMaterial.SetFloat("_Alpha", 1f); //最終的に完全表示
         }
 
         SceneManager.LoadScene(sceneName);

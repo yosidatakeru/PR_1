@@ -8,7 +8,8 @@ using UnityEngine.UIElements;
 public class ResultScoreScript : MonoBehaviour
 {
     private TMP_Text scoreText;
-    int score = 0;
+    public static int result = 0;
+    public static int score = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,13 +21,22 @@ public class ResultScoreScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        scoreText.color = Color.red;
-        
 
-        
-            score = ScoreScript.score;
-        
+        score = ScoreScript.score;
 
-        scoreText.text = "SCORE:" + score.ToString();
+        if(score > result)
+        {
+            result += Random.Range(200, 1000);
+        }
+        
+        if (score < result)
+        {
+            result = ScoreScript.score;
+        }
+
+
+
+
+        scoreText.text = "SCORE:" + result.ToString();
     }
 }
