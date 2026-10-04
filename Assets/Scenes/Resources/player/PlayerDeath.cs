@@ -18,20 +18,20 @@ public class PlayerDeath : MonoBehaviour
         if (!isFalling && hpScript.Gauge <= 0)
         {
             isFalling = true;
-            StartCoroutine(FallAndRotate());
+            //StartCoroutine(FallAndRotate());
         }
     }
 
-    IEnumerator FallAndRotate()
-    {
-        float rotationSpeed = 90f; // 90“x/•b
-        Vector3 fallDirection = new Vector3(0, -10, 0).normalized;
+    //IEnumerator FallAndRotate()
+    //{
+    //    //float rotationSpeed = 90f; // 90“x/•b
+    //    //Vector3 fallDirection = new Vector3(0, -10, 0).normalized;
 
-        while (true)
-        {
-            transform.position += fallDirection * fallSpeed;
-            transform.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime, Space.World);
-            yield return null;
-        }
-    }
+    //    //while (true)
+    //    //{
+    //    //    transform.position += fallDirection * fallSpeed;
+    //    //    transform.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime, Space.World);
+    //    //    yield return null;
+    //    //}
+    //}
 }

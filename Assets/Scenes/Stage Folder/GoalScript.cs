@@ -12,7 +12,7 @@ public class GoalScript : MonoBehaviour
     public CanvasGroup fade;
     public CanvasGroup GameUI;
     public CanvasGroup gameOver;
-    float fadeDuration = 3f;
+    float fadeDuration = 1f;
     private bool isFading = false;
     public Material glitchMaterial; //ゲームオーバーUIに使われてるマテリアル
    

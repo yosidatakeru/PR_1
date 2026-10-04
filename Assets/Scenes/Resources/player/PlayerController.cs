@@ -34,9 +34,11 @@ public class PlayerController : MonoBehaviour
             isControlEnabled = true;
         }
 
-        // 常に前進処理（止めない）
-        transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
-
+        if (isControlEnabled == true)
+        {
+            // 常に前進処理（止めない）
+            transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
+        }
         // 入力や移動・回転は無効化
         if (isControlEnabled == false)
         {
