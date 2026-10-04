@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public bool moveZ = true;
     void Start()
     {
+      
         hpScript = GameObject.Find("HPGauge").GetComponent<HPScript>();
         movement = GetComponent<PlayerMovement>();
         playerAcceleration = GetComponent<PlayerAcceleration>();
@@ -24,6 +25,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        
         // 操作制御ON/OFF判定
         if (transform.position.z <= 50f || transform.position.z >= goalLine || hpScript.Gauge <= 0)
         {
@@ -34,11 +36,7 @@ public class PlayerController : MonoBehaviour
             isControlEnabled = true;
         }
 
-        if (isControlEnabled == true)
-        {
-            // 常に前進処理（止めない）
-            transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
-        }
+       
         // 入力や移動・回転は無効化
         if (isControlEnabled == false)
         {

@@ -6,22 +6,21 @@ using UnityEngine;
 public class PlayerAcceleration : MonoBehaviour
 {
     public ParticleSystem accelerationEffect;
-    public float normalForwardSpeed = 30f;
+    public float normalForwardSpeed = 25f;
     public float acceleratedForwardSpeed = 50f;
 
     public bool isAccelerating = false;
 
-    private PlayerController controller;
+    private PlayerMovement controller;
 
     void Start()
     {
-        controller = GetComponent<PlayerController>();
+        controller = GetComponent< PlayerMovement>();
     }
 
     void Update()
     {
-        if (!controller.IsControlEnabled())
-            return;
+       
 
         if (Input.GetButtonDown("L3") || Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
         {

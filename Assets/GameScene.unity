@@ -3510,6 +3510,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4811239575123757490, guid: 20e30d8e983c21f4bb3d7054b7669c17, type: 3}
+      propertyPath: forwardSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4811239575123757495, guid: 20e30d8e983c21f4bb3d7054b7669c17, type: 3}
+      propertyPath: normalForwardSpeed
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 4811239575123757496, guid: 20e30d8e983c21f4bb3d7054b7669c17, type: 3}
       propertyPath: m_RootOrder
       value: 1

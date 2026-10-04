@@ -5,15 +5,18 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     float playerSpeed = 1f;
-    float maxSpeed = 25f;
+    float maxSpeed = 20f;
     float damping = 1f;
-
+    public float forwardSpeed = 50f;
     private Vector3 velocity;
     private Vector3 playerRotation;
     private Vector3 targetRotation;
     private float rotationSpeed = 5f;
-   
-   
+    void Update()
+    {
+        // 常に前進処理（止めない）
+        transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
+    }
     public void HandleMoveAndRotation()
     {
         HandleInput();
@@ -36,8 +39,9 @@ public class PlayerMovement : MonoBehaviour
 
         velocity += input * playerSpeed;
         if (velocity.magnitude > maxSpeed)
+        {
             velocity = velocity.normalized * maxSpeed;
-
+        }
         velocity = Vector3.Lerp(velocity, Vector3.zero, damping * Time.deltaTime);
     }
 
