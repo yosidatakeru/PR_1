@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
         {
 
             playerAcceleration.isAccelerating = false;
-            // ※回転リセットは PlayerMovement 側で行ってください（必要なら）
+          
         }
 
         if (transform.position.z >= goalLine) 

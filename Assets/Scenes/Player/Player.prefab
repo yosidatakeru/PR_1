@@ -15120,7 +15120,6 @@ GameObject:
   - component: {fileID: 4811239575123757496}
   - component: {fileID: 4089060245594605714}
   - component: {fileID: 1971573542841219802}
-  - component: {fileID: 1971573542841219812}
   - component: {fileID: 4811239575123757490}
   - component: {fileID: 4811239575123757493}
   - component: {fileID: 4811239575123757492}
@@ -15197,27 +15196,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 0
   m_Mesh: {fileID: 0}
---- !u!65 &1971573542841219812
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5300495193500144386}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.128817, y: 0.5147918, z: 1.1473727}
-  m_Center: {x: -0.014604628, y: 0.01898995, z: 0.093052864}
 --- !u!114 &4811239575123757490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15230,6 +15208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48c23577e2ded0c4899f649e7d1a2a3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forwardSpeed: 50
 --- !u!114 &4811239575123757493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15284,8 +15263,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e672db5e98f0384b8d2b2d3038f0d9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bounceForce: 8
-  bounceDisableTime: 0.2
 --- !u!114 &4811239575123757449
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,10 +12,22 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 playerRotation;
     private Vector3 targetRotation;
     private float rotationSpeed = 5f;
+    private HPScript hpScript;
+
+    void Start()
+    {
+        hpScript = GameObject.Find("HPGauge").GetComponent<HPScript>();
+
+    }
+
+
     void Update()
     {
-        // 常に前進処理（止めない）
-        transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
+        if (hpScript.Gauge > 0)
+        {
+            // 常に前進処理（止めない）
+            transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
+        }
     }
     public void HandleMoveAndRotation()
     {
@@ -51,6 +63,7 @@ public class PlayerMovement : MonoBehaviour
         newPosition.x = Mathf.Clamp(newPosition.x, -34.8f, 34.8f);
         newPosition.y = Mathf.Clamp(newPosition.y, -5f, 54f);
         transform.position = newPosition;
+       
     }
 
     void UpdateRotation()
@@ -69,7 +82,9 @@ public class PlayerMovement : MonoBehaviour
 
     public void StopMovement()
     {
+       
         velocity = Vector3.zero;
+       
     }
 
     public void RotationReset() 

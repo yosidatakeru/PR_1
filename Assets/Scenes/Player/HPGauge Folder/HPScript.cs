@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class HPScript : MonoBehaviour
 {
-    public float Gauge = 0;
+    public float Gauge = 2000;
     public Slider HPGauge;
 
     private CanvasGroup canvasGroup;

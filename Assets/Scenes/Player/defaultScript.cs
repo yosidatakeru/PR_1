@@ -67,33 +67,7 @@ public class defaultScript : MonoBehaviour
         previousHp = hpScript.Gauge;
     }
 
-    void OnParticleCollision(GameObject other)
-    {
-       
-
-        if (other.CompareTag("EnemyBullet") || other.gameObject.CompareTag("EnemyWoll"))
-        {
-            playerAcceleration.isAccelerating = false;
-            if (hpScript.Gauge <= 0)
-            {
-                GetComponent<Renderer>().enabled = false;
-                Instantiate(PlreyerDestroy, transform.position, Quaternion.identity);
-            }
-            if (isInvincible) return;
-            comboGaugeScript.Gauge = 0;
-            ScoreScript.score -= 100;
-            hpScript.Gauge -= 200;
-           
-
-
-            StartCoroutine(BlinkAndInvincible());
-        }
-
-        
-           
-        
-
-    }
+    
 
     void OnCollisionStay(Collision collision)
     {
@@ -101,7 +75,7 @@ public class defaultScript : MonoBehaviour
         {
             playerAcceleration.isAccelerating = false;
             Instantiate(damage, transform.position, Quaternion.identity);
-            Debug.Log("ダメージを受けたエフェクト軌道");
+            Debug.Log("ダメージを受けたエフェクト");
             if (hpScript.Gauge <= 0)
             {
                 GetComponent<Renderer>().enabled = false;
@@ -123,7 +97,7 @@ public class defaultScript : MonoBehaviour
             
 
             
-            if (isInvincible) return;
+           if (isInvincible) return;
            
             comboGaugeScript.Gauge = 0;
            
