@@ -27,6 +27,12 @@ public class PlayerMovement : MonoBehaviour
         {
             // 常に前進処理（止めない）
             transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
+           
+        }
+
+        if (hpScript.Gauge < 1)
+        {
+            playerSpeed = 0;
         }
     }
     public void HandleMoveAndRotation()

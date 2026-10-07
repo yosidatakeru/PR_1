@@ -56,6 +56,44 @@ public class PlayerBounce : MonoBehaviour
 
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        // X方向の衝突が一番強い場合（左右の壁にぶつかった）
+        // 衝突点と法線を取得
+
+        ContactPoint contact = collision.contacts[0];
+
+        Vector3 normal = contact.normal;
+
+        // 法線の絶対値を取得して、どの方向の成分が最も強いか判定
+
+        Vector3 absNormal = new Vector3(Mathf.Abs(normal.x), Mathf.Abs(normal.y), Mathf.Abs(normal.z));
+        if (collision.gameObject.CompareTag("EnemyWoll"))
+        {
+            if (absNormal.x > absNormal.y && absNormal.x > absNormal.z)
+
+            {
+
+
+
+            }
+            // Y方向の衝突が一番強い場合（上下にぶつかった）
+            else if (absNormal.y > absNormal.x && absNormal.y > absNormal.z)
+
+            {
+
+
+            }
+            // Z方向の衝突が一番強い場合（正面 or 背面にぶつかった）
+            else
+            {
+
+                //正面にぶつかった場合は即HPゼロ（死亡処理）
+                hpScript.Gauge = 0;
+
+            }
+        }
+    }
 
 
     void OnCollisionStay(Collision collision)
@@ -110,9 +148,7 @@ public class PlayerBounce : MonoBehaviour
 
             {
 
-                //正面にぶつかった場合は即HPゼロ（死亡処理）
-
-               // hpScript.Gauge = 0;
+              
               
             }
 
@@ -124,7 +160,7 @@ public class PlayerBounce : MonoBehaviour
 
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, bounceDistance + 1f))
+            if (Physics.Raycast(ray, out hit, bounceDistance + 100f))
 
             {
 
@@ -156,43 +192,5 @@ public class PlayerBounce : MonoBehaviour
 
     }
 
-    void OnCollisionEnter(Collision collision)
-    {
-        // X方向の衝突が一番強い場合（左右の壁にぶつかった）
-        // 衝突点と法線を取得
-
-        ContactPoint contact = collision.contacts[0];
-
-        Vector3 normal = contact.normal;
-
-        // 法線の絶対値を取得して、どの方向の成分が最も強いか判定
-
-        Vector3 absNormal = new Vector3(Mathf.Abs(normal.x), Mathf.Abs(normal.y), Mathf.Abs(normal.z));
-        if (collision.gameObject.CompareTag("EnemyWoll"))
-        {
-            if (absNormal.x > absNormal.y && absNormal.x > absNormal.z)
-
-            {
-
-
-
-            }
-            // Y方向の衝突が一番強い場合（上下にぶつかった）
-            else if (absNormal.y > absNormal.x && absNormal.y > absNormal.z)
-
-            {
-
-
-            }
-            // Z方向の衝突が一番強い場合（正面 or 背面にぶつかった）
-            else
-            {
-
-                //正面にぶつかった場合は即HPゼロ（死亡処理）
-                hpScript.Gauge = 0;
-
-            }
-        }
-    }
-
+    
 }
