@@ -14,16 +14,28 @@ public class CameraScript : MonoBehaviour
     private Vector3 lastPosition;
     private float tiltAmount = 0f;
     private float tiltVelocity = 0f;
+    private HPScript hpScript;
 
     void Start()
     {
         if (target != null)
+        {
             lastPosition = target.position;
+        }
+
+        hpScript = GameObject.Find("HPGauge").GetComponent<HPScript>();
+
     }
+
 
     void LateUpdate()
     {
-        if (target == null)
+        if (hpScript.Gauge <=0)
+        {
+           enabled = false;
+        }
+
+    if (target == null)
         {
             return;
         }
