@@ -74,48 +74,28 @@ public class PlayerBounce : MonoBehaviour
 
             Vector3 absNormal = new Vector3(Mathf.Abs(normal.x), Mathf.Abs(normal.y), Mathf.Abs(normal.z));
 
+            // 回転していない状態の正面方向を基準に判定
+            Vector3 forward = Vector3.forward;
 
+            float frontDot = Vector3.Dot(forward, -normal);
 
-
-
-            // X方向の衝突が一番強い場合（左右の壁にぶつかった）
-
-            if (absNormal.x > absNormal.y && absNormal.x > absNormal.z)
-
+            if (Mathf.Abs(frontDot) > 0.7f)
             {
-
-                // ぶつかった方向と逆向きに跳ね返る（左右）
-
-                bounceDirection = new Vector3(-Mathf.Sign(normal.x) *2, 0, 0);
-
-                movement.StopMovement();
-
-            }
-
-            // Y方向の衝突が一番強い場合（上下にぶつかった）
-
-            else if (absNormal.y > absNormal.x && absNormal.y > absNormal.z)
-
-            {
-
-                bounceDirection = new Vector3(0, -Mathf.Sign(normal.y)*2, 0);
-
-                movement.StopMovement();
-
-            }
-
-            // Z方向の衝突が一番強い場合（正面 or 背面にぶつかった）
-
-            else
-
-            {
-
                 hpScript.Gauge = 0;
                 movement.StopMovement();
-
             }
-
-
+            // 左右方向の衝突
+            else if (absNormal.x > absNormal.y)
+            {
+                bounceDirection = new Vector3(-Mathf.Sign(normal.x) * 2, 0, 0);
+                movement.StopMovement();
+            }
+            // 上下方向の衝突
+            else
+            {
+                bounceDirection = new Vector3(0, -Mathf.Sign(normal.y) * 2, 0);
+                movement.StopMovement();
+            }
 
             // Raycastで衝突面を検出し、位置の補正を行う
 
