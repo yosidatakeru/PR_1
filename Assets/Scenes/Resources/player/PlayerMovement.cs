@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    float playerSpeed = 1f;
+
+    public Transform DollyTrack;
+    public float playerSpeed = 1f;
     float maxSpeed = 20f;
     float damping = 1f;
     public float forwardSpeed = 50f;
@@ -66,11 +68,12 @@ public class PlayerMovement : MonoBehaviour
     void UpdateMovement()
     {
         Vector3 newPosition = transform.position + velocity * Time.deltaTime;
-        newPosition.x = Mathf.Clamp(newPosition.x, -34.8f, 34.8f);
-        newPosition.y = Mathf.Clamp(newPosition.y, -5f, 54f);
+        newPosition.x = Mathf.Clamp(newPosition.x, DollyTrack.transform.position.x - 34.8f, DollyTrack.transform.position.x + 34.8f);
+        newPosition.y = Mathf.Clamp(newPosition.y, DollyTrack.transform.position.y - 10f, DollyTrack.transform.position.y +50f);
         transform.position = newPosition;
        
     }
+    
 
     void UpdateRotation()
     {

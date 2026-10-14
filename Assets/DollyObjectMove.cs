@@ -1,23 +1,45 @@
+
 using Cinemachine;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DollyObjectMove : MonoBehaviour
 {
     [SerializeField] private CinemachineDollyCart dollyCart;
-    [SerializeField] private float moveSpeed = 10f;
+    [SerializeField] private PlayerMovement playerMovement;
 
-    void Start()
+    void Awake()
     {
         if (dollyCart == null)
         {
             dollyCart = GetComponent<CinemachineDollyCart>();
         }
 
-        if (dollyCart != null)
+        if (playerMovement == null)
         {
-            dollyCart.m_Speed = moveSpeed;
+            playerMovement = GetComponent<PlayerMovement>();
         }
+
+        if (dollyCart == null)
+        {
+            Debug.LogError("Dolly Cartが設定されていません。Inspectorで指定してください。", this);
+            enabled = false;
+            return;
+        }
+
+        if (playerMovement == null)
+        {
+            Debug.LogError("PlayerMovementが見つかりません。Inspectorで指定してください。", this);
+            enabled = false;
+        }
+    }
+
+    void Update()
+    {
+        if (dollyCart == null || playerMovement == null)
+        {
+            return;
+        }
+
+        dollyCart.m_Speed = playerMovement.forwardSpeed;
     }
 }
