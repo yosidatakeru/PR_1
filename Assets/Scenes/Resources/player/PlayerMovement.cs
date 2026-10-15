@@ -28,7 +28,7 @@ public class PlayerMovement : MonoBehaviour
         if (hpScript.Gauge > 0)
         {
             // 常に前進処理（止めない）
-            transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
+          //  transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
            
         }
 
@@ -36,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
         {
             playerSpeed = 0;
         }
+        HandleMoveAndRotation();
     }
     public void HandleMoveAndRotation()
     {
@@ -86,7 +87,10 @@ public class PlayerMovement : MonoBehaviour
         targetRotation.z = Mathf.Lerp(targetRotation.z, targetRoll, Time.deltaTime * rotationSpeed);
 
         playerRotation = Vector3.Lerp(playerRotation, targetRotation, Time.deltaTime * rotationSpeed);
-        transform.rotation = Quaternion.Euler(playerRotation.x, playerRotation.y, playerRotation.z);
+
+        Quaternion localTilt = Quaternion.Euler(playerRotation.x, playerRotation.y, playerRotation.z);
+
+        transform.rotation = DollyTrack.rotation * localTilt;
     }
 
     public void StopMovement()

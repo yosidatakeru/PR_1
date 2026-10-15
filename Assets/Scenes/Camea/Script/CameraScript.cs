@@ -6,11 +6,12 @@ public class CameraScript : MonoBehaviour
 {
     public Transform target;
     Vector3 defaultOffset = new Vector3(0, 0, -4);
-    float smoothSpeed = 5f;
-    float maxTiltAngle = 2.0f;
-    float forwardTriggerZ = 3300f;
     Vector3 boostOffset = new Vector3(-4, 3, 10);
-
+    float smoothSpeed = 5f;
+  
+    float forwardTriggerZ = 3300f;
+    public float rotationSmoothSpeed = 5f;
+    public float maxTiltAngle = 5.0f;
     private Vector3 lastPosition;
     private float tiltAmount = 0f;
     private float tiltVelocity = 0f;
@@ -45,13 +46,17 @@ public class CameraScript : MonoBehaviour
             return;
         }
 
+        Vector3 currentOffset = target.position.z > forwardTriggerZ ? boostOffset : defaultOffset;
+
         Vector3 offset =
             target.position.z > forwardTriggerZ
                 ? boostOffset
                 : defaultOffset;
+        
+        Vector3 desiredPosition = target.position + (target.rotation * currentOffset);
 
-        Vector3 desiredPosition =
-            target.position + offset;
+        //Vector3 desiredPosition =
+        //    target.position + offset;
 
         transform.position =
             Vector3.Lerp(

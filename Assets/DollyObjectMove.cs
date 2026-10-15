@@ -21,14 +21,13 @@ public class DollyObjectMove : MonoBehaviour
 
         if (dollyCart == null)
         {
-            Debug.LogError("Dolly Cartが設定されていません。Inspectorで指定してください。", this);
+           
             enabled = false;
             return;
         }
 
         if (playerMovement == null)
         {
-            Debug.LogError("PlayerMovementが見つかりません。Inspectorで指定してください。", this);
             enabled = false;
         }
     }
