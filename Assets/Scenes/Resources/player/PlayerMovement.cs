@@ -25,21 +25,18 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (hpScript.Gauge > 0)
-        {
-            // 常に前進処理（止めない）
-          //  transform.position += forwardSpeed * Vector3.forward * Time.deltaTime;
-           
-        }
+        
 
         if (hpScript.Gauge < 1)
         {
+            forwardSpeed = 0;
             playerSpeed = 0;
         }
-        HandleMoveAndRotation();
+      //  HandleMoveAndRotation();
     }
     public void HandleMoveAndRotation()
     {
+        
         HandleInput();
         UpdateMovement();
         UpdateRotation();
@@ -56,14 +53,33 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.S)) inputY -= 1f;
 
         Vector3 input = new Vector3(inputX, inputY, 0f);
-        if (input.magnitude > 1f) input.Normalize();
 
-        velocity += input * playerSpeed;
+        if (input.magnitude > 1f)
+        {
+            input.Normalize();
+        }
+
+        // カメラの向きを基準に移動方向を計算
+        Transform cam = Camera.main.transform;
+
+        Vector3 moveDirection =
+            cam.right * input.x +
+            cam.up * input.y;
+
+        // 移動速度を加算
+        velocity += moveDirection * playerSpeed;
+
         if (velocity.magnitude > maxSpeed)
         {
             velocity = velocity.normalized * maxSpeed;
         }
-        velocity = Vector3.Lerp(velocity, Vector3.zero, damping * Time.deltaTime);
+
+        // 徐々に減速
+        velocity = Vector3.Lerp(
+            velocity,
+            Vector3.zero,
+            damping * Time.deltaTime
+        );
     }
 
     void UpdateMovement()
