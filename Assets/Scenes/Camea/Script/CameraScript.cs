@@ -24,10 +24,10 @@ public class CameraScript : MonoBehaviour
     float forwardTriggerZ = 3300f;
 
     // 回転補間速度（※現在は smoothSpeed が使用されています）
-    public float rotationSmoothSpeed = 10f;
+    public float rotationSmoothSpeed = 5f;
 
     // カメラの最大傾き角度（度）
-    public float maxTiltAngle = 2.0f;
+    public float maxTiltAngle = 5.0f;
 
     // 1フレーム前のターゲット位置（X軸方向の速度計算用）
     private Vector3 lastPosition;
