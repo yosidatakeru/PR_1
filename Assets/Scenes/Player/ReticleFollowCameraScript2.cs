@@ -23,11 +23,7 @@ public class ReticleFollowCameraScript2 : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetButtonDown("R3") || Input.GetKeyDown(KeyCode.F))
-        {
-          
-
-        }
+        
 
         transform.LookAt(player);
         

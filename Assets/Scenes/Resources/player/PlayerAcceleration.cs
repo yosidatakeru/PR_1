@@ -6,8 +6,8 @@ using UnityEngine;
 public class PlayerAcceleration : MonoBehaviour
 {
     public ParticleSystem accelerationEffect;
-    public float normalForwardSpeed = 25f;
-    public float acceleratedForwardSpeed = 50f;
+    public float normalForwardSpeed = 15f;
+    public float acceleratedForwardSpeed = 30f;
 
     public bool isAccelerating = false;
 

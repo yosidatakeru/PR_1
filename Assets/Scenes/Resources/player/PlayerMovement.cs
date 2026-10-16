@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public float playerSpeed = 1f;
     float maxSpeed = 20f;
     float damping = 1f;
-    public float forwardSpeed = 50f;
+    public float forwardSpeed = 0f;
     private Vector3 velocity;
     private Vector3 playerRotation;
     private Vector3 targetRotation;
@@ -85,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
     void UpdateMovement()
     {
         Vector3 newPosition = transform.position + velocity * Time.deltaTime;
-        newPosition.x = Mathf.Clamp(newPosition.x, DollyTrack.transform.position.x - 34.8f, DollyTrack.transform.position.x + 34.8f);
+        newPosition.x = Mathf.Clamp(newPosition.x, DollyTrack.transform.position.x - 25f, DollyTrack.transform.position.x + 25f);
         newPosition.y = Mathf.Clamp(newPosition.y, DollyTrack.transform.position.y - 10f, DollyTrack.transform.position.y +50f);
         transform.position = newPosition;
        
