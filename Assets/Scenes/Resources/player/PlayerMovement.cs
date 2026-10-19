@@ -85,8 +85,8 @@ public class PlayerMovement : MonoBehaviour
     void UpdateMovement()
     {
         Vector3 newPosition = transform.position + velocity * Time.deltaTime;
-        newPosition.x = Mathf.Clamp(newPosition.x, DollyTrack.transform.position.x - 25f, DollyTrack.transform.position.x + 25f);
-        newPosition.y = Mathf.Clamp(newPosition.y, DollyTrack.transform.position.y - 10f, DollyTrack.transform.position.y +50f);
+        newPosition.x = Mathf.Clamp(newPosition.x, DollyTrack.transform.position.x - 15f, DollyTrack.transform.position.x + 15f);
+        newPosition.y = Mathf.Clamp(newPosition.y, DollyTrack.transform.position.y - 10f, DollyTrack.transform.position.y +10f);
         transform.position = newPosition;
        
     }

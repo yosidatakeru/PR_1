@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -8,23 +6,26 @@ using UnityEngine;
 /// </summary>
 public class CameraScript : MonoBehaviour
 {
-    // 追従対象のTransform
+    [Header("Target Settings")]
+    [Tooltip("追従対象のTransform")]
     public Transform target;
 
+    [Tooltip("HPゲージ制御スクリプト（未設定の場合は自動検索）")]
+    [SerializeField] private HPScript hpScript;
+
+    [Header("Offset Settings")]
     // 通常時のカメラオフセット（ターゲットのローカル座標系）
-    Vector3 defaultOffset = new Vector3(0, 0, -4);
+    private Vector3 defaultOffset = new Vector3(0, 0, -4);
 
     // ブースト（特定エリア到達）時のカメラオフセット
-    Vector3 boostOffset = new Vector3(-4, 3, 10);
-
-    // カメラの移動・回転の補間スピード
-    float smoothSpeed = 5f;
+    private Vector3 boostOffset = new Vector3(-4, 3, 10);
 
     // ブーストオフセットに切り替えるZ座標の閾値
-    float forwardTriggerZ = 3300f;
+    private float forwardTriggerZ = 3300f;
 
-    // 回転補間速度（※現在は smoothSpeed が使用されています）
-    public float rotationSmoothSpeed = 5f;
+    [Header("Movement & Rotation Settings")]
+    // カメラの移動・回転の補間スピード
+    public float smoothSpeed = 5f;
 
     // カメラの最大傾き角度（度）
     public float maxTiltAngle = 5.0f;
@@ -38,9 +39,6 @@ public class CameraScript : MonoBehaviour
     // SmoothDamp制御用の速度参照変数
     private float tiltVelocity = 0f;
 
-    // HP制御用のスクリプト参照
-    private HPScript hpScript;
-
     void Start()
     {
         // ターゲットが設定されている場合、初期位置を記録
@@ -49,16 +47,28 @@ public class CameraScript : MonoBehaviour
             lastPosition = target.position;
         }
 
-        // HPGaugeオブジェクトからHPScriptを取得
-        hpScript = GameObject.Find("HPGauge").GetComponent<HPScript>();
+        // HPScriptがインスペクターで未設定の場合のみ検索
+        if (hpScript == null)
+        {
+            GameObject hpObj = GameObject.Find("HPGauge");
+            if (hpObj != null)
+            {
+                hpScript = hpObj.GetComponent<HPScript>();
+            }
+            else
+            {
+                Debug.LogWarning("HPGauge オブジェクトが見つかりません。", this);
+            }
+        }
     }
 
     void LateUpdate()
     {
-        // HPが0以下の場合、カメラ追従処理を停止する
-        if (hpScript.Gauge <= 0)
+        // HPチェック（参照が存在し、かつGaugeが0以下の場合処理を無効化）
+        if (hpScript != null && hpScript.Gauge <= 0)
         {
             enabled = false;
+            return;
         }
 
         // ターゲットが未設定の場合は処理を行わない
@@ -73,78 +83,57 @@ public class CameraScript : MonoBehaviour
             return;
         }
 
+        // --- 位置の補間計算 ---
+
         // ターゲットのZ座標に応じて追従オフセットを切り替え
         Vector3 currentOffset = target.position.z > forwardTriggerZ ? boostOffset : defaultOffset;
-        
-        Vector3 rearDirection = -target.forward; // ターゲットの後ろの方向
-        rearDirection.y = 0; // 水平方向のみ考慮
+
+        // ターゲットの後ろの水平方向ベクトルを算出
+        Vector3 rearDirection = -target.forward;
+        rearDirection.y = 0;
         rearDirection.Normalize();
 
-        Vector3 desiredPosition;
-        if (target.position.z > forwardTriggerZ)
-        {
-            // ブーストオフセット（さらに後ろへ）
-            desiredPosition = target.position + rearDirection * Mathf.Abs(currentOffset.z) + target.up * currentOffset.y + target.right * currentOffset.x;
-        }
-        else
-        {
-            // 通常オフセット（後ろへ）
-            desiredPosition = target.position + rearDirection * Mathf.Abs(currentOffset.z) + target.up * currentOffset.y + target.right * currentOffset.x;
-        }
-        // --- 修正箇所：終了 ---
+        // 目標位置の算出（if/elseの重複を削除）
+        Vector3 desiredPosition = target.position
+            + rearDirection * Mathf.Abs(currentOffset.z)
+            + target.up * currentOffset.y
+            + target.right * currentOffset.x;
 
         // カメラの位置を目標位置に向けて滑らかに移動 (Lerp)
-        transform.position =
-            Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * smoothSpeed);
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * smoothSpeed);
+
+        // --- X軸の速度計算と傾き処理 ---
 
         // X軸方向の移動速度を算出
-        float speedX =
-            (target.position.x - lastPosition.x)
-            / Time.deltaTime;
+        float speedX = (target.position.x - lastPosition.x) / Time.deltaTime;
 
         // 非数値 (NaN) や無限大 (Infinity) の例外を防ぐガード処理
-        if (float.IsNaN(speedX) ||
-            float.IsInfinity(speedX))
+        if (float.IsNaN(speedX) || float.IsInfinity(speedX))
         {
             speedX = 0f;
         }
 
         // 速度に応じた目標傾き角度の計算と制限（-maxTiltAngle ～ maxTiltAngle）
-        float targetTilt =
-            (speedX / 10f) * maxTiltAngle;
-
-        targetTilt = Mathf.Clamp(targetTilt, -maxTiltAngle, maxTiltAngle);
+        float targetTilt = Mathf.Clamp((speedX / 10f) * maxTiltAngle, -maxTiltAngle, maxTiltAngle);
 
         // 傾きを滑らかに変化させる (SmoothDamp)
-        tiltAmount =
-            Mathf.SmoothDamp(
-                tiltAmount,
-                targetTilt,
-                ref tiltVelocity,
-                0.2f
-            );
+        tiltAmount = Mathf.SmoothDamp(tiltAmount, targetTilt, ref tiltVelocity, 0.2f);
 
         // 傾き量の例外値ガード処理
-        if (float.IsNaN(tiltAmount) ||
-            float.IsInfinity(tiltAmount))
+        if (float.IsNaN(tiltAmount) || float.IsInfinity(tiltAmount))
         {
             tiltAmount = 0f;
             tiltVelocity = 0f;
         }
 
+        // --- 回転の補間計算 ---
+
         // カメラからターゲットへの方向ベクトルを算出
-        Vector3 dir =
-            target.position - transform.position;
+        Vector3 dir = target.position - transform.position;
 
         // ベクトルの要素に非数値・無限大が含まれている場合は処理を中断
-        if (
-            float.IsNaN(dir.x) ||
-            float.IsNaN(dir.y) ||
-            float.IsNaN(dir.z) ||
-            float.IsInfinity(dir.x) ||
-            float.IsInfinity(dir.y) ||
-            float.IsInfinity(dir.z)
-        )
+        if (float.IsNaN(dir.x) || float.IsNaN(dir.y) || float.IsNaN(dir.z) ||
+            float.IsInfinity(dir.x) || float.IsInfinity(dir.y) || float.IsInfinity(dir.z))
         {
             lastPosition = target.position;
             return;
@@ -154,28 +143,16 @@ public class CameraScript : MonoBehaviour
         if (dir.sqrMagnitude > 0.001f)
         {
             // ターゲットを注視する回転を作成
-            Quaternion rot =
-                Quaternion.LookRotation(dir);
+            Quaternion rot = Quaternion.LookRotation(dir);
 
             // Z軸周りの傾き回転を作成
-            Quaternion tiltRotation =
-                Quaternion.Euler(
-                    0f,
-                    0f,
-                    -tiltAmount
-                );
+            Quaternion tiltRotation = Quaternion.Euler(0f, 0f, -tiltAmount);
 
             // 注視回転と傾き回転を結合
-            Quaternion targetRotation =
-                rot * tiltRotation;
+            Quaternion targetRotation = rot * tiltRotation;
 
             // カメラの回転を目標回転に向けて滑らかに補間 (Slerp)
-            transform.rotation =
-                Quaternion.Slerp(
-                    transform.rotation,
-                    targetRotation,
-                    Time.deltaTime * smoothSpeed
-                );
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * smoothSpeed);
         }
 
         // 次フレームの速度計算のために現在のターゲット位置を保存

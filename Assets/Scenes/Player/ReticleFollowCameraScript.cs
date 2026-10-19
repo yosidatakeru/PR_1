@@ -1,124 +1,193 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+
 using UnityEngine;
 
 public class ReticleFollowCameraScript : MonoBehaviour
 {
-    public Transform player; // プレイヤーのTransform
-    public Camera mainCamera; // メインカメラ
-    float speed = 150.0f; // 移動速度
-                          // float maxRange = 200f; // 移動範囲
-    float distanceAhead = 10f; // プレイヤーの前方に配置する距離
+    [Header("References")]
+    public Transform player;
+    public Camera mainCamera;
 
+    [Header("Reticle Movement")]
+    public float distanceAhead = 20f;
+    public float stickSpeed = 0.5f;
+    public float arrowSpeed = 0.15f;
 
-    private bool playerPosition = true;
-    private Vector3 offset; // プレイヤーとの相対位置
+    [Header("Screen Bounds")]
+    [Range(0f, 0.5f)]
+    public float minX = 0.1f;
 
-    float previousPlayerZ = 0;
-    float previousPlayerX = 0;
-    float previousPlayerY = 0;
-    private Vector3 previousPlayerPosition;
+    [Range(0.5f, 1f)]
+    public float maxX = 0.9f;
+
+    [Range(0f, 0.5f)]
+    public float minY = 0.1f;
+
+    [Range(0.5f, 1f)]
+    public float maxY = 0.9f;
+
+    [Header("Auto Follow")]
+    public float followSpeed = 8f;
+
+    // true: 自動追従 / false: 手動操作
+    private bool autoFollow = true;
+
+    // 画面上の照準位置（0～1）
+    private Vector2 reticleViewport =
+        new Vector2(0.5f, 0.5f);
 
     void Start()
     {
-        offset = transform.position - player.position;
-        previousPlayerZ = player.position.z;
-        previousPlayerPosition = player.position;
+        if (mainCamera == null)
+            mainCamera = Camera.main;
+
+        if (player == null || mainCamera == null)
+        {
+            Debug.LogError(
+                "Player と Main Camera を設定してください。"
+            );
+
+            enabled = false;
+            return;
+        }
+
+        // 現在の照準位置を画面座標に変換
+        Vector3 screenPos =
+            mainCamera.WorldToViewportPoint(transform.position);
+
+        if (screenPos.z > 0f)
+        {
+            reticleViewport = new Vector2(
+                screenPos.x,
+                screenPos.y
+            );
+        }
+
+        ClampViewport();
     }
 
     void Update()
     {
-        MoveReticle();
-        transform.LookAt(player); // レティクルがプレイヤーの方向を見る
+        // Fキーで操作モードを切り替え
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            autoFollow = !autoFollow;
+
+            // 手動操作へ切り替えたときに
+            // 現在の画面位置を引き継ぐ
+            Vector3 screenPos =
+                mainCamera.WorldToViewportPoint(transform.position);
+
+            if (screenPos.z > 0f)
+            {
+                reticleViewport = new Vector2(
+                    screenPos.x,
+                    screenPos.y
+                );
+
+                ClampViewport();
+            }
+        }
+
+        if (!autoFollow)
+        {
+            MoveReticle();
+        }
+        else
+        {
+            // 自動追従中は画面中央を目指す
+            reticleViewport = Vector2.Lerp(
+                reticleViewport,
+                new Vector2(0.5f, 0.5f),
+                followSpeed * Time.deltaTime
+            );
+        }
+
+        ClampViewport();
+        UpdateWorldPosition();
+        FaceCamera();
     }
 
     void MoveReticle()
     {
-        if (Input.GetButtonDown("R3") || Input.GetKeyDown(KeyCode.F))
-        {
-            playerPosition = !playerPosition; // 切り替え
-            previousPlayerPosition = player.position;
-        }
+        float moveX = Input.GetAxis("R_Stick_H");
+        float moveY = Input.GetAxis("R_Stick_V");
 
-        float deltaZ = player.position.z - previousPlayerZ; // プレイヤーのZ移動量
+        // 十字キー入力
+        bool usingArrow =
+            Input.GetKey(KeyCode.RightArrow) ||
+            Input.GetKey(KeyCode.LeftArrow) ||
+            Input.GetKey(KeyCode.UpArrow) ||
+            Input.GetKey(KeyCode.DownArrow);
 
-        if (!playerPosition)
-        {
-            // スティック入力
-            float moveX = Input.GetAxis("R_Stick_H");
-            float moveY = Input.GetAxis("R_Stick_V");
+        if (Input.GetKey(KeyCode.RightArrow))
+            moveX += 1f;
 
-            // アローキー入力も加算
-            if (Input.GetKey(KeyCode.RightArrow)) moveX += 1f;
-            if (Input.GetKey(KeyCode.LeftArrow)) moveX -= 1f;
-            if (Input.GetKey(KeyCode.UpArrow)) moveY += 1f;
-            if (Input.GetKey(KeyCode.DownArrow)) moveY -= 1f;
+        if (Input.GetKey(KeyCode.LeftArrow))
+            moveX -= 1f;
 
-            // 正規化
-            Vector2 inputVector = new Vector2(moveX, moveY);
-            if (inputVector.magnitude > 1f)
-                inputVector.Normalize();
+        if (Input.GetKey(KeyCode.UpArrow))
+            moveY += 1f;
 
-            // 必要に応じてアローキー時だけスピードを落とす
-            bool usingArrow = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow) ||
-                              Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow);
+        if (Input.GetKey(KeyCode.DownArrow))
+            moveY -= 1f;
 
-            float moveSpeed = usingArrow ? speed * 0.1f : speed;
+        Vector2 input = Vector2.ClampMagnitude(
+            new Vector2(moveX, moveY), 1f
+        );
 
-            // --- 修正箇所：カメラの向き基準で移動ベクトルを作成 ---
-            // カメラの「右方向」と「上方向」を基準に入力ベクトルを回転させる
-            Vector3 worldMoveDir = (mainCamera.transform.right * inputVector.x) + (mainCamera.transform.up * inputVector.y);
+        float speed = usingArrow
+            ? arrowSpeed
+            : stickSpeed;
 
-            // スティック入力による移動量
-            Vector3 stickMove = worldMoveDir * moveSpeed * Time.deltaTime;
-
-            // プレイヤーのフレーム間移動量
-            Vector3 playerDelta = player.position - previousPlayerPosition;
-
-            // 現在位置に加算（プレイヤー移動追従 + カメラ基準スティック移動）
-            Vector3 newPosition = transform.position + playerDelta + stickMove;
-
-            // 画面内制限（ビューポート座標で制御）
-            newPosition = ClampToCameraBounds(newPosition);
-
-            // --- 修正箇所：カメラの回転に合わせて前方の距離を正確に保つ ---
-            // プレイヤー位置からカメラ前方方向へ distanceAhead 分だけ離した平面上の位置に補正
-            Vector3 cameraForward = mainCamera.transform.forward;
-            Vector3 playerToNewPos = newPosition - player.position;
-
-            // カメラ前方向の成分を引いて、カメラの向きに対して垂直（上下左右）なオフセットのみ抽出
-            Vector3 orthogonalPos = playerToNewPos - Vector3.Project(playerToNewPos, cameraForward);
-
-            // プレイヤー位置 + 上下左右オフセット + カメラ前方向 distanceAhead
-            newPosition = player.position + orthogonalPos + (cameraForward * distanceAhead);
-
-            // 位置を反映
-            transform.position = newPosition;
-
-            // 次回の比較用に現在のプレイヤー位置を保存
-            previousPlayerPosition = player.position;
-        }
-        else
-        {
-            // カメラの前方に一定距離配置
-            Vector3 cameraForward = mainCamera.transform.forward;
-            Vector3 targetPosition = player.position + cameraForward * distanceAhead;
-
-            // 滑らかに追従
-            transform.position = Vector3.Lerp(transform.position, targetPosition, 0.1f);
-        }
-
-        previousPlayerX = player.position.x;
-        previousPlayerY = player.position.y;
-        previousPlayerZ = player.position.z;
+        reticleViewport += input * speed * Time.deltaTime;
     }
 
-    Vector3 ClampToCameraBounds(Vector3 position)
+    void ClampViewport()
     {
-        Vector3 screenPoint = mainCamera.WorldToViewportPoint(position);
-        screenPoint.x = Mathf.Clamp(screenPoint.x, 0.1f, 0.9f);
-        screenPoint.y = Mathf.Clamp(screenPoint.y, 0.1f, 0.9f);
-        return mainCamera.ViewportToWorldPoint(screenPoint);
+        reticleViewport.x = Mathf.Clamp(
+            reticleViewport.x, minX, maxX
+        );
+
+        reticleViewport.y = Mathf.Clamp(
+            reticleViewport.y, minY, maxY
+        );
+    }
+
+    void UpdateWorldPosition()
+    {
+        // 照準が存在する平面をプレイヤー前方に作る
+        Vector3 planePoint =
+            player.position +
+            mainCamera.transform.forward * distanceAhead;
+
+        Plane targetPlane = new Plane(
+            mainCamera.transform.forward,
+            planePoint
+        );
+
+        // 画面上の照準位置から3D空間へのRayを作成
+        Ray ray = mainCamera.ViewportPointToRay(
+            new Vector3(
+                reticleViewport.x,
+                reticleViewport.y,
+                0f
+            )
+        );
+
+        // Rayと平面の交点に照準を配置
+        if (targetPlane.Raycast(ray, out float enter)
+            && enter >= 0f)
+        {
+            transform.position = ray.GetPoint(enter);
+        }
+    }
+
+    void FaceCamera()
+    {
+        // 照準の表面をカメラに向ける
+        transform.rotation = Quaternion.LookRotation(
+            -mainCamera.transform.forward,
+            mainCamera.transform.up
+        );
     }
 }
