@@ -87,6 +87,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 newPosition = transform.position + velocity * Time.deltaTime;
         newPosition.x = Mathf.Clamp(newPosition.x, DollyTrack.transform.position.x - 15f, DollyTrack.transform.position.x + 15f);
         newPosition.y = Mathf.Clamp(newPosition.y, DollyTrack.transform.position.y - 10f, DollyTrack.transform.position.y +10f);
+        newPosition.z = Mathf.Clamp(newPosition.z, DollyTrack.transform.position.z - 15f, DollyTrack.transform.position.z + 15f);
         transform.position = newPosition;
        
     }

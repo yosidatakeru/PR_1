@@ -1,134 +1,152 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
-using UnityEngine.EventSystems;
 
+using UnityEngine;
+
+[RequireComponent(typeof(Rigidbody))]
 public class BulletShootScript : MonoBehaviour
 {
-    float speed = 170f;//弾の速さ
-    float lifetime = 1f;//消すまでの時間
-    float homingStrength = 10f;    // 誘導の強さ
-    float detectionRadius = 8f;  // 検出範囲
-    private Rigidbody rb;                // 物理エンジン
-    private GameObject target;           // 追尾するターゲット
-    PlayerController playerController;
+    private float speed = 170f;
+    private float lifetime = 1f;
+    private float homingStrength = 10f;
+    private float detectionRadius = 8f;
 
-    private Vector3 moveDirection; // 発射方向
+    private Rigidbody rb;
+    private SphereCollider sphereCollider;
+    private GameObject target;
+    private PlayerController playerController;
 
-    // Start is called before the first frame update
-    Vector3 BulletPos = Vector3.zero;
+    private Vector3 moveDirection;
 
-    void Start()
+    private float detectionRadiusSqr;
+
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        sphereCollider = GetComponent<SphereCollider>();
 
-        // プレイヤーの位置を取得
+        detectionRadiusSqr = detectionRadius * detectionRadius;
+
+        // 元の発射方向を維持
         GameObject player = GameObject.FindGameObjectWithTag("Frame");
-        // 近くの敵を探してターゲットに設定
-        target = FindClosestEnemy();
+
         if (player != null)
         {
-            // 発射方向を計算（正規化して速度に影響を与えないようにする）
-            moveDirection = (player.transform.position - transform.position).normalized;
+            moveDirection =
+                (player.transform.position - transform.position).normalized;
         }
         else
         {
-            //デフォルトで前方向に進む
             moveDirection = transform.forward;
         }
 
-        // 一定時間後に自動で削除
-        Destroy(gameObject, lifetime);
-        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        // 元と同じタイミングで敵を検索
+        target = FindClosestEnemy();
 
+        // 一定時間後に削除
+        Destroy(gameObject, lifetime);
+
+        // PlayerControllerを取得
+        GameObject playerObject = GameObject.Find("Player");
+
+        if (playerObject != null)
+        {
+            playerController = playerObject.GetComponent<PlayerController>();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        speed += playerController.forwardSpeed;
-
-        // ターゲット位置に向かって移動
-        transform.position += moveDirection * speed * Time.deltaTime;
-
-        if (target == null)
+        // 元の加速処理を維持
+        if (playerController != null)
         {
-            target = FindClosestEnemy();  // 近くの敵を探す
+            speed += playerController.forwardSpeed;
         }
 
+        // 元の移動処理を維持
+        transform.position += moveDirection * speed * Time.deltaTime;
+
+        // ターゲットがいない場合だけ再検索
+        if (target == null)
+        {
+            target = FindClosestEnemy();
+        }
 
         if (target != null)
         {
-            Vector3 directionToTarget = (target.transform.position - transform.position).normalized;
+            Vector3 offset = target.transform.position - transform.position;
+            float distanceSqr = offset.sqrMagnitude;
 
-            // 目標が近い場合は方向を完全に切り替える
-            float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-            if (distanceToTarget < detectionRadius) // 近づいたら即ターゲット方向に変更
+            if (distanceSqr > 0.000001f)
             {
-                moveDirection = directionToTarget;
-            }
-            else
-            {
-                moveDirection = Vector3.Slerp(moveDirection, directionToTarget, homingStrength * 2 * Time.fixedDeltaTime).normalized;
+                Vector3 directionToTarget = offset.normalized;
+
+                // 検出範囲内なら即座に方向転換
+                if (distanceSqr < detectionRadiusSqr)
+                {
+                    moveDirection = directionToTarget;
+                }
+                else
+                {
+                    moveDirection = Vector3.Slerp(
+                        moveDirection,
+                        directionToTarget,
+                        homingStrength * 2f * Time.fixedDeltaTime
+                    ).normalized;
+                }
             }
         }
 
-        // Rigidbodyの速度を更新
+        // 元のRigidbody速度更新を維持
         rb.velocity = moveDirection * speed;
 
-        Debug.DrawLine(transform.position, transform.position + moveDirection * 3.0f, Color.blue);
+        Debug.DrawLine(
+            transform.position,
+            transform.position + moveDirection * 3f,
+            Color.blue
+        );
     }
 
-    void FixedUpdate()
-    {
-       
-       
-    }
-
-    // 最も近い敵を探す
-    GameObject FindClosestEnemy()
+    // 最も近い敵を検索
+    private GameObject FindClosestEnemy()
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
         GameObject closestEnemy = null;
-        float closestDistance = detectionRadius;
+        float closestDistanceSqr = detectionRadiusSqr;
+
+        Vector3 position = transform.position;
 
         foreach (GameObject enemy in enemies)
         {
-            float distance = Vector3.Distance(transform.position, enemy.transform.position);
-            if (distance < closestDistance)
+            Vector3 offset = enemy.transform.position - position;
+            float distanceSqr = offset.sqrMagnitude;
+
+            if (distanceSqr < closestDistanceSqr)
             {
                 closestEnemy = enemy;
-                closestDistance = distance;
+                closestDistanceSqr = distanceSqr;
             }
         }
 
         return closestEnemy;
     }
-   
-    // 検出範囲を可視化（シーンビュー）
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;  // 赤色で表示
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);  // 検出範囲を球体で描画
 
-      
-    }
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
-       
-
-        if (collision.gameObject.tag == "EnemyWoll")
+        if (collision.gameObject.CompareTag("EnemyWoll"))
         {
-            GetComponent<SphereCollider>().enabled = false;
-          
+            if (sphereCollider != null)
+            {
+                sphereCollider.enabled = false;
+            }
+
             Destroy(gameObject);
-
-
-
         }
-
     }
 
+    // 選択時のみ検出範囲を表示
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
+    }
 }
-
