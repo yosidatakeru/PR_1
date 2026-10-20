@@ -10,7 +10,7 @@ public class EnemyDetectorAndShooter : MonoBehaviour
     // 発射する弾のプレハブ
     public GameObject missilePrefab;
     //範囲設定
-    Vector3 detectionSize = new Vector3(200f, 200f, 120f);
+    Vector3 detectionSize = new Vector3(200f, 200f, 200f);
     // 敵のレイヤーマスク
     public LayerMask enemyLayer;
     // 最大検出する敵の数

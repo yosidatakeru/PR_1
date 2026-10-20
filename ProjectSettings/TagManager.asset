@@ -13,6 +13,7 @@ TagManager:
   - PerspectiveOn
   - PerspectiveOff
   - scoreManager
+  - Goal
   layers:
   - Default
   - TransparentFX

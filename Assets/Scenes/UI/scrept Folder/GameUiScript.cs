@@ -7,11 +7,12 @@ public class GameUiScript : MonoBehaviour
     public CanvasGroup hpGauge;
     public CanvasGroup canvasGroup;
     public CanvasGroup canvasUi;
-   
+
     public CanvasGroup ScoreText;
     public CanvasGroup fadeinUp;
     public CanvasGroup FadeInDown;
     public GameObject player;
+    bool goalobj = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +23,8 @@ public class GameUiScript : MonoBehaviour
         canvasGroup.alpha = 0;
         canvasUi.alpha = 0;
         ScoreText.alpha = 0;
+        goalobj = true;
+
     }
 
     // Update is called once per frame
@@ -30,10 +33,11 @@ public class GameUiScript : MonoBehaviour
         if (player != null)
         {
             Vector3 pos = player.transform.position;
-          
-        }
 
-        if (player.transform.position.z >= 0 && player.transform.position.z <= 3300)
+        }
+        
+
+        if (player.transform.position.z >= 0 && goalobj== true)
         {
             fadeinUp.alpha = 0;
             FadeInDown.alpha = 0;
@@ -43,14 +47,19 @@ public class GameUiScript : MonoBehaviour
             ScoreText.alpha = 1;
         }
 
-        if (player.transform.position.z >= 3300)
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
         {
+            goalobj = false;
+
             fadeinUp.alpha = 0;
             FadeInDown.alpha = 0;
             hpGauge.alpha = 0;
             canvasGroup.alpha = 0;
             canvasUi.alpha = 0;
-           
         }
     }
 }

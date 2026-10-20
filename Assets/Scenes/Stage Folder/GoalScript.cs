@@ -15,12 +15,12 @@ public class GoalScript : MonoBehaviour
     float fadeDuration = 3f;
     private bool isFading = false;
     public Material glitchMaterial; //ゲームオーバーUIに使われてるマテリアル
-   
+
     // Start is called before the first frame update
     void Start()
     {
         scoreScript = GameObject.Find("ScoreText (TMP)").GetComponent<ScoreScript>();
-      playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         hpScript = GameObject.Find("HPGauge").GetComponent<HPScript>();
         glitchMaterial.SetFloat("_GlitchIntensity", 0f);
         clearUI.alpha = 0;
@@ -29,35 +29,45 @@ public class GoalScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerController.transform.position.z >= 3300 && hpScript.Gauge >= 0)
-        {
+        //if (playerController.transform.position.z >= 3300 && hpScript.Gauge >= 0)
+        //{
+        //    GameUI.alpha = 0;
 
-            GameUI.alpha = 0;
-        }
-
-
-        if (playerController.transform.position.z >= 3350&&hpScript.Gauge>=0) 
-        {
-            Debug.Log("クリアシーン");
-            clearUI.alpha = 1;
-        }
-            
+        //}
         
-        
+        //if (playerController.transform.position.z >= 3350 && hpScript.Gauge >= 0)
+        //{
+        //    Debug.Log("クリアシーン");
+        //    clearUI.alpha = 1;
+        //}
 
 
-        if (playerController.transform.position.z >= 3350&&(playerController.transform.position.z >= 3350))            
+
+
+
+        if (playerController.transform.position.z >= 3350 && (playerController.transform.position.z >= 3350))
         {
-            StartCoroutine(FadeOut("ResultScene"));
-           // "NextSceneName" を切り替えたいシーン名に変更
+         
+            // "NextSceneName" を切り替えたいシーン名に変更
 
         }
 
-        if (hpScript.Gauge <= 0) 
+        if (hpScript.Gauge <= 0)
         {
             StartCoroutine(GameOverFadeOut("GameOverScene"));
         }
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && hpScript.Gauge > 0)
+        {
+            GameUI.alpha = 0f;
+            Debug.Log("クリアシーン");
+            clearUI.alpha = 1;
+            StartCoroutine(FadeOut("ResultScene"));
+        }
     }
 
     IEnumerator FadeOut(string sceneName)
@@ -110,6 +120,11 @@ public class GoalScript : MonoBehaviour
         }
 
         SceneManager.LoadScene(sceneName);
+
+
     }
+
+   
+    
 }
 

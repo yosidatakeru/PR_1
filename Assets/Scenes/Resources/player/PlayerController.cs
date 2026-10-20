@@ -1,23 +1,22 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
     private HPScript hpScript;
+
     public float goalLine = 3300f;
+    public float forwardSpeed = 30f;
+    public bool moveZ = true;
+    public bool isGoal = false;
 
     private bool isControlEnabled = true;
-    public float forwardSpeed = 30f;
-
     private PlayerMovement movement;
+
     public PlayerAcceleration playerAcceleration;
-    public bool moveZ = true;
+
     void Start()
     {
-      
         hpScript = GameObject.Find("HPGauge").GetComponent<HPScript>();
         movement = GetComponent<PlayerMovement>();
         playerAcceleration = GetComponent<PlayerAcceleration>();
@@ -25,9 +24,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        
-        // ëÄçÏêßå‰ON/OFFîªíË
-        if (transform.position.z <= 50f || transform.position.z >= goalLine || hpScript.Gauge <= 0)
+        if (isGoal || transform.position.z <= 50f ||
+            transform.position.z >= goalLine || hpScript.Gauge <= 0)
         {
             isControlEnabled = false;
         }
@@ -36,37 +34,49 @@ public class PlayerController : MonoBehaviour
             isControlEnabled = true;
         }
 
-       
-        // ì¸óÕÇ‚à⁄ìÆÅEâÒì]ÇÕñ≥å¯âª
-        if (isControlEnabled == false)
+        if (!isControlEnabled)
         {
-            movement.StopMovement(); // velocity É[ÉçÇ…Ç∑ÇÈ
+            movement.StopMovement();
+
+            if (playerAcceleration != null)
+            {
+                playerAcceleration.isAccelerating = false;
+            }
+
+            if (isGoal)
+            {
+                movement.RotationReset();
+            }
+
             return;
         }
 
-        // ëÄçÏâ¬î\Ç»Ç∆Ç´ÇæÇØèàóù
         movement.HandleMoveAndRotation();
-
-        if (transform.position.z >= goalLine || isControlEnabled == false)
-        {
-
-            playerAcceleration.isAccelerating = false;
-          
-        }
-
-        if (transform.position.z >= goalLine) 
-        {
-            movement.RotationReset();
-        }
-
-
     }
-   
 
-   
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Goal"))
+        {
+            if (isGoal) return;
+
+            isGoal = true;
+
+            movement.StopMovement();
+
+            if (playerAcceleration != null)
+            {
+                playerAcceleration.isAccelerating = false;
+            }
+
+            movement.RotationReset();
+
+            Debug.Log("GoalÇ…è’ìÀÇµÇ‹ÇµÇΩÅI");
+        }
+    }
+
     internal bool IsControlEnabled()
     {
         return isControlEnabled;
     }
 }
-
