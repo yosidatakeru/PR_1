@@ -68,7 +68,7 @@ public class ReticleFollowCameraScript : MonoBehaviour
     void Update()
     {
         // Fキーで操作モードを切り替え
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F)|| Input.GetKeyDown(KeyCode.JoystickButton11))
         {
             autoFollow = !autoFollow;
 
