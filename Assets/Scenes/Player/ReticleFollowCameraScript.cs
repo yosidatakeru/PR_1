@@ -9,7 +9,7 @@ public class ReticleFollowCameraScript : MonoBehaviour
 
     [Header("Reticle Movement")]
     public float distanceAhead = 20f;
-    public float stickSpeed = 0.5f;
+    public float stickSpeed = 3.0f;
     public float arrowSpeed = 0.15f;
 
     [Header("Screen Bounds")]
@@ -68,7 +68,7 @@ public class ReticleFollowCameraScript : MonoBehaviour
     void Update()
     {
         // Fキーで操作モードを切り替え
-        if (Input.GetKeyDown(KeyCode.F)|| Input.GetKeyDown(KeyCode.JoystickButton11))
+        if (Input.GetKeyDown(KeyCode.F)|| Input.GetButtonDown("R3"))
         {
             autoFollow = !autoFollow;
 

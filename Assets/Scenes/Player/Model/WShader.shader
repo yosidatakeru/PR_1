@@ -65,10 +65,10 @@ Shader "Custom/WShader"
 		}
 
 		void surf(Input IN, inout SurfaceOutput o) {
-			fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
-			o.Albedo = c.rgb + float3(IN.customVert.y + 0.1f, 0.1f, -IN.customVert.y + 0.1f);
-			o.Alpha = c.a;
-		}
+			  fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
+              o.Albedo = c.rgb;
+              o.Alpha = c.a;
+        }
 		ENDCG
 	}
 	FallBack "Diffuse"
