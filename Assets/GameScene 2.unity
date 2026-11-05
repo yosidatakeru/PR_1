@@ -4474,8 +4474,8 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: -10}
   DollyTrack: {fileID: 1109098420}
   useBounds: 1
-  minBounds: {x: -10, y: 0}
-  maxBounds: {x: -10, y: 20}
+  minBounds: {x: -10, y: -5}
+  maxBounds: {x: 10, y: 5}
   minZ: -50
   maxZ: 50
 --- !u!1 &2094497067
