@@ -4,17 +4,23 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform target; // 追従するプレイヤー
-    public float smoothSpeed = 10f;
-    public Vector3 offset = new Vector3(0, 0, -5);
-    public Transform DollyTrack; // 基準となるオブジェクト（任意）
+    public Transform target;       // プレイヤー
+    public Transform DollyTrack;   // レール
 
-    [Header("移動範囲の制限 (Min / Max)")]
-    public bool useBounds = true; // 制限を有効にするかどうか
-    public Vector2 minBounds = new Vector2(-10f, -10f); // X最小, Y最小
-    public Vector2 maxBounds = new Vector2(100f, 200f);  // X最大, Y最大
-    public float minZ = -50f; // Zの最小値
-    public float maxZ = 50f;  // Zの最大値
+    public float smoothSpeed = 10f;
+    public float rotationSpeed = 5f;
+
+    [Header("プレイヤーとの距離")]
+    public Vector3 offset = new Vector3(0, 0, -10f);
+
+    [Header("移動範囲の制限")]
+    public bool useBounds = true;
+
+    public Vector2 minBounds = new Vector2(-10f, -10f);
+    public Vector2 maxBounds = new Vector2(10f, 10f);
+
+    public float minZ = -50f;
+    public float maxZ = 50f;
 
     private Camera cam;
     private float defaultFOV;
@@ -22,38 +28,79 @@ public class CameraFollow : MonoBehaviour
     void Start()
     {
         cam = GetComponent<Camera>();
-        if (cam != null) defaultFOV = cam.fieldOfView;
+
+        if (cam != null)
+        {
+            defaultFOV = cam.fieldOfView;
+        }
     }
 
     void LateUpdate()
     {
         if (target == null) return;
 
-        // 滑らかに追従する目標位置を計算
-        Vector3 desiredPosition = target.position + offset;
+        // プレイヤーの後ろの位置を計算
+        Vector3 desiredPosition =
+            target.position + target.rotation * offset;
 
-        // 範囲制限が有効な場合、座標をクランプ（制限）する
-        if (useBounds)
+        // 移動範囲の制限
+        if (useBounds && DollyTrack != null)
         {
-            // DollyTrackが設定されている場合はその位置を基準にする
-            Vector3 basePosition = (DollyTrack != null) ? DollyTrack.position : Vector3.zero;
+            Vector3 basePosition = DollyTrack.position;
 
-            desiredPosition.x = Mathf.Clamp(desiredPosition.x, basePosition.x + minBounds.x, basePosition.x + maxBounds.x);
-            desiredPosition.y = Mathf.Clamp(desiredPosition.y, basePosition.y + minBounds.y, basePosition.y + maxBounds.y);
-            desiredPosition.z = Mathf.Clamp(desiredPosition.z, basePosition.z + minZ, basePosition.z + maxZ);
+            desiredPosition.x = Mathf.Clamp(
+                desiredPosition.x,
+                basePosition.x + minBounds.x,
+                basePosition.x + maxBounds.x
+            );
+
+            desiredPosition.y = Mathf.Clamp(
+                desiredPosition.y,
+                basePosition.y + minBounds.y,
+                basePosition.y + maxBounds.y
+            );
+
+            desiredPosition.z = Mathf.Clamp(
+                desiredPosition.z,
+                basePosition.z + minZ,
+                basePosition.z + maxZ
+            );
         }
 
-        // 実際のカメラ位置を滑らかに更新
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
+        // カメラ位置を追従
+        transform.position = Vector3.Lerp(
+            transform.position,
+            desiredPosition,
+            smoothSpeed * Time.deltaTime
+        );
+
+        // レールの進行方向を見る
+        if (DollyTrack != null)
+        {
+            Vector3 railDirection = DollyTrack.forward;
+
+            Quaternion targetRotation =
+                Quaternion.LookRotation(railDirection, DollyTrack.up);
+
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRotation,
+                rotationSpeed * Time.deltaTime
+            );
+        }
     }
 
-    // ブースト・ブレーキ時のズーム処理の例
     public void AdjustZoom(float zoomAmount)
     {
         if (cam != null)
         {
             float targetFOV = defaultFOV + zoomAmount;
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, targetFOV, Time.deltaTime * 5f);
+
+            cam.fieldOfView = Mathf.Lerp(
+                cam.fieldOfView,
+                targetFOV,
+                Time.deltaTime * 5f
+            );
         }
     }
 }

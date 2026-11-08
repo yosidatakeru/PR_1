@@ -2190,15 +2190,11 @@ MonoBehaviour:
     roll: 0
   - position: {x: 54.620796, y: 36.81172, z: 519.47766}
     roll: 0
-  - position: {x: 55.18642, y: 108.805466, z: 561.43335}
+  - position: {x: 54.72551, y: 44.148674, z: 1039.0664}
     roll: 0
-  - position: {x: 55.752045, y: 105.80095, z: 519.3028}
+  - position: {x: 54.830223, y: 51.485626, z: 1558.6552}
     roll: 0
-  - position: {x: 56.31767, y: 75.50018, z: 518.86926}
-    roll: 0
-  - position: {x: 56.883293, y: 36.81526, z: 595.5192}
-    roll: 0
-  - position: {x: 57.448917, y: 51.814835, z: 738.85156}
+  - position: {x: 54.934937, y: 58.82258, z: 2078.244}
     roll: 0
 --- !u!1 &1136932619
 GameObject:
@@ -4470,14 +4466,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 6456080866273488273}
-  smoothSpeed: 10
-  offset: {x: 0, y: 0, z: -10}
   DollyTrack: {fileID: 1109098420}
+  smoothSpeed: 10
+  rotationSpeed: 5
+  offset: {x: 0, y: 0, z: -10}
   useBounds: 1
   minBounds: {x: -10, y: -5}
   maxBounds: {x: 10, y: 5}
-  minZ: -50
-  maxZ: 50
+  minZ: -10
+  maxZ: 10
 --- !u!1 &2094497067
 GameObject:
   m_ObjectHideFlags: 0
@@ -5150,7 +5147,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4783667070489272819, guid: 9cc75991939e1c0499834aac7e70f55b, type: 3}
       propertyPath: field of view
-      value: 60
+      value: 34
       objectReference: {fileID: 0}
     - target: {fileID: 4783667070489272819, guid: 9cc75991939e1c0499834aac7e70f55b, type: 3}
       propertyPath: far clip plane
@@ -5372,19 +5369,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1272701498206779278, guid: 353d307cce5b84249af295144cfa6af0, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.999932
+      value: 0.9999751
       objectReference: {fileID: 0}
     - target: {fileID: 1272701498206779278, guid: 353d307cce5b84249af295144cfa6af0, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.011665478
+      value: -0.00705982
       objectReference: {fileID: 0}
     - target: {fileID: 1272701498206779278, guid: 353d307cce5b84249af295144cfa6af0, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000014661745
+      value: 0.00010075587
       objectReference: {fileID: 0}
     - target: {fileID: 1272701498206779278, guid: 353d307cce5b84249af295144cfa6af0, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.00000017104789
+      value: 0.00000071133604
       objectReference: {fileID: 0}
     - target: {fileID: 2811946034706914078, guid: 353d307cce5b84249af295144cfa6af0, type: 3}
       propertyPath: m_Enabled
