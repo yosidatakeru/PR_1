@@ -14,11 +14,12 @@ public class CameraFollow : MonoBehaviour
     public float positionSpeed = 5f;
     public float rotationSpeed = 3f;
 
-    [Header("プレイヤー移動範囲")]
-    public float minX = -20f;
-    public float maxX = 20f;
-    public float minY = -5f;
-    public float maxY = 15f;
+    [Header("画面移動制限")]
+    [Range(0f, 0.4f)]
+    public float marginX = 0.03f;
+
+    [Range(0f, 0.4f)]
+    public float marginY = 0.03f;
 
     [Header("カメラ追従量")]
     [Range(0f, 1f)]
@@ -46,7 +47,6 @@ public class CameraFollow : MonoBehaviour
     {
         if (player == null || rail == null) return;
 
-        // レールの進行方向を滑らかに取得
         currentForward = Vector3.Slerp(
             currentForward,
             rail.forward,
@@ -59,38 +59,32 @@ public class CameraFollow : MonoBehaviour
             curveLookSpeed * Time.deltaTime
         ).normalized;
 
-        // カメラの基準となる回転
         Quaternion railRotation = Quaternion.LookRotation(
             currentForward,
             currentUp
         );
 
-        // レール基準の左右上下方向
         Vector3 railRight = railRotation * Vector3.right;
         Vector3 railUp = railRotation * Vector3.up;
 
-        // プレイヤーの位置を取得
         Vector3 playerOffset = player.position - rail.position;
 
         float x = Vector3.Dot(playerOffset, railRight);
         float y = Vector3.Dot(playerOffset, railUp);
 
-        // 移動範囲を制限
-        x = Mathf.Clamp(x, minX, maxX);
-        y = Mathf.Clamp(y, minY, maxY);
-
-        // プレイヤーに追従するカメラ位置
+        // カメラ位置を計算
         Vector3 targetPosition =
             player.position
             + railRight * offset.x
             + railUp * offset.y
             - currentForward * Mathf.Abs(offset.z);
 
-        // 左右上下の追従量を調整
-        targetPosition += railRight * (x * (followAmount - 1f));
-        targetPosition += railUp * (y * (followAmount - 1f));
+        targetPosition +=
+            railRight * (x * (followAmount - 1f));
 
-        // 滑らかに追従
+        targetPosition +=
+            railUp * (y * (followAmount - 1f));
+
         float positionLerp = 1f -
             Mathf.Exp(-positionSpeed * Time.deltaTime);
 
@@ -100,7 +94,7 @@ public class CameraFollow : MonoBehaviour
             positionLerp
         );
 
-        // プレイヤーより前方を注視
+        // カメラの向きを計算
         Vector3 lookPosition =
             player.position + currentForward * lookAhead;
 
@@ -122,5 +116,53 @@ public class CameraFollow : MonoBehaviour
                 rotationLerp
             );
         }
+
+        // プレイヤーの画面上の位置を取得
+        Camera cam = GetComponent<Camera>();
+
+        if (cam == null) return;
+
+        Vector3 viewport =
+            cam.WorldToViewportPoint(player.position);
+
+        // 画面端に余白を設定
+        float minViewportX = marginX;
+        float maxViewportX = 1f - marginX;
+
+        float minViewportY = marginY;
+        float maxViewportY = 1f - marginY;
+
+        // 画面外に出ないように制限
+        Vector3 clampedViewport = viewport;
+
+        clampedViewport.x = Mathf.Clamp(
+            viewport.x,
+            minViewportX,
+            maxViewportX
+        );
+
+        clampedViewport.y = Mathf.Clamp(
+            viewport.y,
+            minViewportY,
+            maxViewportY
+        );
+
+        // 画面座標からワールド座標へ変換
+        Vector3 clampedWorld =
+            cam.ViewportToWorldPoint(clampedViewport);
+
+        // レール方向の左右上下だけ補正
+        Vector3 correction =
+            clampedWorld - player.position;
+
+        float correctionX =
+            Vector3.Dot(correction, railRight);
+
+        float correctionY =
+            Vector3.Dot(correction, railUp);
+
+        player.position +=
+            railRight * correctionX +
+            railUp * correctionY;
     }
 }

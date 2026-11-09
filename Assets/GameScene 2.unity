@@ -2190,7 +2190,7 @@ MonoBehaviour:
     roll: 0
   - position: {x: 54.620796, y: 36.81172, z: 519.47766}
     roll: 0
-  - position: {x: 257.5067, y: 44.148674, z: 828.22394}
+  - position: {x: 54.72551, y: 740.4626, z: 1039.0664}
     roll: 0
 --- !u!1 &1136932619
 GameObject:
@@ -4463,14 +4463,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 6456080866273488273}
   rail: {fileID: 2117111791}
-  offset: {x: 0, y: 0, z: -10}
-  positionSpeed: 5
+  offset: {x: 0, y: 0, z: -20}
+  positionSpeed: 20
   rotationSpeed: 5
-  minX: -5
-  maxX: 5
-  minY: -5
-  maxY: 15
-  followAmount: 0.7
+  marginX: 0.03
+  marginY: 0.03
+  followAmount: 0.116
   lookAhead: 30
   curveLookSpeed: 4
 --- !u!1 &2094497067
@@ -5367,19 +5365,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1272701498206779278, guid: 353d307cce5b84249af295144cfa6af0, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.99900806
+      value: 0.9879707
       objectReference: {fileID: 0}
     - target: {fileID: 1272701498206779278, guid: 353d307cce5b84249af295144cfa6af0, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.0063785743
+      value: 0.15464133
       objectReference: {fileID: 0}
     - target: {fileID: 1272701498206779278, guid: 353d307cce5b84249af295144cfa6af0, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.04406966
+      value: 0.00009954634
       objectReference: {fileID: 0}
     - target: {fileID: 1272701498206779278, guid: 353d307cce5b84249af295144cfa6af0, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.00028138072
+      value: -0.000015581412
       objectReference: {fileID: 0}
     - target: {fileID: 2811946034706914078, guid: 353d307cce5b84249af295144cfa6af0, type: 3}
       propertyPath: m_Enabled
