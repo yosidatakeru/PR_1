@@ -4,165 +4,150 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
     [Header("追従対象")]
-    public Transform player;
-    public Transform rail;
+    public Transform target;
+    public Transform DollyTrack;
+    public PlayerMovement playerMovement;
 
-    [Header("カメラ位置")]
+    [Header("カメラ基本位置")]
     public Vector3 offset = new Vector3(0f, 4f, -15f);
 
-    [Header("追従速度")]
-    public float positionSpeed = 5f;
+    [Header("カメラ移動")]
+    public float followSpeed = 5f;
+    public float smoothTime = 0.3f;
+
+    [Header("画面内の追従範囲")]
+    public float limitX = 8f;
+    public float limitY = 5f;
+
+    [Header("追従量")]
+    [Range(0f, 1f)]
+    public float followX = 0.5f;
+
+    [Range(0f, 1f)]
+    public float followY = 0.5f;
+
+    [Header("カメラの角度変化")]
+    public float maxPitch = 4f;
+    public float maxYaw = 5f;
+    public float maxRoll = 5f;
+
+    [Header("角度変化の速度")]
     public float rotationSpeed = 3f;
 
-    [Header("画面移動制限")]
-    [Range(0f, 0.4f)]
-    public float marginX = 0.03f;
-
-    [Range(0f, 0.4f)]
-    public float marginY = 0.03f;
-
-    [Header("カメラ追従量")]
-    [Range(0f, 1f)]
-    public float followAmount = 0.7f;
-
-    [Header("カメラ注視位置")]
-    public float lookAhead = 30f;
-
-    [Header("カーブ対応")]
-    public float curveLookSpeed = 4f;
-
-    private Vector3 currentForward;
-    private Vector3 currentUp;
+    private Vector3 positionVelocity;
 
     void Start()
     {
-        if (rail != null)
-        {
-            currentForward = rail.forward;
-            currentUp = rail.up;
-        }
+        if (DollyTrack == null)
+            return;
+
+        transform.position = DollyTrack.TransformPoint(offset);
+        transform.rotation = DollyTrack.rotation;
     }
 
     void LateUpdate()
     {
-        if (player == null || rail == null) return;
+        if (target == null || DollyTrack == null)
+            return;
 
-        currentForward = Vector3.Slerp(
-            currentForward,
-            rail.forward,
-            curveLookSpeed * Time.deltaTime
-        ).normalized;
+        // プレイヤーの位置をレール基準に変換
+        Vector3 localPlayerPosition =
+            DollyTrack.InverseTransformPoint(target.position);
 
-        currentUp = Vector3.Slerp(
-            currentUp,
-            rail.up,
-            curveLookSpeed * Time.deltaTime
-        ).normalized;
+        // --------------------------------
+        // 1. カメラの位置を計算
+        // --------------------------------
 
-        Quaternion railRotation = Quaternion.LookRotation(
-            currentForward,
-            currentUp
-        );
+        float followOffsetX = 0f;
+        float followOffsetY = 0f;
 
-        Vector3 railRight = railRotation * Vector3.right;
-        Vector3 railUp = railRotation * Vector3.up;
-
-        Vector3 playerOffset = player.position - rail.position;
-
-        float x = Vector3.Dot(playerOffset, railRight);
-        float y = Vector3.Dot(playerOffset, railUp);
-
-        // カメラ位置を計算
-        Vector3 targetPosition =
-            player.position
-            + railRight * offset.x
-            + railUp * offset.y
-            - currentForward * Mathf.Abs(offset.z);
-
-        targetPosition +=
-            railRight * (x * (followAmount - 1f));
-
-        targetPosition +=
-            railUp * (y * (followAmount - 1f));
-
-        float positionLerp = 1f -
-            Mathf.Exp(-positionSpeed * Time.deltaTime);
-
-        transform.position = Vector3.Lerp(
-            transform.position,
-            targetPosition,
-            positionLerp
-        );
-
-        // カメラの向きを計算
-        Vector3 lookPosition =
-            player.position + currentForward * lookAhead;
-
-        Vector3 direction = lookPosition - transform.position;
-
-        if (direction.sqrMagnitude > 0.001f)
+        // 左右の追従判定
+        if (localPlayerPosition.x > limitX)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(
-                direction,
-                currentUp
-            );
-
-            float rotationLerp = 1f -
-                Mathf.Exp(-rotationSpeed * Time.deltaTime);
-
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation,
-                targetRotation,
-                rotationLerp
-            );
+            followOffsetX =
+                (localPlayerPosition.x - limitX) * followX;
+        }
+        else if (localPlayerPosition.x < -limitX)
+        {
+            followOffsetX =
+                (localPlayerPosition.x + limitX) * followX;
         }
 
-        // プレイヤーの画面上の位置を取得
-        Camera cam = GetComponent<Camera>();
+        // 上下の追従判定
+        if (localPlayerPosition.y > limitY)
+        {
+            followOffsetY =
+                (localPlayerPosition.y - limitY) * followY;
+        }
+        else if (localPlayerPosition.y < -limitY)
+        {
+            followOffsetY =
+                (localPlayerPosition.y + limitY) * followY;
+        }
 
-        if (cam == null) return;
+        // レール基準のカメラ位置
+        Vector3 localCameraPosition =
+            offset + new Vector3(
+                followOffsetX,
+                followOffsetY,
+                0f
+            );
 
-        Vector3 viewport =
-            cam.WorldToViewportPoint(player.position);
+        Vector3 targetPosition =
+            DollyTrack.TransformPoint(localCameraPosition);
 
-        // 画面端に余白を設定
-        float minViewportX = marginX;
-        float maxViewportX = 1f - marginX;
-
-        float minViewportY = marginY;
-        float maxViewportY = 1f - marginY;
-
-        // 画面外に出ないように制限
-        Vector3 clampedViewport = viewport;
-
-        clampedViewport.x = Mathf.Clamp(
-            viewport.x,
-            minViewportX,
-            maxViewportX
+        // 滑らかに追従
+        transform.position = Vector3.SmoothDamp(
+            transform.position,
+            targetPosition,
+            ref positionVelocity,
+            smoothTime
         );
 
-        clampedViewport.y = Mathf.Clamp(
-            viewport.y,
-            minViewportY,
-            maxViewportY
+        // --------------------------------
+        // 2. プレイヤーの移動速度を取得
+        // --------------------------------
+
+        Vector3 localVelocity = Vector3.zero;
+
+        if (playerMovement != null)
+        {
+            localVelocity = playerMovement.LocalVelocity;
+        }
+
+        float normalizedX =
+            Mathf.Clamp(localPlayerPosition.x / limitX, -1f, 1f);
+
+        float normalizedY =
+            Mathf.Clamp(localPlayerPosition.y / limitY, -1f, 1f);
+
+        float normalizedVelocityX = Mathf.Clamp(
+            localVelocity.x / 20f, -1f, 1f
         );
 
-        // 画面座標からワールド座標へ変換
-        Vector3 clampedWorld =
-            cam.ViewportToWorldPoint(clampedViewport);
+        // --------------------------------
+        // 3. カメラの角度を計算
+        // --------------------------------
 
-        // レール方向の左右上下だけ補正
-        Vector3 correction =
-            clampedWorld - player.position;
+        // 上下移動によるカメラのピッチ
+        float pitch = -normalizedY * maxPitch;
 
-        float correctionX =
-            Vector3.Dot(correction, railRight);
+        // 左右位置によるカメラの向き
+        float yaw = normalizedX * maxYaw;
 
-        float correctionY =
-            Vector3.Dot(correction, railUp);
+        // 左右移動によるカメラのロール
+        float roll = -normalizedVelocityX * maxRoll;
 
-        player.position +=
-            railRight * correctionX +
-            railUp * correctionY;
+        // レールの回転を基本に角度を追加
+        Quaternion targetRotation =
+            DollyTrack.rotation *
+            Quaternion.Euler(pitch, yaw, roll);
+
+        // 滑らかに回転
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            rotationSpeed * Time.deltaTime
+        );
     }
 }

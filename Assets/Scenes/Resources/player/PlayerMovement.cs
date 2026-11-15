@@ -1,42 +1,64 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
+    [Header("レール")]
     public Transform DollyTrack;
+
+    [Header("移動設定")]
     public float playerSpeed = 1f;
-    float maxSpeed = 20f;
-    float damping = 1f;
+    public float maxSpeed = 20f;
+    public float damping = 1f;
     public float forwardSpeed = 0f;
+
+    [Header("機体の傾き")]
+    public float maxPitchAngle = 35f;
+    public float maxRollAngle = 35f;
+    public float rotationSpeed = 5f;
+
+    [Header("移動範囲")]
+    public float limitX = 15f;
+    public float limitY = 10f;
+    public float limitZ = 15f;
+
     private Vector3 velocity;
     private Vector3 playerRotation;
     private Vector3 targetRotation;
-    private float rotationSpeed = 5f;
+
     private HPScript hpScript;
+
+    // カメラから参照する移動速度（レール基準）
+    public Vector3 LocalVelocity => velocity;
 
     void Start()
     {
-        hpScript = GameObject.Find("HPGauge").GetComponent<HPScript>();
+        GameObject hpObject = GameObject.Find("HPGauge");
 
+        if (hpObject != null)
+        {
+            hpScript = hpObject.GetComponent<HPScript>();
+        }
     }
-
 
     void Update()
     {
-        
-
-        if (hpScript.Gauge < 1)
+        if (hpScript == null || hpScript.Gauge < 1)
         {
-            forwardSpeed = 0;
-            playerSpeed = 0;
+            forwardSpeed = 0f;
+            playerSpeed = 0f;
+            velocity = Vector3.zero;
         }
-      //  HandleMoveAndRotation();
     }
+
     public void HandleMoveAndRotation()
     {
-        
+        if (hpScript == null || hpScript.Gauge < 1)
+            return;
+
+        if (DollyTrack == null)
+            return;
+
         HandleInput();
         UpdateMovement();
         UpdateRotation();
@@ -59,20 +81,11 @@ public class PlayerMovement : MonoBehaviour
             input.Normalize();
         }
 
-        // カメラの向きを基準に移動方向を計算
-        Transform cam = Camera.main.transform;
+        // レール基準で加速
+        velocity += input * playerSpeed * Time.deltaTime * 60f;
 
-        Vector3 moveDirection =
-            cam.right * input.x +
-            cam.up * input.y;
-
-        // 移動速度を加算
-        velocity += moveDirection * playerSpeed;
-
-        if (velocity.magnitude > maxSpeed)
-        {
-            velocity = velocity.normalized * maxSpeed;
-        }
+        // 最大速度制限
+        velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
 
         // 徐々に減速
         velocity = Vector3.Lerp(
@@ -84,43 +97,59 @@ public class PlayerMovement : MonoBehaviour
 
     void UpdateMovement()
     {
-        Vector3 newPosition = transform.position + velocity * Time.deltaTime;
-        newPosition.x = Mathf.Clamp(newPosition.x, DollyTrack.transform.position.x - 15f, DollyTrack.transform.position.x + 15f);
-        newPosition.y = Mathf.Clamp(newPosition.y, DollyTrack.transform.position.y - 10f, DollyTrack.transform.position.y +10f);
-        newPosition.z = Mathf.Clamp(newPosition.z, DollyTrack.transform.position.z - 15f, DollyTrack.transform.position.z + 15f);
-        transform.position = newPosition;
-       
+        Vector3 localPosition =
+            DollyTrack.InverseTransformPoint(transform.position);
+
+        // ローカル座標で移動
+        localPosition += velocity * Time.deltaTime;
+
+        // 移動範囲制限
+        localPosition.x = Mathf.Clamp(localPosition.x, -limitX, limitX);
+        localPosition.y = Mathf.Clamp(localPosition.y, -limitY, limitY);
+        localPosition.z = Mathf.Clamp(localPosition.z, -limitZ, limitZ);
+
+        transform.position = DollyTrack.TransformPoint(localPosition);
     }
-    
 
     void UpdateRotation()
     {
-        float maxPitchAngle = 35f;
-        float targetPitch = -velocity.y / maxSpeed * maxPitchAngle;
-        targetRotation.x = Mathf.Lerp(targetRotation.x, targetPitch, Time.deltaTime * rotationSpeed);
+        // 上下移動によるピッチ
+        float targetPitch =
+            -velocity.y / maxSpeed * maxPitchAngle;
 
-        float maxRollAngle = 35f;
-        float targetRoll = -velocity.x / maxSpeed * maxRollAngle;
-        targetRotation.z = Mathf.Lerp(targetRotation.z, targetRoll, Time.deltaTime * rotationSpeed);
+        // 左右移動によるロール
+        float targetRoll =
+            -velocity.x / maxSpeed * maxRollAngle;
 
-        playerRotation = Vector3.Lerp(playerRotation, targetRotation, Time.deltaTime * rotationSpeed);
+        targetRotation.x = Mathf.Clamp(
+            targetPitch, -maxPitchAngle, maxPitchAngle);
 
-        Quaternion localTilt = Quaternion.Euler(playerRotation.x, playerRotation.y, playerRotation.z);
+        targetRotation.z = Mathf.Clamp(
+            targetRoll, -maxRollAngle, maxRollAngle);
+
+        playerRotation = Vector3.Lerp(
+            playerRotation,
+            targetRotation,
+            rotationSpeed * Time.deltaTime
+        );
+
+        Quaternion localTilt = Quaternion.Euler(
+            playerRotation.x,
+            playerRotation.y,
+            playerRotation.z
+        );
 
         transform.rotation = DollyTrack.rotation * localTilt;
     }
 
     public void StopMovement()
     {
-       
         velocity = Vector3.zero;
-       
     }
 
-    public void RotationReset() 
+    public void RotationReset()
     {
         playerRotation = Vector3.zero;
         targetRotation = Vector3.zero;
     }
-
 }
