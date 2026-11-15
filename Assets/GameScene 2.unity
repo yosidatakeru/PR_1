@@ -4461,16 +4461,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fb5ed43966dca2409fa8f0be4c2e127, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 6456080866273488273}
-  rail: {fileID: 2117111791}
+  target: {fileID: 6456080866273488273}
+  DollyTrack: {fileID: 2117111791}
+  playerMovement: {fileID: 6456080866273488306}
   offset: {x: 0, y: 0, z: -20}
-  positionSpeed: 20
+  followSpeed: 5
+  smoothTime: 0.3
+  limitX: 8
+  limitY: 5
+  followX: 0.5
+  followY: 0.5
+  maxPitch: 4
+  maxYaw: 5
+  maxRoll: 5
   rotationSpeed: 5
-  marginX: 0.03
-  marginY: 0.03
-  followAmount: 0.116
-  lookAhead: 30
-  curveLookSpeed: 4
 --- !u!1 &2094497067
 GameObject:
   m_ObjectHideFlags: 0
@@ -4946,6 +4950,18 @@ PrefabInstance:
     - target: {fileID: 4089060243795798627, guid: 20e30d8e983c21f4bb3d7054b7669c17, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4811239575123757490, guid: 20e30d8e983c21f4bb3d7054b7669c17, type: 3}
+      propertyPath: limitX
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4811239575123757490, guid: 20e30d8e983c21f4bb3d7054b7669c17, type: 3}
+      propertyPath: limitY
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4811239575123757490, guid: 20e30d8e983c21f4bb3d7054b7669c17, type: 3}
+      propertyPath: limitZ
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4811239575123757490, guid: 20e30d8e983c21f4bb3d7054b7669c17, type: 3}
       propertyPath: DollyTrack
