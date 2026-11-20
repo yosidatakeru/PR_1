@@ -24,15 +24,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (isGoal || transform.position.z <= 50f ||
-            transform.position.z >= goalLine || hpScript.Gauge <= 0)
-        {
-            isControlEnabled = false;
-        }
-        else
-        {
-            isControlEnabled = true;
-        }
+        
 
         if (!isControlEnabled)
         {
